@@ -27,8 +27,33 @@ _PAWN_CHAIN_RE = re.compile(r"[a-h][1-8](?:\s*-\s*[a-h][1-8])+")
 _LOOKAHEAD = 16
 
 _THREAT_CUE_RE = re.compile(
-    r"(?i)(?:threatening|as well as|followed by|aiming(?:\s+for)?|preventing)\s+$"
+    r"(?i)(?:threats?|threatening|as well as|followed by|aiming(?:\s+for)?|preventing)\s+$"
 )
+_MANEUVER_RE = re.compile(r"\b[NBRQK][a-h][1-8]-[a-h][1-8]\b")
+_THREAT_WORD_RE = re.compile(
+    r"(?i)\b(?:threats?|threatening|as well as|followed by|aiming(?:\s+for)?|preventing)\b"
+)
+
+
+def _in_threat_phrase(text: str, pos: int) -> bool:
+    """True when the next SAN sits in a threat list, not a playable variation."""
+    window = text[max(0, pos - 72) : pos]
+    # Threat lists stop before a resumed score: "e8=Q: 51... Bf8"
+    window = re.split(r"[:.]\s*(?=\d+\.(?:\.\.)?\s*[NBRQKa-hx])", window)[-1]
+    if _THREAT_CUE_RE.search(window):
+        return True
+    m = _THREAT_WORD_RE.search(window)
+    if not m:
+        return False
+    tail = window[m.start() :]
+    rest = _THREAT_WORD_RE.sub(" ", tail)
+    rest = re.sub(
+        r"(?i)(?:\d+\.(?:\.\.)?\s*)?[NBRQK]?[a-h]?x?[a-h][1-8](?:=[NBRQ])?[+#]*",
+        " ",
+        rest,
+    )
+    rest = re.sub(r"(?i)\b(?:and|or)\b|[,\s\-]+", " ", rest)
+    return not re.search(r"[A-Za-z]", rest)
 
 
 def board_before_ply(game: chess.pgn.Game, ply: int) -> chess.Board:
@@ -282,19 +307,50 @@ def _choose_move(
         round_trip = _piece_class(token) != "P" and any(
             _returns_to_from(t) for t in rest[:6]
         )
+
+        def _bishop_development_next(
+            bishop_move: chess.Move, pawn_move: chess.Move
+        ) -> bool:
+            """True when next B-SAN is real development (Bg4 Bg7), not pawn OCR."""
+            if not rest or _piece_class(rest[0]) != "B":
+                return False
+            after_b = board.copy()
+            after_b.push(bishop_move)
+            if _try_parse(after_b, rest[0]) is None:
+                return False
+            after_p = board.copy()
+            after_p.push(pawn_move)
+            return not any(
+                _piece_class(s) == "P" for s, _ in _candidates(after_p, rest[0])
+            )
+
         for san, move in cands:
             if move == exact:
                 continue
             _ex_c, strip_c, swap_c = _classify_choice(
                 token, san, exact=exact, chosen=move, n_cands=n
             )
+            # Never invent a king move from a non-king token (Bf8 ≠ Kf8).
+            if _piece_class(san) == "K" and _piece_class(token) != "K":
+                continue
+            # Keep exact bishop over queen (Bg7 ≠ Qg7).
+            if _piece_class(token) == "B" and _piece_class(san) == "Q":
+                continue
             alt_rest = rest_after(move)
             better = alt_rest > exact_rest
+            # OCR bishop→pawn (Bh4/Bg5), but keep real development (Bg4 Bg7)
             better = better or (
-                strip_c > 0 and alt_rest[0] >= exact_rest[0]
+                strip_c > 0
+                and _piece_class(token) == "B"
+                and _piece_class(san) == "P"
+                and (
+                    round_trip
+                    or (
+                        alt_rest[0] >= exact_rest[0]
+                        and not _bishop_development_next(exact, move)
+                    )
+                )
             )
-            # OCR bishop/pawn: Bg5 … Bh4 (return to from-square) → g5
-            better = better or (strip_c > 0 and round_trip)
             better = better or (
                 alt_rest == exact_rest
                 and capture_to is not None
@@ -393,7 +449,7 @@ def _peek_san_tokens(
         if depth:
             pos += 1
             continue
-        if _THREAT_CUE_RE.search(text[max(0, pos - 48) : pos]):
+        if _in_threat_phrase(text, pos):
             m_skip = _SAN_TOKEN_RE.match(text, pos)
             if m_skip and not (m_skip.group("head") or ""):
                 pos = m_skip.end()
@@ -531,6 +587,13 @@ def legalize_note_prose(board: chess.Board, text: str) -> str:
             pos += 1
             continue
 
+        # Piece maneuver prose (Bg4-e6), not two SANs
+        man = _MANEUVER_RE.match(text, pos)
+        if man:
+            out.append(man.group(0))
+            pos = man.end()
+            continue
+
         m = _SAN_TOKEN_RE.match(text, pos)
         if not m:
             chain = _PAWN_CHAIN_RE.match(text, pos)
@@ -556,8 +619,9 @@ def legalize_note_prose(board: chess.Board, text: str) -> str:
         marks = m.group("marks") or ""
         end = m.end()
 
-        # Prose threats are not a playable line: "(threatening Qf8# as well as Nxb6)"
-        if not head and _THREAT_CUE_RE.search(text[max(0, pos - 48) : pos]):
+        # Prose threats are not a playable line:
+        # "(threatening Qf8# …)" / "Threatening 45.Nc3" / "threats Ne6 and Bg4"
+        if _in_threat_phrase(text, pos):
             out.append(head + san + marks)
             pos = end
             continue

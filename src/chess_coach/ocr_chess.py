@@ -41,6 +41,7 @@ _PROSE_START_RE = re.compile(
     r"And as usually|And we have|A better defence|Black missed|Weak is |"
     r"Making things|This is the key|This is an |This is a |"
     r"The (?:knight|bishop|rook|queen|king|pawn|piece) |"
+    r"But now|Suicidal is |"
     r"If |When |While |Although |Though |Should |"
     r"[!?]+\s*(?:A |The |This |White |Black |It |There )"
     r")",
@@ -130,6 +131,8 @@ def glue_spaced_san(text: str) -> str:
     out = re.sub(r"\b([a-hA-H])([a-h][1-8])\b", _pawn_cap, out)
     # Bishop figurine OCR as "h" / ".h" before destination: hc4 → Bxc4, hg3 → Bxg3
     out = re.sub(r"\.h(?=[a-h][1-8])", "Bx", out)
+    # Bishop-as-h with f OCR'd as i: hi7 → Bxf7 (before generic h+square)
+    out = re.sub(r"\bh[iI]([1-8])\b", r"Bxf\1", out, flags=re.I)
     out = re.sub(r"\bh([a-h][1-8])\b", r"Bx\1", out, flags=re.I)
     # Bishop-as-h + file + OCR rank l/I (back-rank capture): hfl → Bxf1
     out = re.sub(r"\bh([a-h])[lI]\b", r"Bx\g<1>1", out, flags=re.I)
@@ -200,8 +203,9 @@ def ocr_clean_move_token(token: str) -> str:
     out = re.sub(r"^Q([a-h])[lI](?=[+#?!]*$)", r"Q\g<1>1", out)
     out = re.sub(r"^N([a-h])[lI](?=[+#?!]*$)", r"N\g<1>7", out)
     out = re.sub(r"^([BK][a-h])[lI](?=[+#?!]*$)", r"\g<1>7", out)
-    # Rank letter OCR: s/S → 8 (Qds → Qd8)
-    out = re.sub(r"^([NBRQK][a-h])[sS](?=[+#?!]*$)", r"\g<1>8", out)
+    # Rank letter OCR: s/S — Q/R often back-rank 8; N/B/K prefer 5 (S≈5)
+    out = re.sub(r"^([QR][a-h])[sS](?=[+#?!]*$)", r"\g<1>8", out)
+    out = re.sub(r"^([NBK][a-h])[sS](?=[+#?!]*$)", r"\g<1>5", out)
     # Bare file+l/I token = lost queen figurine (fl → Qf1)
     out = re.sub(r"^([a-h])[lI](?=[+#?!]*$)", r"Q\g<1>1", out)
     # Bare file+l → file+1 (a1); do not apply after piece letter
@@ -336,18 +340,45 @@ def ocr_clean_chess(text: str) -> str:
     out = re.sub(r"\bJ(?=[a-h][1-8])", "R", out)
     # Rook lost letter: 39.gb3 → 39.Rb3 (g + square ≠ pawn g3)
     out = re.sub(r"\b(\d+)\.\s*[Gg](?=[a-h][1-8]\b)", r"\1. R", out)
+    # Rook as g before non-adjacent capture (pawn g only takes f/h): gxb5 / gxbS → Rxb…
+    out = re.sub(r"\bg(?=x[a-eg][1-8sS])", "R", out, flags=re.I)
+    # Capture dest rank OCR: RxbS / xbS → …b5 (S looks like 5)
+    out = re.sub(r"\b([NBRQK][a-h]?x[a-h]|x[a-h])[sS]\b", r"\g<1>5", out)
     # Score-line figurine bootstrap (Quality Chess): 32.ffe2 !:ib7 33.ttlc4:t:
+    # Queen salad Wff/Yff/Yfif/Yfix/Wif (before bare ff→Q)
+    out = re.sub(r"\b[WY]fi?xf?lt\b", "Qxf7+", out, flags=re.I)
+    out = re.sub(r"\b[WY]fff?lt\b", "Qxf7+", out, flags=re.I)
+    out = re.sub(r"\b[WY]fif[l1I]\b", "Qf7", out, flags=re.I)
+    out = re.sub(r"\bWif(?=[1-8])", "Qf", out, flags=re.I)
+    out = re.sub(r"\b[WY]ff(?=\s*[a-hx])", "Q", out, flags=re.I)
+    out = re.sub(r"=\s*[WY]ff\b", "=Q", out, flags=re.I)
     out = re.sub(r"\bff(?=[a-h][1-8])", "Q", out)
     out = re.sub(r"\bttl(?=[a-h])", "N", out, flags=re.I)
+    # Knight tee/tex spaced: tee 6 → Ne6, tex g7 → Nxg7
+    out = re.sub(r"\btee\s*([1-8])\b", r"Ne\1", out, flags=re.I)
+    out = re.sub(r"\btex\s*([a-h][1-8])\b", r"Nx\1", out, flags=re.I)
     out = re.sub(r"!:i(?=[a-h])", "R", out)
     out = re.sub(r"!:(?=[a-h][1-8])", "R", out)
+    # Rook OCR :9' / l!b (Quality Chess)
+    out = re.sub(r":9'\.?", "R", out)
+    out = re.sub(r"\bl!b(?=[a-h1-8lI])", "Rb", out, flags=re.I)
+    # Rook figurine J + OCR junk before square: J�b2 / JQb2 → Rb2
+    out = re.sub(r"\bJ(?:[\ufffd]|Q)?(?=[a-h][1-8]\b)", "R", out)
     out = re.sub(r":t:", "±", out)
     out = re.sub(r"(?<=[NBRQKa-h1-8])\s*:t\b", "±", out)
     # King @ / file+i → rank 1: 35.@hi → 35.Kh1
     out = re.sub(r"@(?=[a-h])", "K", out)
     out = re.sub(r"\b(K[a-h])[iI]\b", r"\g<1>1", out)
-    # Queen glyph f? + file + rank-letter s/S → …d8 before glyph expand
-    out = re.sub(r"\b(f\?|[NBRQK])([a-h])[sS]\b", r"\1\g<2>8", out)
+    # King figurine 'it> / it> / 'tt> (Quality Chess > for l)
+    out = re.sub(r"'it>(?=[a-h])", "K", out, flags=re.I)
+    out = re.sub(r"(?<![A-Za-z0-9])it>(?=[a-h])", "K", out, flags=re.I)
+    out = re.sub(r"'tt>(?=[a-h])", "K", out, flags=re.I)
+    out = re.sub(r"(?<![A-Za-z0-9])tt>(?=[a-h])", "K", out, flags=re.I)
+    # Lost bishop before e8 after move marks: ! �es / ! es → Be8
+    out = re.sub(r"([!?]{1,3})\s*[\ufffd]?\s*es\b", r"\1 Be8", out)
+    # Queen glyph f? / Q/R + file + S → rank 8; N/B/K + file + S → rank 5 (S≈5)
+    out = re.sub(r"\b(f\?|[QR])([a-h])[sS]\b", r"\1\g<2>8", out)
+    out = re.sub(r"\b([NBK])([a-h])[sS]\b", r"\1\g<2>5", out)
     # Diagram salad after White head (m:t etc.): drop junk, next SAN is Black reply
     # 34.m:t Kg7 → 34...Kg7 (do not invent Rf1)
     out = re.sub(
@@ -413,6 +444,9 @@ def ocr_clean_chess(text: str) -> str:
     text = re.sub(r"[ \t]+", " ", text)
     # Keep space before ".Bh6" / ".ih6" (figurine leftover), not before ".d5" pawn
     text = re.sub(r" +([,;:!?]|\.(?![NBRQK][a-hx]|i[a-h]))", r"\1", text)
+    # Punct collapse can glue leftover ellipsis dots: 44... . → 44.... → 44...
+    text = re.sub(r"\b(\d+)\.{3}\s*\.(?!\.)", r"\1...", text)
+    text = re.sub(r"\b(\d+)\.{4,}", r"\1...", text)
     # Mid-prose figurine OCR first, then spaced-SAN glue (lilc 6 → Nc 6 → Nc6)
     text = replace_piece_ocr_glyphs(text)
     text = glue_spaced_san(text)
@@ -422,10 +456,27 @@ def ocr_clean_chess(text: str) -> str:
     text = re.sub(r"\bl0\s*x\s*([a-h][1-8])", r"Nx\1", text)
     text = re.sub(r"\bl0\s+([a-h][1-8])", r"N\1", text)
     text = re.sub(r"\bl0(?=[a-h][1-8]|x)", "N", text)
-    # King 'itl / itl / lt> mid-prose: 'itlg7 → Kg7, lt>g8 → Kg8
+    # King 'itl / 'it> / 'tt> / itl / lt> mid-prose: 'itlg7 → Kg7, 'tt>g7 → Kg7
     text = re.sub(r"'itl(?=[a-h])", "K", text, flags=re.I)
+    text = re.sub(r"'it>(?=[a-h])", "K", text, flags=re.I)
+    text = re.sub(r"'tt>(?=[a-h])", "K", text, flags=re.I)
     text = re.sub(r"(?<![A-Za-z0-9])itl(?=[a-h])", "K", text, flags=re.I)
+    text = re.sub(r"(?<![A-Za-z0-9])it>(?=[a-h])", "K", text, flags=re.I)
+    text = re.sub(r"(?<![A-Za-z0-9])tt>(?=[a-h])", "K", text, flags=re.I)
     text = re.sub(r"lt>K?(?=[a-h])", "K", text)
+    # Queen salad mid-prose (Wff/Yfif/Yfix after soft-wrap)
+    text = re.sub(r"\b[WY]fi?xf?lt\b", "Qxf7+", text, flags=re.I)
+    text = re.sub(r"\b[WY]fff?lt\b", "Qxf7+", text, flags=re.I)
+    text = re.sub(r"\b[WY]fif[l1I]\b", "Qf7", text, flags=re.I)
+    text = re.sub(r"\bWif(?=[1-8])", "Qf", text, flags=re.I)
+    text = re.sub(r"\b[WY]ff(?=\s*[a-hx])", "Q", text, flags=re.I)
+    text = re.sub(r"=\s*[WY]ff\b", "=Q", text, flags=re.I)
+    text = re.sub(r"\btee\s*([1-8])\b", r"Ne\1", text, flags=re.I)
+    text = re.sub(r"\btex\s*([a-h][1-8])\b", r"Nx\1", text, flags=re.I)
+    text = re.sub(r":9'\.?", "R", text)
+    text = re.sub(r"\bl!b(?=[a-h1-8lI])", "Rb", text, flags=re.I)
+    text = re.sub(r"\bJ(?:[\ufffd]|Q)?(?=[a-h][1-8]\b)", "R", text)
+    text = re.sub(r"([!?]{1,3})\s*[\ufffd]?\s*es\b", r"\1 Be8", text)
     # Queen 'Ml'xg3
     text = re.sub(r"'Ml'?(?=x?[a-h])", "Q", text)
     # Bishop bare i before square mid-prose (ih4); Layer 5 fixes false Bg5→g5
@@ -454,6 +505,9 @@ def ocr_clean_chess(text: str) -> str:
         r" \1",
         text,
     )
+    # Rook-as-g capture + dest S→5 mid-prose (after token walk)
+    text = re.sub(r"\bg(?=x[a-eg][1-8sS])", "R", text, flags=re.I)
+    text = re.sub(r"\b([NBRQK][a-h]?x[a-h]|x[a-h])[sS]\b", r"\g<1>5", text)
     # Move-number OCR: 4o. → 40. (digit o/O as zero)
     text = re.sub(r"\b(\d)[oO]\.(?=\s*[NBRQKa-h])", r"\g<1>0.", text)
     # Check: trailing t after SAN → + (dict alias t→+; apply only on move shapes)
@@ -478,12 +532,15 @@ def ocr_clean_chess(text: str) -> str:
     # Piece+file+l mid-prose: R/Q→1, N→7, B/K→7; captures →1
     text = re.sub(r"\b([NBRQK]x[a-h])\s*[lI]\b", r"\g<1>1", text)
     text = re.sub(r"\b([NBRQK]x[a-h])[lI]\b", r"\g<1>1", text)
+    text = re.sub(r"\bR([a-h])[lI]t(?=\+-)", r"R\g<1>1", text)
+    text = re.sub(r"\bR([a-h])[lI]t(?=[+#?!]|\b)", r"R\g<1>1+", text)
     text = re.sub(r"\bR([a-h])[lI](?=[+#?!]|\b)", r"R\g<1>1", text)
     text = re.sub(r"\bQ([a-h])[lI](?=[+#?!]|\b)", r"Q\g<1>1", text)
     text = re.sub(r"\bN([a-h])[lI](?=[+#?!]|\b)", r"N\g<1>7", text)
     text = re.sub(r"\b([BK][a-h])[lI](?=[+#?!]|\b)", r"\g<1>7", text)
-    # Rank letter OCR mid-prose: Qds → Qd8
-    text = re.sub(r"\b([NBRQK][a-h])[sS]\b", r"\g<1>8", text)
+    # Rank letter OCR mid-prose: QdS → Qd8; NcS → Nc5
+    text = re.sub(r"\b([QR][a-h])[sS]\b", r"\g<1>8", text)
+    text = re.sub(r"\b([NBK][a-h])[sS]\b", r"\g<1>5", text)
     # White two-dot leftover after late piece OCR: 39..Bg1 → 39.Bg1
     text = re.sub(r"\b(\d+)\.\.(?!\.)(?=[NBRQK])", r"\1.", text)
     # Lost queen figurine: bare file+l/I after move head → Q + file + rank 1
@@ -520,6 +577,8 @@ def ocr_clean_chess(text: str) -> str:
         text,
         flags=re.I,
     )
+    # Common OCR: bur after → but after
+    text = re.sub(r"\bbur\s+after\b", "but after", text, flags=re.I)
     # ASCII Informator → canonical Unicode
     text = re.sub(r"(?<=\S)\s*\+=\b", " ⩲", text)
     text = re.sub(r"(?<=\S)\s*=\+\b", " ⩱", text)
@@ -571,7 +630,7 @@ def prose_is_usable(text: str, *, min_alpha: int = 40) -> bool:
     alpha = sum(1 for ch in cleaned if ch.isalpha())
     # Clear coaching openers win even when the note is short ("If 28... f4?! …").
     if _PROSE_START_RE.search(cleaned) or _PROSE_START_RE.search(text):
-        return alpha >= 15
+        return alpha >= 6
     if alpha < min_alpha:
         return False
     if alpha >= 55 and len(_ENGLISH_HINT_RE.findall(cleaned)) >= 3:

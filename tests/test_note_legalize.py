@@ -28,6 +28,33 @@ def test_bare_square_becomes_unique_piece() -> None:
     assert " was d2" not in out
 
 
+def test_threat_list_does_not_swallow_or_sideline_pawn() -> None:
+    """After 'followed by e8=Q: 51...', later '(or … 54. e7)' stays a pawn push."""
+    from pathlib import Path
+
+    import chess.pgn
+
+    pgn = Path("data/annotated/bookwalk/Magnus_Carlsen_vs_Luke_McShane_2009_bookwalk.pgn")
+    if not pgn.exists():
+        return
+    game = chess.pgn.read_game(pgn.open())
+    board = game.board()
+    node = game
+    while node.variations:
+        nxt = node.variation(0)
+        if board.fullmove_number == 50 and board.san(nxt.move).startswith("Be8"):
+            text = (
+                "Suicidal is 50... Bxe6? 51. dxe6 when the threat is Rb8 followed by "
+                "e6-e7-e8=Q: 51... Bf8 52. Rb8 Kg7 53. Rb7+ Kf6 (or 53... Kg8 54. e7 +-)"
+            )
+            out = legalize_note_prose(board, text)
+            assert "54. e7" in out or "54.e7" in out.replace(" ", "")
+            assert "Be7" not in out
+            break
+        board.push(nxt.move)
+        node = nxt
+
+
 def test_ambiguous_capture_left_untouched() -> None:
     board = chess.Board("4k3/8/1B6/p7/8/8/3Q4/4K3 w - - 0 1")
     sans = {board.san(m) for m in board.legal_moves}

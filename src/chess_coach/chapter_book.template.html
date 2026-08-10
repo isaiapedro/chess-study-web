@@ -1172,7 +1172,8 @@
     out = out.replace(/^Q([a-h])[lI]$/g, "Q$11");
     out = out.replace(/^N([a-h])[lI]$/g, "N$17");
     out = out.replace(/^([BK][a-h])[lI]$/g, "$17");
-    out = out.replace(/^([NBRQK][a-h])[sS]$/g, "$18");
+    out = out.replace(/^([QR][a-h])[sS]$/g, "$18");
+    out = out.replace(/^([NBK][a-h])[sS]$/g, "$15");
     out = out.replace(/^([a-h])[lI](?=[+#?!]*$)/g, "Q$11");
     out = out.replace(/(?<![NBRQK])([a-h])[lI](?=[+#?!]*$)/g, "$11");
     out = out.replace(/^([a-h])\s+x\s*([a-h][1-8])/g, "$1x$2");
@@ -1315,10 +1316,13 @@
     out = out.replace(/\.\s*[•·∙⋅]+\s*\./g, "...");
     out = out.replace(/\b(\d+)\s*\.\s*[•·∙⋅]+\s*\.\s*/g, "$1... ");
     out = out.replace(/\b(\d+)\s+[•·∙⋅]+\s*\.\s*/g, "$1... ");
+    out = out.replace(/\b(\d+)\s*\.\s*\.\s*\.\s*/g, "$1... ");
     out = out.replace(/\b(\d+)\s*\.\s*\.\.\s*/g, "$1...");
     out = out.replace(/\b(\d+)\s+\.\.\.?\s*/g, "$1...");
     out = out.replace(/\b(\d+)\s*\.\s*\.\s+/g, "$1... ");
     out = out.replace(/\b(\d+)\.\.(?!\.)(?=[NBRQK]|[1lI'"%@&§]|id|if|il|lt|l')/g, "$1.");
+    out = out.replace(/\b(\d+)\.{3}\s*\.(?!\.)/g, "$1...");
+    out = out.replace(/\b(\d+)\.{4,}/g, "$1...");
     // Move-number OCR: 3 Llilb4 → 31.lilb4; ll.d5 → 11.d5
     out = out.replace(/\b(\d)[ \t]+[lI][ \t]*\.\s*/g, function (_m, d) { return d + "1."; });
     out = out.replace(/\b(\d)[ \t]+L(?=[NBRQK1'lia-hlt/])/g, function (_m, d) { return d + "1."; });
@@ -1339,6 +1343,9 @@
     out = out.replace(/\bJk(?=[a-h][1-8])/g, "Rc");
     out = out.replace(/\bJ(?=[a-h][1-8])/g, "R");
     out = out.replace(/\b(\d+)\.\s*[Gg](?=[a-h][1-8]\b)/g, "$1. R");
+    // Rook as g before non-adjacent capture; dest S→5
+    out = out.replace(/\bg(?=x[a-eg][1-8sS])/gi, "R");
+    out = out.replace(/\b([NBRQK][a-h]?x[a-h]|x[a-h])[sS]\b/g, "$15");
 
     // Score-line figurine bootstrap: ffe2 / !:ib7 / ttlc4 / @hi
     out = out.replace(/\bff(?=[a-h][1-8])/g, "Q");
@@ -1350,7 +1357,10 @@
     out = out.replace(/(?<=[NBRQKa-h1-8])\s*:t\b/g, "±");
     out = out.replace(/@(?=[a-h])/g, "K");
     out = out.replace(/\b(K[a-h])[iI]\b/g, "$11");
-    out = out.replace(/\b(f\?|[NBRQK])([a-h])[sS]\b/g, "$1$28");
+    out = out.replace(/'it>(?=[a-h])/gi, "K");
+    out = out.replace(/(?<![A-Za-z0-9])it>(?=[a-h])/gi, "K");
+    out = out.replace(/\b(f\?|[QR])([a-h])[sS]\b/g, "$1$28");
+    out = out.replace(/\b([NBK])([a-h])[sS]\b/g, "$1$25");
     // Diagram salad after White head: 34.m:t Kg7 → 34...Kg7 (no Rf1 invent)
     out = out.replace(
       /\b(\d+)\.\s*[a-z]{1,2}:[a-z0-9]{1,2}\s+(?=(?:O-O-O|O-O|[NBRQK][a-hx]|[a-h]x?[a-h]?[1-8]))/gi,
@@ -1412,7 +1422,9 @@
     built = built.replace(/\bl0\s+([a-h][1-8])/g, "N$1");
     built = built.replace(/\bl0(?=[a-h][1-8]|x)/g, "N");
     built = built.replace(/'itl(?=[a-h])/gi, "K");
+    built = built.replace(/'it>(?=[a-h])/gi, "K");
     built = built.replace(/(?<![A-Za-z0-9])itl(?=[a-h])/gi, "K");
+    built = built.replace(/(?<![A-Za-z0-9])it>(?=[a-h])/gi, "K");
     built = built.replace(/lt>K?(?=[a-h])/g, "K");
     built = built.replace(/'Ml'?(?=x?[a-h])/g, "Q");
     built = built.replace(/(?<![A-Za-z0-9])i(?=[a-h][1-8](?:[+#!=]|\b))/g, "B");
@@ -1444,7 +1456,8 @@
     built = built.replace(/\bQ([a-h])[lI](?=[+#?!]|\b)/g, "Q$11");
     built = built.replace(/\bN([a-h])[lI](?=[+#?!]|\b)/g, "N$17");
     built = built.replace(/\b([BK][a-h])[lI](?=[+#?!]|\b)/g, "$17");
-    built = built.replace(/\b([NBRQK][a-h])[sS]\b/g, "$18");
+    built = built.replace(/\b([QR][a-h])[sS]\b/g, "$18");
+    built = built.replace(/\b([NBK][a-h])[sS]\b/g, "$15");
     built = built.replace(/\b(\d+)\.\.(?!\.)(?=[NBRQK])/g, "$1.");
     // Lost queen figurine: bare file+l/I after move head → Q + file + 1
     built = built.replace(/\b(\d+)\.\s*([a-h])[lI](?=[+#?!]|\b)/g, "$1. Q$21");
@@ -1481,6 +1494,7 @@
     let text = ocrCleanClient(stripTag(raw));
     if (!text) return "";
     text = text.replace(/\r\n?/g, "\n").replace(/[ \t]+\n/g, "\n").replace(/\n[ \t]+/g, "\n");
+    text = text.replace(/\b(Final\s+remarks)\s+(?=\d+\.\s)/gi, "$1\n\n");
     if (!/\n/.test(text)) {
       text = text.replace(
         /(?:\.(?!\.)|(?<=[a-z]{2})[!?]+)\s+(?=(?:The |This |White |Black |Better |Threatening |Followed |An interesting |A better |Not |Once |Again |His |In |After |Precision |Learning |Something |Creating |Preparing |Ignoring |Covering |Aiming |We |It |And as |For example|If ))/g,

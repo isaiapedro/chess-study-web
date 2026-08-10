@@ -82,9 +82,15 @@ Annotation `?!` on a SAN is **not** a sentence break (does not open a new score 
 | --- | --- |
 | `PIECE_OCR_GLYPHS` | `'Wie`→`Qe`, `ltJ`/`lll`/`lil`/`ill`→`N`, `f?`→`Q`, `%'m`→`Qf8`, `E:`/`.§`/`§`→`R` |
 | `OCR_ALIASES` | `?f`→`?!`, `;i;`/`;!;`/`!;!;`/`+=`→`⩲` |
-| Lookahead leftovers | `W`→K/Q by file; lone `i`→`B`; `iB`→`B`; `lt>`/`'itl`→`K`; `!'l:`/`El`/`E'`→`R`; `l0`→`N`; `4o.`→`40.`; `hfl`→`Bxf1`; SAN `t`→`+` (check); `#` = checkmate (dict); `;t`→`⩲`; R/`l`→rank1, N/`l`→rank7. |
+| Lookahead leftovers | `W`→K/Q by file; lone `i`→`B`; `iB`→`B`; `lt>`/`'itl`/`'tt>`→`K`; `!'l:`/`El`/`E'`/`:9'`/`l!b`→`R`; `l0`/`tee`/`tex`→`N`/`Nx`; `4o.`→`40.`; `hfl`/`hi7`→`Bxf1`/`Bxf7`; SAN `t`→`+` (check); `#` = checkmate (dict); `;t`→`⩲`; R/`l`→rank1, N/`l`→rank7. |
 
-**Spaced SAN glue** (`glue_spaced_san` in `ocr_chess.py`, mirrored in viewer): after glyphs, collapse OCR spaces inside moves — `lilc 6`→`Nc6`, `fx e4`/`fic e4`→`fxe4`, `Ra 1`→`Ra1`, missing capture `x` on **adjacent** files **except leading `h`** (`fg5`→`fxg5`; `hg3`/`hc4`→`Bxg3`/`Bxc4` because Quality Chess bishop figurine OCR as `h`). Real h-pawn captures keep `x`: `hxg3` / `h xg4`. Glyph dict alone is not enough when file/rank is spaced. Bishop-as-`h` + file + OCR-rank `l`/`I`: `hfl`→`Bxf1`.
+**Spaced SAN glue** (`glue_spaced_san` in `ocr_chess.py`, mirrored in viewer): after glyphs, collapse OCR spaces inside moves — `lilc 6`→`Nc6`, `fx e4`/`fic e4`→`fxe4`, `Ra 1`→`Ra1`, missing capture `x` on **adjacent** files **except leading `h`** (`fg5`→`fxg5`; `hg3`/`hc4`→`Bxg3`/`Bxc4` because Quality Chess bishop figurine OCR as `h`). Real h-pawn captures keep `x`: `hxg3` / `h xg4`. Glyph dict alone is not enough when file/rank is spaced. Bishop-as-`h` + file + OCR-rank `l`/`I`: `hfl`→`Bxf1`. Bishop-as-`h` with `f` OCR'd as `i`: `hi7`→`Bxf7`.
+
+**Queen salad `Wff`/`Yfif`/`Yfix`**: `Wfff7`/`Wffd7`/`Yfifl`→`Qf7`/`Qd7`; `Yfixflt`/`Yffflt`→`Qxf7+`; `= Wff`→`=Q`. Keep mid-variation `If N.` from opening a new score line; strip leading Informator `+-`/`-+` from note prose after `SAN+-`.
+
+**Lost bishop before `e8`**: after move marks, `! �es` / `! es` → `Be8`.
+
+**Rook figurine `J` + junk**: `J�b2` / `JQb2` → `Rb2`.
 
 **Move-number `L` / `ll`**: `3 Llilb4` → `31.Nb4`; `ll.d5` / `ll .d5` → `11.d5` (digit `1` OCR as `l`).
 
@@ -93,6 +99,12 @@ Annotation `?!` on a SAN is **not** a sentence break (does not open a new score 
 **Diagram salad after White head**: `34.m:t Kg7` → `34...Kg7` (drop non-SAN `x:y` crumb; promote next SAN to Black). Do not invent `Rf1`.
 
 **Figurine leftover dots**: keep/unglue `h4 .Bh6` / `h4.Bh6` → `h4 Bh6` (punct rule must not treat `.Piece` / `.ih6` like sentence dots; still collapse `ll .d5` → `ll.d5` before `ll`→`11`).
+
+**Black ellipsis salad**: `44 .. .` / `44....` → `44...` (three spaced dots before two-dot rules; collapse leftover fourth dot after punct).
+
+**Rook-as-`g` capture**: `gxb5` / `gxbS` → `Rxb5` when dest file is not adjacent to g (pawn g only takes f/h). Capture dest `S`→`5` (`RxbS`→`Rxb5`).
+
+**Threat legalize**: `Threatening 45.Nc3` keeps written piece — Layer 5 must not rewrite headed SANs after a threat cue (was turning `Nc3`→`Rc3` on the pre-ply board).
 
 **Queen back-rank `l`**: bare `fl` / `Qfl` after a move head → `Qf1` (lost queen figurine + rank `l`→`1`). Knights keep `l`→`7`; bishops/kings keep `l`→`7`.
 

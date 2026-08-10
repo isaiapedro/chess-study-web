@@ -434,6 +434,7 @@ def test_collect_mainline_book_marks_na4():
 
 def test_final_move_gets_post_game_tail():
     """Last mainline ply gets book text after 1-0 / Final remarks; mid-game notes lose it."""
+    import re
     from pathlib import Path
 
     import chess.pgn
@@ -454,6 +455,8 @@ def test_final_move_gets_post_game_tail():
     assert "Final remarks" in tail
     assert "bxc5" in tail
     assert "Chessbase" not in tail
+    assert re.search(r"(?i)Final\s+remarks\n\n1\.", tail)
+    assert not re.search(r"(?i)Final\s+remarks[ \t]+1\.", tail)
 
     pgn = Path("data/annotated/bookwalk/Magnus_Carlsen_vs_Luke_McShane_2009_bookwalk.pgn")
     if not pgn.exists():
@@ -547,3 +550,131 @@ def test_h4_dot_bh6_retargets_defenceless_prose():
     assert bh6.fullmove == 43 and bh6.side == "black"
     assert "Bh6" in (bh6.san_hint or "")
     assert not any(n.fullmove == 43 and n.side == "white" for n in notes)
+
+
+def test_na4_threat_not_glued_to_rxb5():
+    """44.Na4 keeps Threatening 45.Nc3; 44...gxbS → Rxb5 with But now; L5 skips threat."""
+    from pathlib import Path
+
+    import chess.pgn
+
+    from chess_coach.chapter import extract_move_notes
+    from chess_coach.note_legalize import legalize_note_prose
+    from chess_coach.ocr_chess import ocr_clean_chess
+
+    raw = (
+        "44.tlia4!\n"
+        "Threatening 45. l0c3, forcing Black to capture.\n"
+        "44 .. . gxbS\n"
+        "But now:\n"
+        "45 . .ie2! &.b3\n"
+    )
+    cleaned = ocr_clean_chess(raw)
+    assert "44... Rxb5" in cleaned or "44...Rxb5" in cleaned.replace(" ", "")
+    assert "gxbS" not in cleaned
+    assert "44...." not in cleaned
+    assert "Nc3" in cleaned
+    _pre, notes = extract_move_notes(raw)
+    na4 = next(n for n in notes if n.fullmove == 44 and n.side == "white")
+    assert "Threatening 45" in na4.text and "Nc3" in na4.text
+    assert "But now" not in na4.text
+    assert "Rxb5" not in na4.text and "gxb" not in na4.text.lower()
+    rxb = next(n for n in notes if n.fullmove == 44 and n.side == "black")
+    assert "Rxb5" in (rxb.san_hint or "")
+    assert "But now" in rxb.text
+
+    pgn = Path("data/annotated/bookwalk/Magnus_Carlsen_vs_Luke_McShane_2009_bookwalk.pgn")
+    if not pgn.exists():
+        return
+    game = chess.pgn.read_game(pgn.open())
+    board = game.board()
+    node = game
+    while node.variations:
+        node = node.variation(0)
+        if board.fullmove_number == 44 and board.turn == chess.WHITE:
+            fixed = legalize_note_prose(
+                board, "Threatening 45. Nc3, forcing Black to capture."
+            )
+            assert "Nc3" in fixed
+            assert "Rc3" not in fixed
+            break
+        board.push(node.move)
+
+
+def test_be2_score_retargets_key_comment_to_nc5():
+    """45.Be2 … 47.tlicS! + 'This is the key…' belongs on 47.Nc5, not Be2/Qxf6."""
+    from chess_coach.chapter import extract_move_notes
+    from chess_coach.ocr_chess import ocr_clean_chess
+
+    raw = (
+        "But now:\n"
+        "45 . .ie2! &.b3 46.\ufffdxf6t 'it>g8 47.tlicS!\n"
+        "This is the key to White's last four moves: the "
+        "knight is immune, and Black's position is near "
+        "collapse due to the threats l0e6 and ig4-e6.\n"
+        "47 ... \ufffdg3\n"
+        "Making things easier for White.\n"
+    )
+    cleaned = ocr_clean_chess(raw)
+    assert "Kg8" in cleaned
+    assert "'it>" not in cleaned
+    assert "Nc5" in cleaned
+    assert "Nc8" not in cleaned
+    _pre, notes = extract_move_notes(raw)
+    key = next(n for n in notes if "key to White" in n.text)
+    assert key.fullmove == 47 and key.side == "white"
+    assert "Nc5" in (key.san_hint or "")
+    assert not any(n.fullmove == 45 and "key" in n.text for n in notes)
+    assert not any(n.fullmove == 46 and "key" in n.text for n in notes)
+    qg3 = next(n for n in notes if n.fullmove == 47 and n.side == "black")
+    assert "Making things easier" in qg3.text
+    assert "key to White" not in qg3.text
+
+
+def test_rg3_late_game_notes_ocr_and_targets():
+    """47...Rg3 keeps full If/Or/Rb2 note; Suicidal on 50...Be8; 51.Qf3+- strips eval."""
+    from chess_coach.chapter import extract_move_notes
+    from chess_coach.ocr_chess import ocr_clean_chess
+
+    raw = (
+        "47 ... \ufffdg3\n"
+        "Making things easier for White.\n"
+        "If 47 ... dxc5?? 48.d6 Wfff7 (or 48 ... Wffd7 49 .i.c4t)\n"
+        "49 .d7! Wffxd7 50.i.c4t with forced mate.\n"
+        "Or: 47 ... Wffxc5?? 48 .Wie6t 'tt>g7 49.Wff e7t 'tt>g8\n"
+        "50.Wffxe8t 'tt>g7 5 l .Wfff8#\n"
+        "The best defence was 47 .. J\ufffdb2 bur after the\n"
+        "forcing sequence 48.i.g4 i.g7 49.tee 6 Wif7\n"
+        "50.tex g7 Wffxf6 5 l. E:xf6 'tt>xg7 52 .:9'.xd6 the\n"
+        "endgame should be winning for White.\n"
+        "48.tlie6 Yfifl 49.Yfixflt hi7 50.l!bl! \ufffdes\n"
+        "Suicidal is 50 ... i.xe6? 5 l .dxe6 when the threat\n"
+        "is :9'.b8 followed by e6-e7-e8= Wff: 5 l ... i.f8 52.:9'.b8\n"
+        "'tt>g7 53.:9'.b7t 'tt>f6 (or 53 ... 'tt>g8 54. e7+-)\n"
+        "54.E: flt+-\n"
+        "51. \ufffdf3+-\n"
+        "Black cannot defend without the help of his trapped rook.\n"
+    )
+    cleaned = ocr_clean_chess(raw)
+    assert "Qf7" in cleaned and "Wfff" not in cleaned
+    assert "Kg7" in cleaned and "tt>" not in cleaned
+    assert "Rb2" in cleaned and "Ne6" in cleaned and "Nxg7" in cleaned
+    assert "Qxf7+" in cleaned and "Bxf7" in cleaned
+    assert "Be8" in cleaned
+    assert "Rf1+-" in cleaned.replace(" ", "") or "Rf1 +-" in cleaned
+    _pre, notes = extract_move_notes(raw)
+    rg3 = next(n for n in notes if n.fullmove == 47 and n.side == "black")
+    assert "Making things easier" in rg3.text
+    assert "Qf8#" in rg3.text
+    assert "Rb2" in rg3.text
+    assert "winning for White" in rg3.text
+    assert "Wff" not in rg3.text
+    assert not any(
+        n.fullmove == 48 and n.side == "white" and "Suicidal" in n.text for n in notes
+    )
+    be8 = next(n for n in notes if "Suicidal" in n.text)
+    assert be8.fullmove == 50 and be8.side == "black"
+    assert "Be8" in (be8.san_hint or "")
+    qf3 = next(n for n in notes if n.fullmove == 51 and n.side == "white")
+    assert qf3.text.startswith("Black")
+    assert not qf3.text.startswith("-")

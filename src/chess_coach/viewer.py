@@ -926,15 +926,16 @@ def render_html(
   function formatNoteHtml(raw) {{
     let text = ocrCleanClient(stripTag(raw));
     if (!text) return "";
-    text = text.replace(/\r\n?/g, "\n").replace(/[ \t]+\n/g, "\n").replace(/\n[ \t]+/g, "\n");
-    if (!/\n/.test(text)) {{
+    text = text.replace(/\\r\\n?/g, "\\n").replace(/[ \\t]+\\n/g, "\\n").replace(/\\n[ \\t]+/g, "\\n");
+    text = text.replace(/\\b(Final\\s+remarks)\\s+(?=\\d+\\.\\s)/gi, "$1\\n\\n");
+    if (!/\\n/.test(text)) {{
       text = text.replace(
-        /(?:\.(?!\.)|(?<=[a-z]{{2}})[!?]+)\s+(?=(?:The |This |White |Black |Better |Threatening |Followed |An interesting |A better |Not |Once |Again |His |In |After |Precision |Learning |Something |Creating |Preparing |Ignoring |Covering |Aiming |We |It |And as |For example))/g,
-        function (m) {{ return m.replace(/\s+$/, "") + "\n\n"; }}
+        /(?:\\.(?!\\.)|(?<=[a-z]{{2}})[!?]+)\\s+(?=(?:The |This |White |Black |Better |Threatening |Followed |An interesting |A better |Not |Once |Again |His |In |After |Precision |Learning |Something |Creating |Preparing |Ignoring |Covering |Aiming |We |It |And as |For example))/g,
+        function (m) {{ return m.replace(/\\s+$/, "") + "\\n\\n"; }}
       );
     }}
-    text = text.replace(/\n{{3,}}/g, "\n\n").trim();
-    const blocks = text.split(/\n\n+/);
+    text = text.replace(/\\n{{3,}}/g, "\\n\\n").trim();
+    const blocks = text.split(/\\n\\n+/);
     const re = /(\d+\.(?:\.\.)?\s*)?(O-O-O|O-O|[NBRQK][a-h]?[1-8]?x?[a-h][1-8](?:=[NBRQ])?[+#?!]*|[a-h]x[a-h][1-8](?:=[NBRQ])?[+#?!]*|[a-h][1-8](?:=[NBRQ])?[+#?!]*)/g;
     function formatInline(chunk) {{
       let out = "";

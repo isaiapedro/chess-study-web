@@ -369,6 +369,12 @@ def extract_final_move_book_tail(
     elif m and _RESULT_RE.match(tail):
         # Result already consumed by cut; remarks may follow noise
         tail = tail[m.start() :].strip()
+    # Heading ≠ first numbered body item: "Final remarks 1. …" → two blocks
+    tail = re.sub(
+        r"(?i)\b(Final\s+remarks)\s+(?=\d+\.\s)",
+        r"\1\n\n",
+        tail,
+    )
     if not prose_is_usable(tail, min_alpha=40):
         return ""
     return tail[:6000]

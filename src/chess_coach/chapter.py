@@ -717,13 +717,24 @@ def extract_move_notes(text: str) -> tuple[str, list[BookMoveNote]]:
     for seg in segments:
         prose = normalize_prose_breaks(seg.text)
         prose = _TRAILING_BROKEN_MOVE_RE.sub("", prose).strip()
-        if len(prose) < 12:
+        prose = re.sub(r"^(?:\+-|-\+|±|∓)\s*", "", prose)
+        short_ok = bool(
+            re.match(
+                r"(?i)(?:but now|threatening |covering the |suicidal is )\b",
+                prose,
+            )
+        )
+        if len(prose) < 12 and not short_ok:
             continue
         if MOVE_LABEL_RE.fullmatch(prose.strip()):
             continue
-        if len(clean_book_note(prose)) < 12 and not re.search(
-            r"\b(?:The|White|Black|Better|Threatening|Precision|If|Getting|Preparing|Something)\b",
-            prose,
+        if (
+            len(clean_book_note(prose)) < 12
+            and not short_ok
+            and not re.search(
+                r"\b(?:The|White|Black|Better|Threatening|Precision|If|Getting|Preparing|Something|But)\b",
+                prose,
+            )
         ):
             continue
         note = BookMoveNote(

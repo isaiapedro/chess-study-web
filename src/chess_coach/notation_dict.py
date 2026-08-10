@@ -147,6 +147,10 @@ PIECE_OCR_GLYPHS: Final[dict[str, str]] = {
     # King figurines
     "'itl": "K",
     "itl": "K",
+    "'it>": "K",
+    "it>": "K",
+    "'tt>": "K",
+    "tt>": "K",
     # Queen leftovers
     "'Ml'": "Q",
     "'Ml": "Q",

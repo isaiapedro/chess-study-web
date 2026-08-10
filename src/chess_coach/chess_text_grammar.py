@@ -46,7 +46,8 @@ _VARIATION_TAIL_START_RE = re.compile(
     r"Example\b:?|"
     r"followed\s+by\b|"
     r"(?:the\s+)?(?:typical\s+)?(?:manoeuvre|maneuver)\b|"
-    r"with\s+(?:a\s+)?(?:possible\s+)?continuation\b"
+    r"with\s+(?:a\s+)?(?:possible\s+)?continuation\b|"
+    r"If\s+\d+\.(?:\.\.)?"
     r")"
 )
 
@@ -65,6 +66,7 @@ _COACHING_OPEN_RE = re.compile(
     r"We are close|The most accurate|Aiming for|Covering the |"
     r"And as usually|A better defence|Black missed|Weak is |"
     r"The (?:knight|bishop|rook|queen|king|pawn|piece) |"
+    r"But now|Suicidal is |"
     r"If |When |While |Although |Though |Should |"
     r"[!?]+\s*(?:A |The |This |White |Black |It |There )"
     r")",
@@ -95,6 +97,8 @@ def normalize_ellipsis_forms(text: str) -> str:
     out = re.sub(r"\.\s*[•·∙⋅]+\s*\.", "...", out)
     out = re.sub(r"\b(\d+)\s*\.\s*[•·∙⋅]+\s*\.\s*", r"\1... ", out)
     out = re.sub(r"\b(\d+)\s+[•·∙⋅]+\s*\.\s*", r"\1... ", out)
+    # Three spaced dots before two-dot rules: "44 .. . SAN" → "44... SAN"
+    out = re.sub(r"\b(\d+)\s*\.\s*\.\s*\.\s*", r"\1... ", out)
     out = re.sub(r"\b(\d+)\s*\.\s*\.\.\s*", r"\1...", out)
     out = re.sub(r"\b(\d+)\s+\.\.\.?\s*", r"\1...", out)
     out = re.sub(r"\b(\d+)\s*\.\s*\.\s+", r"\1... ", out)
@@ -110,6 +114,9 @@ def normalize_ellipsis_forms(text: str) -> str:
         r"\1.",
         out,
     )
+    # Leftover fourth dot after ellipsis: 44... . / 44.... → 44...
+    out = re.sub(r"\b(\d+)\.{3}\s*\.(?!\.)", r"\1...", out)
+    out = re.sub(r"\b(\d+)\.{4,}", r"\1...", out)
     return out
 
 
@@ -372,22 +379,28 @@ def segment_score_lines(text: str) -> tuple[str, list[ScoreLineNote]]:
 
         last = group[-1]
         prose_start = last.end()
+        # Informator eval after SAN is move annotation, not prose lead-in
+        m_ev = re.match(r"\s*(?:\+-|-\+|±|∓)", text[prose_start:])
+        if m_ev:
+            prose_start += m_ev.end()
         prose_end = opens[j].start() if j < len(opens) else min(len(text), prose_start + 4000)
         # If next open is mid-prose variation that somehow got in, still cut there
         prose = text[prose_start:prose_end].strip()
+        prose = re.sub(r"^(?:\+-|-\+|±|∓)\s*", "", prose)
 
-        # Skip empty / label-only crumbs
-        if len(prose) >= 12 and not MOVE_LABEL_RE.fullmatch(prose):
-            notes.append(
-                ScoreLineNote(
-                    fullmove=int(last.group("num")),
-                    side=_label_side(last),
-                    san=last.group("move"),
-                    text=prose[:4000],
-                    label_start=last.start(),
-                    label_end=last.end(),
+        # Skip empty / label-only crumbs; keep short coaching cues ("But now:")
+        if prose and not MOVE_LABEL_RE.fullmatch(prose):
+            if len(prose) >= 12 or _COACHING_OPEN_RE.match(prose):
+                notes.append(
+                    ScoreLineNote(
+                        fullmove=int(last.group("num")),
+                        side=_label_side(last),
+                        san=last.group("move"),
+                        text=prose[:4000],
+                        label_start=last.start(),
+                        label_end=last.end(),
+                    )
                 )
-            )
         i = j
 
     return preamble, notes
