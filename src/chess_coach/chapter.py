@@ -615,6 +615,9 @@ def _retarget_through_leading_score(note: BookMoveNote) -> BookMoveNote:
     Books print a short score then the comment on the last move, e.g.
     ``27...Bf6 28.Qd2`` / ``Preparing a4-a5…``, or labeled ``21.bxc5`` with
     body ``Nxb5`` then coaching. Commentary belongs on the last score move.
+
+    Walks labeled plies and bare replies (including OCR leftover ``.Bh6``)
+    until coaching prose starts.
     """
     from chess_coach.ocr_chess import _PROSE_START_RE, prose_is_usable, strip_diagrams
 
@@ -629,46 +632,53 @@ def _retarget_through_leading_score(note: BookMoveNote) -> BookMoveNote:
     moved = False
     bare_san = re.compile(rf"(?P<move>{MOVE_TOKEN})", re.I)
 
-    while pos < len(text):
-        ws = re.match(r"[ \t]+", text[pos:])
-        if ws:
-            pos += ws.end()
-        m = MOVE_LABEL_RE.match(text, pos)
-        if not m:
-            break
-        num = int(m.group("num"))
-        if not moved:
-            if num < note.fullmove or num > note.fullmove + 1:
-                break
-        elif num < fm or num > fm + 1:
-            break
-        fm = num
-        side = "black" if m.group("dots") else "white"
-        san = m.group("move")
-        pos = m.end()
-        moved = True
-
-    while pos < len(text):
-        ws = re.match(r"\s+", text[pos:])
-        if ws:
-            pos += ws.end()
-        m = bare_san.match(text, pos)
-        if not m:
-            break
-        after = text[m.end() :]
-        probe = strip_diagrams(after).lstrip()
-        if not _PROSE_START_RE.match(probe):
-            m2 = bare_san.match(probe)
-            if not m2:
-                break
-            probe2 = strip_diagrams(probe[m2.end() :]).lstrip()
-            if not _PROSE_START_RE.match(probe2):
-                break
+    def _accept_white_to_black() -> None:
+        nonlocal side, fm
         if side == "white":
             side = "black"
         else:
             side = "white"
             fm += 1
+
+    while pos < len(text):
+        ws = re.match(r"\s+", text[pos:])
+        if ws:
+            pos += ws.end()
+            continue
+        if _PROSE_START_RE.match(strip_diagrams(text[pos:]).lstrip()):
+            break
+
+        m = MOVE_LABEL_RE.match(text, pos)
+        if m:
+            num = int(m.group("num"))
+            if not moved:
+                if num < note.fullmove or num > note.fullmove + 1:
+                    break
+            elif num < fm or num > fm + 1:
+                break
+            fm = num
+            side = "black" if m.group("dots") else "white"
+            san = m.group("move")
+            pos = m.end()
+            moved = True
+            continue
+
+        # OCR leftover figurine dot before reply SAN: ".Bh6 The knight…"
+        if text[pos : pos + 1] == "." and pos + 1 < len(text) and text[pos + 1].isalpha():
+            pos += 1
+        m = bare_san.match(text, pos)
+        if not m:
+            break
+        after = text[m.end() :]
+        probe = strip_diagrams(after).lstrip()
+        next_move = bool(
+            _PROSE_START_RE.match(probe)
+            or MOVE_LABEL_RE.match(probe)
+            or bare_san.match(probe)
+        )
+        if not next_move:
+            break
+        _accept_white_to_black()
         san = m.group("move")
         pos = m.end()
         moved = True
@@ -678,7 +688,7 @@ def _retarget_through_leading_score(note: BookMoveNote) -> BookMoveNote:
     if not moved:
         return note
     rest = strip_diagrams(text[pos:]).strip()
-    if not prose_is_usable(rest, min_alpha=30):
+    if not prose_is_usable(rest, min_alpha=20):
         return note
     if fm == note.fullmove and side == note.side:
         return note

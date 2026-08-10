@@ -64,6 +64,7 @@ _COACHING_OPEN_RE = re.compile(
     r"It was preferable|Once again|The battle is|The only move|"
     r"We are close|The most accurate|Aiming for|Covering the |"
     r"And as usually|A better defence|Black missed|Weak is |"
+    r"The (?:knight|bishop|rook|queen|king|pawn|piece) |"
     r"If |When |While |Although |Though |Should |"
     r"[!?]+\s*(?:A |The |This |White |Black |It |There )"
     r")",

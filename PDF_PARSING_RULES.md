@@ -84,10 +84,23 @@ Annotation `?!` on a SAN is **not** a sentence break (does not open a new score 
 | `OCR_ALIASES` | `?f`→`?!`, `;i;`/`;!;`/`!;!;`/`+=`→`⩲` |
 | Lookahead leftovers | `W`→K/Q by file; lone `i`→`B`; `iB`→`B`; `lt>`/`'itl`→`K`; `!'l:`/`El`/`E'`→`R`; `l0`→`N`; `4o.`→`40.`; `hfl`→`Bxf1`; SAN `t`→`+` (check); `#` = checkmate (dict); `;t`→`⩲`; R/`l`→rank1, N/`l`→rank7. |
 
-**Spaced SAN glue** (`glue_spaced_san` in `ocr_chess.py`, mirrored in viewer): after glyphs, collapse OCR spaces inside moves — `lilc 6`→`Nc6`, `fx e4`/`fic e4`→`fxe4`, `Ra 1`→`Ra1`, missing capture `x` on **adjacent** files **except leading `h`** (`fg5`→`fxg5`; `hg3`/`hc4`→`Bxg3`/`Bxc4` because Quality Chess bishop figurine OCR as `h`). Real h-pawn captures keep `x`: `hxg3` / `h xg4`. Glyph dict alone is not enough when file/rank is spaced.
+**Spaced SAN glue** (`glue_spaced_san` in `ocr_chess.py`, mirrored in viewer): after glyphs, collapse OCR spaces inside moves — `lilc 6`→`Nc6`, `fx e4`/`fic e4`→`fxe4`, `Ra 1`→`Ra1`, missing capture `x` on **adjacent** files **except leading `h`** (`fg5`→`fxg5`; `hg3`/`hc4`→`Bxg3`/`Bxc4` because Quality Chess bishop figurine OCR as `h`). Real h-pawn captures keep `x`: `hxg3` / `h xg4`. Glyph dict alone is not enough when file/rank is spaced. Bishop-as-`h` + file + OCR-rank `l`/`I`: `hfl`→`Bxf1`.
 
-**Move-number `L`**: `3 Llilb4` → `31.Nb4` (`L` OCR for tens digit `1`, including before lowercase knight glyphs `lil`/`lt`/`ll`).
+**Move-number `L` / `ll`**: `3 Llilb4` → `31.Nb4`; `ll.d5` / `ll .d5` → `11.d5` (digit `1` OCR as `l`).
 
+**Lost piece + OCR rank digit**: after a move head, `U+FFFD` + `0`/`o`/`O` (rank `3↔0`) bootstraps an **f-file square** (`41.� 0` → `41. f3`). Dict maps `&.sq` → bishop (`Bb6`). Align matches same destination; Layer 5 fills piece / capture when unique (`f3`~`Bf3`, `Bb6`→`Rxb6`). Do **not** hardcode `Bf3 Rxb6` in OCR.
+
+**Diagram salad after White head**: `34.m:t Kg7` → `34...Kg7` (drop non-SAN `x:y` crumb; promote next SAN to Black). Do not invent `Rf1`.
+
+**Figurine leftover dots**: keep/unglue `h4 .Bh6` / `h4.Bh6` → `h4 Bh6` (punct rule must not treat `.Piece` / `.ih6` like sentence dots; still collapse `ll .d5` → `ll.d5` before `ll`→`11`).
+
+**Queen back-rank `l`**: bare `fl` / `Qfl` after a move head → `Qf1` (lost queen figurine + rank `l`→`1`). Knights keep `l`→`7`; bishops/kings keep `l`→`7`.
+
+**Bishop + file + marks, lost rank**: `ia?!` → `Ba?!` (Layer 5 fills when unique). Do not hardcode `Ba7!`.
+
+**Rank letter `s`/`S`→`8`**: `f?ds` → `f?d8` → `Qd8` via glyph `f?`→`Q`.
+
+**Retarget**: `_retarget_through_leading_score` walks labeled plies **and** bare replies (incl. leading `.SAN`) until a coaching opener; attaches prose to the last score move.
 ---
 
 ## Layer 4 — Fixture corpus

@@ -288,7 +288,7 @@ _SAN_CONT_RE = re.compile(
     r"^\s*(?:"
     r"[a-h]?\s*[1-8]?\s*x\s*[a-h]\s*[1-8]|"
     r"[a-h]\s*[1-8]|"
-    r"[a-h][1-8]|"
+    r"[a-h][lI1-8sS]|"
     r"x\s*[a-h]|"
     r"[1-8]"
     r")(?:-\s*[a-h]\s*[1-8])?[+#?!]*"
@@ -347,7 +347,7 @@ def replace_piece_ocr_glyphs(text: str) -> str:
         # Optional space between glyph and square (OCR "lil b4", "lilc 6")
         out = re.sub(
             rf"(?<![A-Za-z0-9]){re.escape(glyph)}\s*"
-            rf"(?=(?:[a-h]?\s*[1-8]?\s*x\s*[a-h]\s*[1-8]|[a-h]\s*[1-8]|[a-h][1-8]|x\s*[a-h]|[1-8])"
+            rf"(?=(?:[a-h]?\s*[1-8]?\s*x\s*[a-h]\s*[1-8]|[a-h]\s*[1-8]|[a-h][lI1-8sS]|x\s*[a-h]|[1-8])"
             rf"(?:-\s*[a-h]\s*[1-8])?[+#?!]*)",
             repl,
             out,

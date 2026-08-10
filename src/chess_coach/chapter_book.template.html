@@ -154,32 +154,38 @@
       box-sizing: border-box;
     }
     .eval-readout {
-      display: flex; flex-direction: column; align-items: stretch;
-      gap: 0.28rem; margin: 0; min-width: 0;
-      width: 100%;
+      display: flex; flex-direction: column; align-items: stretch; justify-content: center;
+      gap: 0.2rem; margin: 0; min-width: 0;
+      flex: 1 1 auto;
       font-variant-numeric: tabular-nums;
-      min-height: calc(1.25rem + 0.28rem + 3 * 1.35em + 2 * 0.12rem);
+      min-height: 3rem;
     }
     .eval-top {
       display: flex; align-items: center; justify-content: flex-start;
       gap: 0.5rem; min-width: 0; width: 100%;
+      min-height: 1.2rem;
     }
     .eval-score-row { display: inline-flex; align-items: center; gap: 0.4rem; min-width: 0; }
     .eval-score {
-      font-size: 1.25rem; font-weight: 700; letter-spacing: -0.4px; color: var(--text);
+      font-size: 1.05rem; font-weight: 700; letter-spacing: -0.4px; color: var(--text);
     }
     .eval-lines {
-      display: flex; flex-direction: column; gap: 0.12rem;
+      display: flex; flex-direction: column; gap: 0.08rem;
       margin: 0; padding: 0; list-style: none;
-      font-family: var(--mono); font-size: 0.6875rem; line-height: 1.35;
+      font-family: var(--mono); font-size: 0.6875rem; line-height: 1.3;
       color: var(--text-soft); min-width: 0;
-      height: calc(3 * 1.35em + 2 * 0.12rem);
+      height: calc(3 * 1.3em + 2 * 0.08rem);
+      min-height: calc(3 * 1.3em + 2 * 0.08rem);
       overflow: hidden;
     }
     .eval-lines.is-stale { opacity: 0.45; }
     .eval-lines li {
       display: grid; grid-template-columns: 1.1rem 2.6rem minmax(0, 1fr);
       gap: 0.35rem; align-items: baseline; min-width: 0;
+      min-height: 1.3em;
+    }
+    .eval-lines li.is-empty {
+      visibility: hidden;
     }
     .eval-lines .rank { color: var(--text-dim); }
     .eval-lines .score { color: var(--text); font-weight: 600; }
@@ -276,17 +282,20 @@
     }
     .board-chrome {
       grid-row: 1;
-      grid-column: 2;
+      grid-column: 1 / -1;
       display: flex;
-      justify-content: flex-end;
+      flex-direction: row;
+      justify-content: space-between;
       align-items: center;
-      min-height: 2.85rem;
-      margin: 0 0 0.4rem;
-      padding: 0 0.05rem;
+      gap: 0.55rem;
+      min-height: 3rem;
+      margin: 0 0 0.35rem;
+      padding: 0;
       box-sizing: border-box;
     }
     .ply-badge {
       position: static;
+      flex: 0 0 auto;
       min-width: 3rem;
       height: 3rem;
       padding: 0 0.55rem;
@@ -594,8 +603,9 @@
         gap: 0.28rem;
       }
       .board-chrome {
-        min-height: 2.1rem;
+        min-height: 2.4rem;
         margin: 0 0 0.2rem;
+        gap: 0.4rem;
       }
       .ply-badge {
         min-width: 2.4rem;
@@ -609,17 +619,23 @@
         box-shadow: 0 10px 24px rgba(0, 0, 0, 0.5);
       }
       .eval-readout {
-        gap: 0.12rem;
-        min-height: calc(1.05rem + 0.12rem + 3 * 1.25em + 2 * 0.06rem);
+        gap: 0.08rem;
+        min-height: 2.4rem;
       }
-      .eval-score { font-size: 1.05rem; }
+      .eval-top { min-height: 1.05rem; }
+      .eval-score { font-size: 0.95rem; }
       .eval-lines {
         font-size: 0.625rem;
         line-height: 1.25;
         height: calc(3 * 1.25em + 2 * 0.06rem);
+        min-height: calc(3 * 1.25em + 2 * 0.06rem);
         gap: 0.06rem;
       }
-      .eval-lines li { grid-template-columns: 1rem 2.3rem minmax(0, 1fr); gap: 0.25rem; }
+      .eval-lines li {
+        grid-template-columns: 1rem 2.3rem minmax(0, 1fr);
+        gap: 0.25rem;
+        min-height: 1.25em;
+      }
       .move-keys { gap: 0.28rem; width: 100%; }
       .move-keys button { min-height: 2.35rem; border-radius: var(--r-md); }
       .move-keys .ico { width: 1.1em; height: 1.1em; }
@@ -669,19 +685,23 @@
         <p class="page-meta" id="gameMeta"></p>
       </div>
       <div class="board-dock" id="boardDock">
-        <div class="eval-readout">
-          <div class="eval-top">
-            <span class="eval-score-row">
-              <span class="eval-score" id="evalScore">—</span>
-            </span>
-          </div>
-          <ol class="eval-lines" id="evalLines" aria-label="Top engine lines"></ol>
-        </div>
         <div class="board-row" id="boardRow">
-          <div class="eval-bar" title="White-POV eval"><div class="eval-white" id="evalWhite"></div></div>
           <div class="board-chrome">
+            <div class="eval-readout">
+              <div class="eval-top">
+                <span class="eval-score-row">
+                  <span class="eval-score" id="evalScore">—</span>
+                </span>
+              </div>
+              <ol class="eval-lines" id="evalLines" aria-label="Top engine lines">
+                <li class="is-empty"><span class="rank">1.</span><span class="score">—</span><span class="pv">—</span></li>
+                <li class="is-empty"><span class="rank">2.</span><span class="score">—</span><span class="pv">—</span></li>
+                <li class="is-empty"><span class="rank">3.</span><span class="score">—</span><span class="pv">—</span></li>
+              </ol>
+            </div>
             <div class="ply-badge is-empty" id="plyBadge" title="Current move">—</div>
           </div>
+          <div class="eval-bar" title="White-POV eval"><div class="eval-white" id="evalWhite"></div></div>
           <div class="board-wrap" id="boardWrap">
             <div id="board"></div>
             <svg class="board-arrows" id="boardArrows" aria-hidden="true"></svg>
@@ -1146,8 +1166,15 @@
     out = out.replace(/^J\.([a-h][1-8])$/g, "B$1");
     out = out.replace(/^(?:§)(?=[a-hx])/g, "R");
     out = out.replace(/^([NBRQK])x?c[lI]$/g, "$1xc1");
-    out = out.replace(/^([NBRQK])([a-h])[lI]$/g, function (_m, p, f) { return p + f + "1"; });
-    out = out.replace(/([a-h])[lI](?=[+#?!]*$)/g, "$11");
+    // Rank OCR: R/Q→1, N→7, B/K→7; bare file+l = lost queen → Qf1
+    out = out.replace(/^([NBRQK]x[a-h])[lI]$/g, "$11");
+    out = out.replace(/^R([a-h])[lI]$/g, "R$11");
+    out = out.replace(/^Q([a-h])[lI]$/g, "Q$11");
+    out = out.replace(/^N([a-h])[lI]$/g, "N$17");
+    out = out.replace(/^([BK][a-h])[lI]$/g, "$17");
+    out = out.replace(/^([NBRQK][a-h])[sS]$/g, "$18");
+    out = out.replace(/^([a-h])[lI](?=[+#?!]*$)/g, "Q$11");
+    out = out.replace(/(?<![NBRQK])([a-h])[lI](?=[+#?!]*$)/g, "$11");
     out = out.replace(/^([a-h])\s+x\s*([a-h][1-8])/g, "$1x$2");
     out = out.replace(/^([a-h])\s+([a-h][1-8])$/g, "$1$2");
     out = out.replace(/^([a-h])\s+([1-8])$/g, "$1$2");
@@ -1195,7 +1222,7 @@
         continue;
       }
       if (!rest.trim()) continue;
-      if (/^\s*(?:[a-h]?\s*[1-8]?\s*x\s*[a-h]\s*[1-8]|[a-h]\s*[1-8]|[a-h][1-8]|x\s*[a-h]|[1-8])(?:-\s*[a-h]\s*[1-8])?[+#?!]*/.test(rest)
+      if (/^\s*(?:[a-h]?\s*[1-8]?\s*x\s*[a-h]\s*[1-8]|[a-h]\s*[1-8]|[a-h][lI1-8sS]|x\s*[a-h]|[1-8])(?:-\s*[a-h]\s*[1-8])?[+#?!]*/.test(rest)
           || (/^[NBRQK][a-h]$/.test(repl) && /^\s*[1-8]/.test(rest))) {
         return repl + (rest.charAt(0) === " " || rest.charAt(0) === "\t" ? rest.replace(/^\s+/, "") : rest);
       }
@@ -1215,7 +1242,7 @@
       }
       out = out.replace(
         new RegExp(
-          "(?<![A-Za-z0-9])" + esc + "\\s*(?=(?:[a-h]?\\s*[1-8]?\\s*x\\s*[a-h]\\s*[1-8]|[a-h]\\s*[1-8]|[a-h][1-8]|x\\s*[a-h]|[1-8])(?:-\\s*[a-h]\\s*[1-8])?[+#?!]*)",
+          "(?<![A-Za-z0-9])" + esc + "\\s*(?=(?:[a-h]?\\s*[1-8]?\\s*x\\s*[a-h]\\s*[1-8]|[a-h]\\s*[1-8]|[a-h][lI1-8sS]|x\\s*[a-h]|[1-8])(?:-\\s*[a-h]\\s*[1-8])?[+#?!]*)",
           "g"
         ),
         repl
@@ -1241,6 +1268,7 @@
     // Bishop figurine OCR as h / .h: hc4 → Bxc4, hg3 → Bxg3
     out = out.replace(/\.h(?=[a-h][1-8])/g, "Bx");
     out = out.replace(/\bh([a-h][1-8])\b/gi, "Bx$1");
+    out = out.replace(/\bh([a-h])[lI]\b/gi, "Bx$11");
     out = out.replace(/\b([NBRQK])([a-h])\s+([1-8])\b/g, "$1$2$3");
     out = out.replace(/\b([NBRQK])\s+([a-h][1-8])\b/g, "$1$2");
     out = out.replace(/\b([NBRQK][a-h]?[1-8]?)x\s+([a-h][1-8])\b/g, "$1x$2");
@@ -1264,9 +1292,18 @@
     let out = String(text || "").replace(/\u00a0/g, " ");
     // Queen figurine → U+FFFD before square/capture: 30.�d2 / 31.� xa5 → Q…
     out = out.replace(/\uFFFD\s*(?=x?[a-h][1-8])/g, "Q");
-    out = out.replace(/\uFFFD\s*f[lI]\b/g, "Qf1");
+    // Lost piece + OCR rank digit (3↔0): bootstrap f-file square (align + L5 fill piece)
+    out = out.replace(/\b(\d+)\s*\uFFFD\s*([0oOlIi])\b/g, function (_m, n, d) {
+      const rank = ({ "0": "3", o: "3", O: "3", l: "1", I: "1", i: "1" })[d] || d;
+      return n + ". f" + rank;
+    });
+    out = out.replace(/\uFFFD\s*(?=f[l1I]\b)/g, "Q");
     out = out.replace(/\uFFFD(?=[a-h][l1I])/g, "Q");
-    out = out.replace(/\uFFFD/g, "").replace(/[\u2018\u2019\u02bc]/g, "'").replace(/\\/g, "");
+    out = out.replace(/\uFFFD/g, "");
+    out = out.replace(/\b(\d+)\s+([0oO])\s+(?=&\.)/g, function (_m, n) {
+      return n + ". f3 ";
+    });
+    out = out.replace(/[\u2018\u2019\u02bc]/g, "'").replace(/\\/g, "");
     out = out.replace(/0\s*-{1,3}\s*0\s*-{1,3}\s*0/g, "O-O-O").replace(/0\s*-{1,3}\s*0/g, "O-O");
     out = out.replace(/\b([a-z]{2,}[a-egh])\+/g, "$1t");
     out = out.replace(/([a-h][1-8])\.(?=If\b)/g, "$1. ");
@@ -1282,18 +1319,20 @@
     out = out.replace(/\b(\d+)\s+\.\.\.?\s*/g, "$1...");
     out = out.replace(/\b(\d+)\s*\.\s*\.\s+/g, "$1... ");
     out = out.replace(/\b(\d+)\.\.(?!\.)(?=[NBRQK]|[1lI'"%@&§]|id|if|il|lt|l')/g, "$1.");
-    // Move-number OCR: 3 Llilb4 → 31.lilb4
+    // Move-number OCR: 3 Llilb4 → 31.lilb4; ll.d5 → 11.d5
     out = out.replace(/\b(\d)[ \t]+[lI][ \t]*\.\s*/g, function (_m, d) { return d + "1."; });
     out = out.replace(/\b(\d)[ \t]+L(?=[NBRQK1'lia-hlt/])/g, function (_m, d) { return d + "1."; });
     out = out.replace(/\b(\d)[ \t]+L\.(?=[NBRQK1'lia-hlt/])/g, function (_m, d) { return d + "1."; });
+    out = out.replace(/\bll\s*\.(?=\s*[NBRQKa-h])/g, "11.");
+    out = out.replace(/\bl([1-9])\s*\.(?=\s*[NBRQKa-h])/g, "1$1.");
     // Rook OCR E:b3 / E:5c7 (colon breaks tokenRe)
     out = out.replace(/(?<![A-Za-z0-9])E:(?=[a-h1-8x])/g, "R");
     out = out.replace(/\.§(?=[a-h])/g, "R");
     out = out.replace(/(?<![A-Za-z0-9])§(?=[a-h])/g, "R");
-    // Bishop OCR lost-dot ixb6 / ia6 / ia?!
+    // Bishop OCR lost-dot ixb6 / ia6 / ia?! → Ba?! (L5 fills rank)
     out = out.replace(/(?<![A-Za-z0-9])i(?=x[a-h][1-8])/g, "B");
     out = out.replace(/(?<![A-Za-z0-9])i(?=a[1-8])/g, "B");
-    out = out.replace(/(?<![A-Za-z0-9])ia\?!/g, "Ba7!");
+    out = out.replace(/(?<![A-Za-z0-9])i([a-h])(?=[!?]{1,3})/g, "B$1");
     out = out.replace(/(?<![A-Za-z0-9])i\s+([a-h][1-8])/g, "B$1");
     out = out.replace(/\{(?=\s*or\b)/gi, "(");
     out = out.replace(/\{(?=\s*\d+\.)/g, "(");
@@ -1301,9 +1340,7 @@
     out = out.replace(/\bJ(?=[a-h][1-8])/g, "R");
     out = out.replace(/\b(\d+)\.\s*[Gg](?=[a-h][1-8]\b)/g, "$1. R");
 
-    // Knight OCR illfl / illf1 → Nf7
-    out = out.replace(/\billf[l1I]\b/gi, "Nf7");
-    // Score-line figurine bootstrap: ffe2 / !:ib7 / ttlc4 / @hi / f?ds / m:t
+    // Score-line figurine bootstrap: ffe2 / !:ib7 / ttlc4 / @hi
     out = out.replace(/\bff(?=[a-h][1-8])/g, "Q");
     out = out.replace(/\bttl(?=[a-h])/gi, "N");
     out = out.replace(/\btli(?=[a-h])/gi, "N");
@@ -1312,10 +1349,13 @@
     out = out.replace(/:t:/g, "±");
     out = out.replace(/(?<=[NBRQKa-h1-8])\s*:t\b/g, "±");
     out = out.replace(/@(?=[a-h])/g, "K");
-    out = out.replace(/\bKh[iI]\b/g, "Kh1");
-    out = out.replace(/\bf\?d[sS8]\b/g, "Qd8");
-    out = out.replace(/\bm:t\b/g, "Rf1");
-    out = out.replace(/\bQd[sS]\b/g, "Qd8");
+    out = out.replace(/\b(K[a-h])[iI]\b/g, "$11");
+    out = out.replace(/\b(f\?|[NBRQK])([a-h])[sS]\b/g, "$1$28");
+    // Diagram salad after White head: 34.m:t Kg7 → 34...Kg7 (no Rf1 invent)
+    out = out.replace(
+      /\b(\d+)\.\s*[a-z]{1,2}:[a-z0-9]{1,2}\s+(?=(?:O-O-O|O-O|[NBRQK][a-hx]|[a-h]x?[a-h]?[1-8]))/gi,
+      "$1... "
+    );
     // Rule A: move number not a rank after file / hyphen (a4-a5. / exd5.)
     const headRe = /(?:(?<![a-h\-])(\d{1,3})\s*(\.\.\.|\.)|(?<!\d)(\.\.\.))\s*/g;
     const junkRe = /^(?:[•·∙⋅]+\s*|'+\s*\(!?\s*|\(\s*!\s*)+/;
@@ -1362,6 +1402,8 @@
     built += out.slice(pos);
     built = built.replace(/\b([NBRQK][a-h]?[1-8]?x?[a-h][1-8][+#]?)\.([NBRQK][a-hx])/g, "$1 $2");
     built = built.replace(/[ \t]+/g, " ");
+    // Keep space before ".Bh6"/".ih6"; collapse before ".d5" pawn
+    built = built.replace(/ +([,;:!?]|\.(?![NBRQK][a-hx]|i[a-h]))/g, "$1");
     built = replacePieceOcrGlyphs(built);
     built = glueSpacedSan(built);
     // Rook / knight / king / queen salad mid-prose (Quality Chess)
@@ -1382,9 +1424,10 @@
       /\b([NBRQK][a-h]?[1-8]?x?[a-h][1-8][+#?!]*)(?=[NBRQK][a-hx])/g,
       "$1 "
     );
+    built = built.replace(/\b([a-h][1-8][+#?!]*)\.([NBRQK][a-hx])/g, "$1 $2");
+    built = built.replace(/(?<=[a-h1-8+#?!])\s+\.([NBRQK][a-hx])/g, " $1");
 
     built = built.replace(/\b(\d)[oO]\.(?=\s*[NBRQKa-h])/g, "$10.");
-    built = built.replace(/\bhf[l1]\b/gi, "Bxf1");
     built = built.replace(
       /\b([NBRQK]?[a-h]?[1-8]?x?[a-h][1-8]|O-O-O|O-O)t(?=\s|$|[;,)\]}?!])/g,
       "$1+"
@@ -1394,16 +1437,17 @@
       "$1$2 +-"
     );
     built = built.replace(/;t\b/g, " ⩲");
-    // Piece+file+l: Rooks→1, Knights→7, B/Q/K→7; captures →1
+    // Piece+file+l: R/Q→1, N→7, B/K→7; captures →1
     built = built.replace(/\b([NBRQK]x[a-h])\s*[lI]\b/g, "$11");
     built = built.replace(/\b([NBRQK]x[a-h])[lI]\b/g, "$11");
     built = built.replace(/\bR([a-h])[lI](?=[+#?!]|\b)/g, "R$11");
+    built = built.replace(/\bQ([a-h])[lI](?=[+#?!]|\b)/g, "Q$11");
     built = built.replace(/\bN([a-h])[lI](?=[+#?!]|\b)/g, "N$17");
-    built = built.replace(/\b([BQK][a-h])[lI](?=[+#?!]|\b)/g, "$17");
+    built = built.replace(/\b([BK][a-h])[lI](?=[+#?!]|\b)/g, "$17");
+    built = built.replace(/\b([NBRQK][a-h])[sS]\b/g, "$18");
     built = built.replace(/\b(\d+)\.\.(?!\.)(?=[NBRQK])/g, "$1.");
-    // Queen OCR lost figurine: 38.fl?! / Qfl → Qf1
-    built = built.replace(/\b(\d+)\.\s*f[lI](?=[+#?!]|\b)/g, "$1. Qf1");
-    built = built.replace(/\bQf[lI]\b/g, "Qf1");
+    // Lost queen figurine: bare file+l/I after move head → Q + file + 1
+    built = built.replace(/\b(\d+)\.\s*([a-h])[lI](?=[+#?!]|\b)/g, "$1. Q$21");
     built = built.replace(
       /((?:O-O-O|O-O|[NBRQK]?[a-h]?[1-8]?x?[a-h][1-8](?:=[NBRQ])?[+#]?|[a-h]x[a-h][1-8]|[a-h][1-8])[!?]{0,3})(?:;!;|!;!;|;[il1I]+;?)/gi,
       "$1 ⩲"
@@ -1839,7 +1883,13 @@
     renderNotes(); renderMoveList(); setButtons(); updateBookHint();
     if (miss) {
       elScore.textContent = "—";
-      if (elLines) elLines.innerHTML = "";
+      if (elLines) {
+        elLines.classList.remove("is-stale");
+        elLines.innerHTML = ""
+          + '<li class="is-empty"><span class="rank">1.</span><span class="score">—</span><span class="pv">—</span></li>'
+          + '<li class="is-empty"><span class="rank">2.</span><span class="score">—</span><span class="pv">—</span></li>'
+          + '<li class="is-empty"><span class="rank">3.</span><span class="score">—</span><span class="pv">—</span></li>';
+      }
       elWhite.style.height = "50%";
       clearBookSquareBadge();
 
@@ -2198,13 +2248,21 @@
       return;
     }
     elLines.classList.remove("is-stale");
-    elLines.innerHTML = lines.map(function (line, i) {
+    const slots = [];
+    for (let i = 0; i < MULTIPV; i++) {
+      const line = lines[i];
+      if (!line) {
+        slots.push('<li class="is-empty"><span class="rank">' + (i + 1) + ".</span>"
+          + '<span class="score">—</span><span class="pv">—</span></li>');
+        continue;
+      }
       const score = formatScore(line.cp, line.mate);
       const pv = escapeHtml(line.pvSan || (line.pvUci || []).join(" ") || "");
-      return '<li><span class="rank">' + (i + 1) + ".</span>"
+      slots.push('<li><span class="rank">' + (i + 1) + ".</span>"
         + '<span class="score">' + escapeHtml(score) + "</span>"
-        + '<span class="pv">' + pv + "</span></li>";
-    }).join("");
+        + '<span class="pv">' + pv + "</span></li>");
+    }
+    elLines.innerHTML = slots.join("");
   }
 
   function startEngineSearch(fen) {
