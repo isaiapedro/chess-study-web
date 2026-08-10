@@ -1,0 +1,63 @@
+Radoslaw Wojtaszek- Dariusz Swiera 
+Warsaw 2011 
+Learning objective: This game reinforces 
+the idea that White is ultimately the one 
+who can gain control of the c-file, despite 
+Black having extra moves. In particular, the 
+reader should notice Black's lack of targets. 
+I.d4 �f6 2.c4 e6 3.g3 d5 4 . .ig2 i.h4t 5.�d2 
+0-06.�gf.3 dxc47.�c2 �c6 8.�xc4 .id6?! 
+This opening imprecision allows White to gain 
+a firm control of the centre. 
+Better was 8 ... �d5 9. 0-0 hd2 1 O.�xd5 exd5 
+l 1. hd2 E:e8 12. e3 if5 with reasonable chances 
+for Black. 
+9.0--0 �e7 10.e4 e5 ll .d5 �b8 12.�c2 �bd7 
+13.�c4 �b6 
+a b c d e f g h 
+We have reached an interesting position. 
+White has a notable advantage because of his 
+good control of the centre, and the backward c7-
+pawn, but how shall he take advantage of these 
+factors? The answer is the rather paradoxical but 
+strong: 
+14.�xd6! cxd6 
+And the resulting position is the beginning 
+of our study. We have reached the structure of 
+this chapter, and this is the moment to assess che 
+position. At first sight it might seem that Black 
+is doing completely fine, as he may soon start 
+to fight for the c-file with ... �d7 and ... E:ac8. 
+Moreover, Black's dark-squared bishop (the bad 
+bishop) has already been traded so he should 
+have nothing to worry about. Unfortunately 
+for Black,. reality is not so simple. The biggest 
+pro�lem is that, as in the previous game, 
+White has a significant space advantage due to 
+the �vourable e4-d5 vs e5-d6 chain. Despite 
+Blacks temporary activity, White will be able to 
+re?rganize �is p!eces more efficiently and emerge 
+wtth a dommattng position. 
+15.a4! 
+A good continuation, to proceed with a4-a5 
+gaining space. 
+a b c d e f g h 
+15 .. �g4 
+If l 5 ... a5 preventing a4-a5, the weird-looking 
+_16. �h.4!? prevents �g4xf3 thus putting Black m a difficult position as he cannot develop his 
+bishop. 16 ... �d8 (but not 16 ... �d7? 17. �b3! 
+winning a pawn, or 16 ... �g4? l 7.f3! �h5 
+18. �b3 �c8 19 .�f5 �c7 20.�d2 followed with 
+E:acl with domination) 17 .b3 �d7 18 .�a3 �c8 
+19 .E:fc1 ± Black's forces are against the wall due to 
+their lack of space. 
+If 1.5 ... �d7 then 16 .b3 E:ac8 17 .�d3;!; gives 
+Whne a promising advantage due to his extra 
+space and the weak d6-pawn. 
+268 Family Four - King's Indian 
+16.�d2!? 
+This is an interesting approach. Wojtaszek 
+begins the knight transfer to c4 immediately, as 
+he knows Black's pieces do not have targets to 
+attack. 
+A worthy option was 16 .a5 ll'lbd7 (or 16 .

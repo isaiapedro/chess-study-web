@@ -18,6 +18,8 @@ chess-coach/
 ├── STRUCTURE.md              # This file
 ├── BEHAVIOR.md               # Experiment boundaries
 ├── DECISIONS.md              # ADR log
+├── PDF_PARSING_RULES.md      # Grammar layers vs dict lookups
+├── tests/                    # pytest: grammar + PDF note fixtures
 ├── Chess_AI_Coaching_System_Design.md
 ├── manifest.yaml             # PIOS experiment manifest
 ├── pyproject.toml            # Package + `chess-coach` entrypoint
@@ -45,7 +47,8 @@ chess-coach/
 │   ├── report.py
 │   ├── viewer.py             # Interactive HTML + SF18 WASM bootstrap
 │   ├── chapter.py            # Book sections / citations
-│   ├── ocr_chess.py          # PDF glyph cleanup
+│   ├── ocr_chess.py          # PDF glyph cleanup (uses grammar heads)
+│   ├── chess_text_grammar.py # Move heads + score-line segmenter
 │   ├── notation_dict.py      # Squares / pieces / marks / eval reference
 │   ├── notes_align.py        # Anchor book notes to game plies
 │   ├── book_walkthrough.py   # Dual Book + Engine/RAG annotate

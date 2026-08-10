@@ -1,0 +1,10 @@
+expect:
+  - fullmove: 21
+    side: black
+    san_contains: Nxb5
+    text_prefix: "An interesting alternative"
+  - fullmove: 22
+    side: black
+    san_contains: Rxc5
+    text_prefix: "We have reached the position"
+source: Chess Structures Carlsen-McShane move 21 reply peel

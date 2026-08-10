@@ -1,0 +1,7 @@
+20.Ne3 Nc7
+21.bxc5 Nxb5
+An interesting alternative was 21... bxc5!? += and
+this structure is studied in the next chapter.
+22.cxb5 Rxc5
+We have reached the position of interest. The reader
+should examine this position very carefully.

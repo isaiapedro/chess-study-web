@@ -18,7 +18,7 @@ from chess_coach.comment import engine_grounded_note, explain, pedagogical_fallb
 from chess_coach.engine import StockfishEngine
 from chess_coach.logutil import log
 from chess_coach.master_fetch import fetch_master_game
-from chess_coach.notes_align import align_notes_to_game
+from chess_coach.notes_align import align_notes_to_game, apply_book_mark_nags, collect_mainline_book_marks
 from chess_coach.ocr_chess import clean_book_note
 from chess_coach.rag.quality import filter_passages
 from chess_coach.rag.retrieve import retrieve_passages
@@ -51,6 +51,34 @@ class WalkthroughResult:
 
 def _sanitize(text: str) -> str:
     return clean_book_note(text.replace("{", "(").replace("}", ")")).strip()
+
+
+def _var_already_in_prose(var: str, prose: str) -> bool:
+    """True when variation text is already inline in the book note (avoid [Vars:] echo)."""
+
+    def norm(s: str) -> str:
+        s = re.sub(r"\s+", " ", (s or "").strip().lower())
+        return re.sub(r"^or\s+", "", s)
+
+    def fingerprint(s: str) -> str:
+        # Move numbers + destinations only — survives Qxg3 vs Bxg3 legalize drift
+        return " ".join(
+            re.findall(
+                r"\d+\.(?:\.\.)?|[a-h][1-8]|o-o-o|o-o|drawn\s+position",
+                norm(s),
+            )
+        )
+
+    nv, np_ = norm(var), norm(prose)
+    if len(nv) < 12 or not np_:
+        return False
+    if nv in np_:
+        return True
+    cut = nv.split("]")[0]
+    if len(cut) >= 20 and cut in np_:
+        return True
+    fv, fp = fingerprint(var), fingerprint(prose)
+    return len(fv) >= 12 and fv in fp
 
 
 def _try_add_variation_line(board: chess.Board, main_node: chess.pgn.GameNode, line: str) -> bool:
@@ -182,7 +210,10 @@ def apply_dual_annotations(
     sample_every = int(ann.get("sample_every_ply", 4))
     min_delta = int(ann.get("min_delta_for_note", 35))
 
-    aligned = align_notes_to_game(game, citation.notes)
+    aligned = align_notes_to_game(game, citation.notes, context=citation.context)
+    book_marks = collect_mainline_book_marks(
+        game, citation.notes, context=citation.context
+    )
     book_by_ply: dict[int, str] = {}
     variations_by_ply: dict[int, list[str]] = {}
     for note in aligned:
@@ -193,7 +224,13 @@ def apply_dual_annotations(
         book_by_ply[note.ply] = prefix + chunk
         if note.variations:
             variations_by_ply[note.ply] = note.variations
-            book_by_ply[note.ply] += " [Vars: " + "; ".join(_sanitize(v) for v in note.variations[:4]) + "]"
+            unique_vars = [
+                _sanitize(v)
+                for v in note.variations[:4]
+                if _sanitize(v) and not _var_already_in_prose(v, chunk)
+            ]
+            if unique_vars:
+                book_by_ply[note.ply] += " [Vars: " + "; ".join(unique_vars) + "]"
 
     strip_auto_variations(game)
 
@@ -304,7 +341,14 @@ def apply_dual_annotations(
 
     game.headers["Annotator"] = f"Book:{citation.source_book} + Stockfish/RAG"
     game.headers["BookChapter"] = citation.chapter
-    log("Annotate done: book_notes=%d critical=%d forks=%d", book_applied, len(critical), fork_count)
+    mark_n = apply_book_mark_nags(game, book_marks)
+    log(
+        "Annotate done: book_notes=%d critical=%d forks=%d marks=%d",
+        book_applied,
+        len(critical),
+        fork_count,
+        mark_n,
+    )
     return game, book_applied, len(critical)
 
 
@@ -329,7 +373,10 @@ def reapply_book_layer(
     """
     Replace [Book:…] comments from fresh citation notes; keep [Engine/RAG] intact.
     """
-    aligned = align_notes_to_game(game, citation.notes)
+    aligned = align_notes_to_game(game, citation.notes, context=citation.context)
+    book_marks = collect_mainline_book_marks(
+        game, citation.notes, context=citation.context
+    )
     book_by_ply: dict[int, str] = {}
     variations_by_ply: dict[int, list[str]] = {}
     for note in aligned:
@@ -340,9 +387,13 @@ def reapply_book_layer(
         book_by_ply[note.ply] = prefix + chunk
         if note.variations:
             variations_by_ply[note.ply] = note.variations
-            book_by_ply[note.ply] += (
-                " [Vars: " + "; ".join(_sanitize(v) for v in note.variations[:4]) + "]"
-            )
+            unique_vars = [
+                _sanitize(v)
+                for v in note.variations[:4]
+                if _sanitize(v) and not _var_already_in_prose(v, chunk)
+            ]
+            if unique_vars:
+                book_by_ply[note.ply] += " [Vars: " + "; ".join(unique_vars) + "]"
 
     strip_auto_variations(game, book=True, engine=False)
 
@@ -384,7 +435,15 @@ def reapply_book_layer(
         game.headers["BookChapter"] = citation.chapter
     if preamble:
         applied += 1
-    log("Reapplied book notes: %d (raw=%d forks=%d preamble=%s)", applied, len(citation.notes), forks, bool(preamble))
+    mark_n = apply_book_mark_nags(game, book_marks)
+    log(
+        "Reapplied book notes: %d (raw=%d forks=%d preamble=%s marks=%d)",
+        applied,
+        len(citation.notes),
+        forks,
+        bool(preamble),
+        mark_n,
+    )
     return game, applied
 
 

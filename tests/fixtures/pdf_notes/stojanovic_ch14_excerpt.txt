@@ -1,0 +1,64 @@
+Dalibor Stojanovic-Ding Liren 
+Istanbul Olympiad 2012 
+Leaming objectives: 
+1. This game illust rates Black's effective 
+queenside play once die position is 
+somewhat simplified. 
+2. Later in the game we see the bat tle 
+between White's light-squared bishop 
+and Black's dark-squared bishop, where 
+Black executes the strong ... .if6-d8-b6 
+manoeuvre and manages to win 
+convincingly. 
+l.e4 c5 2.ftlf3 e6 3.d.4 cxd4 4.fi:lxd4 a6 5.J.d3 
+lllf6 6.0-0 d6 7.c4 b6 8.lllc3 J.b7 9.�e2 g6 
+IO.J.c2 J.g7 11 .gdl lllbd7 12.lllf3 �c7 13.J.£4 
+e5 14.J.g5 h6 15..ixf6 fi:lxf6 16.J.a4t �e7 
+a b c d e f g h 
+We have reached a very interesting position, 
+corresponding to the Najdorf Type IL As the 
+reader may recall, one of the key issues in that 
+structure is the control of the d5-square, thus 
+we know White must be doing okay at the very 
+least. However, comparing this position with 
+the game Tiviakov - Anand from that chapter, 
+we see a crucial difference: White has the wrong 
+bishop. Typically, the light-squared bishop can 
+be very effective on b3 if the c-pawn is still on c2; 
+as an example, take the game Almasi -A agaard 
+from that chapter. In the present case though, 
+the light-squared bishop has few prospects as it 
+Chapter 14 - KID Type 1 277 
+is blocked by the c4-pawn, which means Black 
+is doing fine. 
+17.llldSt? 
+This is a very unfortunate position al decision; 
+the kind of mistake I hope you will not make 
+after reading this book. White chooses a very bad 
+occasion to go into the structure studied in this 
+chapter. 
+Playing this position in the spirit of a Najdorf 
+Type II yields only equality, for example: l 7.i.c2 
+ghc8 18. i.d3 �f8 19 .il)d2 h5 20.il)fl i.h6 with 
+level chances. 
+But instead, White could have prepared il)d5, 
+hoping to obtain this chapter's structure under 
+favourable circumstances. I believe the strongest 
+move was: 
+17 .f!:acl gac8 18 _gc2 
+18 .il)d5t? is premature due to: l 8 ... il)xd5 
+19 .cxd5? �xcl+ 
+18 ... ghd8? 
+18 ... bS 
+Another alternative was l 8 ... ghc8!? securing 
+control of the c-file. It is possible that Black 
+wanted to prevent l 9.i.c6!? getting rid of the bad 
+light-squared bishop (but not 19 .gacl? �xcl 
+20.gxcl gxcl t 21. il)e 1 gac8+; 19 .il)el ?! is met 
+by 19 ... �c4!+) 19 .. .i.xc6 20.dxc6 �xc6 21 .�d3 
+when White has reasonable compensation for 
+the pawn, but it is Black who can play for an 
+advantage. 
+8 7 6 5 4 3 2 
+Permitting White's positional threat. 
+l 8 ... �xc4? loses to l 9.il)d5t i.xd5 20.gxc4 a b c d e f g 

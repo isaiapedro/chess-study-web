@@ -112,4 +112,13 @@ Prefer Ollama `nomic-embed-text`. If unavailable, use a deterministic hashing em
 
 - Canonical reference: `notation_dict.py` — squares a1–h8, piece letters NBRQK, move marks (`??`…`!!`), Informator evals (`=` `⩲` `⩱` `±` `∓` `+-` `-+` `∞` `=/∞`).
 - `OCR_ALIASES` maps scan junk (`?f`→`?!`, `;i;`/`+=`→`⩲`, …). `ocr_chess` resolves trailing aliases through this module.
+- `PIECE_OCR_GLYPHS` maps Quality Chess figurines (`'Wie`→`Qe`, `ltJ`→`N`, `%'m`→`Qf8`, …). Mid-prose pass rewrites `"a3-a4, 'Wie2, ltJc4"` → SAN; viewer figurizes bare SAN with piece icons.
+- Non-dictionary PDF rules (move-number surgery, mainline detection, page strip, lookahead piece OCR, …) catalogued in `PDF_PARSING_RULES.md`.
+
+## 2026-08-10 — Chapter viewer: book + session user lines only
+
+- TEMP (`SHOW_ENGINE_VAR_BOOKS = false` in `chapter_book.template.html`): hide Engine/RAG notes, PGN book/engine forks, and the “engine / variants” legend.
+- Book notes + live explore lines remain.
+- User lines persist for the browser session (in-memory per game); reopen via green brackets in the move tree. Lost on full page reload.
+- Flip flag to `true` to restore engine notes + playable forks.
 

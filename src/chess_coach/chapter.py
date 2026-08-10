@@ -453,7 +453,7 @@ def _last_prose_sentence_end(before: str) -> int | None:
     Ignores move-number dots (26.) and annotation glyphs (a4?), but treats
     SAN stops like 'Qd2.' / 'Rac8.' as sentence ends when followed by space.
     """
-    last: int | None = None
+    ends: list[int] = []
     for m in re.finditer(r"\.", before):
         i = m.start()
         if i + 1 < len(before) and not before[i + 1].isspace() and before[i + 1] not in "\"'”’)":
@@ -472,10 +472,10 @@ def _last_prose_sentence_end(before: str) -> int | None:
             k += 1
         while k < len(before) and before[k].isspace():
             k += 1
-        last = k
+        ends.append(k)
     for m in _PROSE_BANG_RE.finditer(before):
-        last = m.end()
-    return last
+        ends.append(m.end())
+    return max(ends) if ends else None
 
 
 def _trailing_is_score_only(before: str) -> bool:
@@ -496,47 +496,15 @@ def _trailing_is_score_only(before: str) -> bool:
     rest = re.sub(rf"\b{MOVE_TOKEN}\b", " ", rest, flags=re.I)
     rest = re.sub(r"[0-9.!?\s\-–—,;:]+", " ", rest)
     rest = re.sub(r"\s+", " ", rest).strip()
-    return len(rest) <= 2
+    # Any leftover letters ("If", "and") mean variation / prose, not bare score.
+    return not re.search(r"[A-Za-z]", rest)
 
 
 def _is_mainline_label(text: str, match: re.Match[str]) -> bool:
-    """
-    Keep only move numbers that open a coaching block for the main score.
+    """Delegate to score-line grammar (kept for tests / callers)."""
+    from chess_coach.chess_text_grammar import can_open_score_line
 
-    Drop mid-sentence / variation prose labels such as:
-      'As McShane points out, 23.a4? is a serious imprecision…'
-      '…after 23 ... g5 24.Bg3 f5 White is forced…'
-      'A possible continuation is 26.Rc1…'
-    Those must stay inside the preceding note (and become forks), not cut it.
-    """
-    if _inside_parens(text, match.start()):
-        return False
-    before = text[max(0, match.start() - 200) : match.start()]
-    # Soften trailing commas so keyword lookbehind still matches ("out, 23.")
-    before_soft = re.sub(r"[,:;\"'”’)\]]+\s*$", " ", before)
-    if re.search(
-        r"(?i)\b(?:play(?:ed|ing)?|was|after|since|than|with|or|and|but|to|by|"
-        r"continuation(?:\s+is)?|example|forced|prefer(?:able)?|intended|ready|"
-        r"followed|when|while|if|not|but not|possible|continued|via|"
-        r"rather|forcing|sequence|threat(?:ening)?|refuted|"
-        r"points?\s+out|imprecision|because|against|until|before|into|onto|"
-        r"from|as|so|for|is|are|be|been|being|has|have|had|can|could|"
-        r"should|would|may|might|must|will|does|did|do|"
-        r"out|how|why|that|this|these|those|which|who|"
-        r"move|moves|line|lines|variation|idea|plan|try|tries|"
-        r"instead|else|here|there|now|then|also|even|only|"
-        r"manoeuvre|maneuver|typical|accurate|less|"
-        r"white|black)\s+$",
-        before_soft,
-    ):
-        return False
-    if match.start() == 0:
-        return True
-    # New coaching block: right after prose sentence, or only score moves since then
-    # (e.g. 'chances. 23...Rac8 24.Bd3' / 'queenside.\n23.f3').
-    if _trailing_is_score_only(before):
-        return True
-    return False
+    return can_open_score_line(text, match)
 
 
 def _next_game_boundary(text: str, after: int) -> int | None:
@@ -642,52 +610,119 @@ def _retarget_early_score_note(note: BookMoveNote) -> BookMoveNote:
     )
 
 
+def _retarget_through_leading_score(note: BookMoveNote) -> BookMoveNote:
+    """
+    Books print a short score then the comment on the last move, e.g.
+    ``27...Bf6 28.Qd2`` / ``Preparing a4-a5…``, or labeled ``21.bxc5`` with
+    body ``Nxb5`` then coaching. Commentary belongs on the last score move.
+    """
+    from chess_coach.ocr_chess import _PROSE_START_RE, prose_is_usable, strip_diagrams
+
+    text = (note.text or "").lstrip()
+    if not text:
+        return note
+
+    fm = note.fullmove
+    side = note.side
+    san = note.san_hint
+    pos = 0
+    moved = False
+    bare_san = re.compile(rf"(?P<move>{MOVE_TOKEN})", re.I)
+
+    while pos < len(text):
+        ws = re.match(r"[ \t]+", text[pos:])
+        if ws:
+            pos += ws.end()
+        m = MOVE_LABEL_RE.match(text, pos)
+        if not m:
+            break
+        num = int(m.group("num"))
+        if not moved:
+            if num < note.fullmove or num > note.fullmove + 1:
+                break
+        elif num < fm or num > fm + 1:
+            break
+        fm = num
+        side = "black" if m.group("dots") else "white"
+        san = m.group("move")
+        pos = m.end()
+        moved = True
+
+    while pos < len(text):
+        ws = re.match(r"\s+", text[pos:])
+        if ws:
+            pos += ws.end()
+        m = bare_san.match(text, pos)
+        if not m:
+            break
+        after = text[m.end() :]
+        probe = strip_diagrams(after).lstrip()
+        if not _PROSE_START_RE.match(probe):
+            m2 = bare_san.match(probe)
+            if not m2:
+                break
+            probe2 = strip_diagrams(probe[m2.end() :]).lstrip()
+            if not _PROSE_START_RE.match(probe2):
+                break
+        if side == "white":
+            side = "black"
+        else:
+            side = "white"
+            fm += 1
+        san = m.group("move")
+        pos = m.end()
+        moved = True
+        if _PROSE_START_RE.match(strip_diagrams(text[pos:]).lstrip()):
+            break
+
+    if not moved:
+        return note
+    rest = strip_diagrams(text[pos:]).strip()
+    if not prose_is_usable(rest, min_alpha=30):
+        return note
+    if fm == note.fullmove and side == note.side:
+        return note
+    return BookMoveNote(
+        fullmove=fm,
+        side=side,
+        san_hint=san,
+        text=rest[:4000],
+    )
+
+
+# Trailing next-move OCR crumbs with missing file/piece: "aiming…. 25... 5"
+_TRAILING_BROKEN_MOVE_RE = re.compile(
+    r"(?:\s+\d+\.(?:\.\.)?\s*(?:[1-8])?\s*)+$"
+)
+
+
 def extract_move_notes(text: str) -> tuple[str, list[BookMoveNote]]:
+    from chess_coach.chess_text_grammar import segment_score_lines
     from chess_coach.ocr_chess import clean_book_note, normalize_prose_breaks, ocr_clean_chess
 
     cleaned = ocr_clean_chess(text)
-    matches = list(MOVE_LABEL_RE.finditer(cleaned))
-    mainline_matches = [m for m in matches if _is_mainline_label(cleaned, m)]
-    # Never fall back to mid-prose variation numbers — that re-splits coaching
-    # across the wrong plies (e.g. McShane 23.a4? / 25.exf5 analysis).
-    if len(mainline_matches) < 2:
-        # Last resort: paragraph-start labels only (after .!? or start of text)
-        mainline_matches = []
-        for m in matches:
-            if _inside_parens(cleaned, m.start()):
-                continue
-            before = cleaned[max(0, m.start() - 3) : m.start()]
-            if m.start() == 0 or re.search(r"[.!?\n]\s*$", before):
-                mainline_matches.append(m)
-    preamble = ""
-    if mainline_matches:
-        preamble = _clean_preamble(cleaned[: mainline_matches[0].start()])
+    raw_preamble, segments = segment_score_lines(cleaned)
+    preamble = _clean_preamble(raw_preamble) if raw_preamble else ""
     notes: list[BookMoveNote] = []
-    for i, match in enumerate(mainline_matches):
-        start = match.end()
-        end = (
-            mainline_matches[i + 1].start()
-            if i + 1 < len(mainline_matches)
-            else min(len(cleaned), start + 4000)
-        )
-        prose = cleaned[start:end].strip()
-        prose = normalize_prose_breaks(prose)
+    for seg in segments:
+        prose = normalize_prose_breaks(seg.text)
+        prose = _TRAILING_BROKEN_MOVE_RE.sub("", prose).strip()
         if len(prose) < 12:
             continue
         if MOVE_LABEL_RE.fullmatch(prose.strip()):
             continue
-        # keep raw-ish span for aligner (needs leading move list); also drop empty after clean
         if len(clean_book_note(prose)) < 12 and not re.search(
-            r"\b(?:The|White|Black|Better|Threatening|Precision)\b", prose
+            r"\b(?:The|White|Black|Better|Threatening|Precision|If|Getting|Preparing|Something)\b",
+            prose,
         ):
             continue
-        side = "black" if match.group("dots") else "white"
         note = BookMoveNote(
-            fullmove=int(match.group("num")),
-            side=side,
-            san_hint=match.group("move"),
+            fullmove=seg.fullmove,
+            side=seg.side,
+            san_hint=seg.san,
             text=prose[:4000],
         )
+        note = _retarget_through_leading_score(note)
         notes.append(_retarget_early_score_note(note))
     return preamble, notes
 

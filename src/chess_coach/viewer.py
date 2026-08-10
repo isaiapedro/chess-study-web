@@ -12,8 +12,6 @@ import chess.pgn
 
 from chess_coach.ocr_chess import clean_book_note
 
-_VARS_RE = re.compile(r"\s*\[Vars:\s*(.*?)\]\s*", re.I | re.S)
-
 STOCKFISH_RELEASE = "https://github.com/nmrugg/stockfish.js/releases/download/v18.0.0"
 STOCKFISH_JS = "stockfish-18-lite-single.js"
 STOCKFISH_WASM = "stockfish-18-lite-single.wasm"
@@ -111,6 +109,23 @@ def ensure_textbook_badge(out_html: Path) -> Path:
     return dest
 
 
+def ensure_book_mark_badges(out_html: Path) -> None:
+    """Copy Tenor-style ! / ?! / ? / ?? badge GIFs beside the HTML."""
+    assets = Path(__file__).with_name("assets")
+    for name in (
+        "chess-great-move.gif",
+        "chess-inaccuracy.gif",
+        "chess-mistake.gif",
+        "chess-blunder.gif",
+    ):
+        src = assets / name
+        dest = out_html.parent / name
+        if src.exists() and (
+            not dest.exists() or dest.stat().st_size != src.stat().st_size
+        ):
+            dest.write_bytes(src.read_bytes())
+
+
 def _worker_url_for(out_html: Path, assets_dir: Path | None = None) -> str:
     """
     Always place engine assets beside the HTML (…/bookwalk/stockfish/) so
@@ -127,12 +142,46 @@ def _worker_url_for(out_html: Path, assets_dir: Path | None = None) -> str:
     return f"stockfish/{STOCKFISH_JS}"
 
 
-def _split_layers(comment: str) -> tuple[str, str, list[str]]:
+def _extract_vars_blocks(comment: str) -> tuple[str, list[str]]:
+    """Pull [Vars:…] blocks with nested brackets; return (comment_without_vars, vars)."""
     variations: list[str] = []
-    for match in _VARS_RE.finditer(comment):
-        chunk = match.group(1).strip()
-        variations.extend(clean_book_note(v) for v in chunk.split(";") if clean_book_note(v))
-    comment = _VARS_RE.sub(" ", comment).strip()
+    if not comment:
+        return "", variations
+    out = comment
+    built: list[str] = []
+    i = 0
+    lower = out.lower()
+    while i < len(out):
+        at = lower.find("[vars:", i)
+        if at < 0:
+            built.append(out[i:])
+            break
+        built.append(out[i:at])
+        depth = 0
+        j = at
+        while j < len(out):
+            if out[j] == "[":
+                depth += 1
+            elif out[j] == "]":
+                depth -= 1
+                if depth == 0:
+                    j += 1
+                    break
+            j += 1
+        block = out[at:j]
+        if block.lower().startswith("[vars:") and block.endswith("]"):
+            inner = block[len("[Vars:") : -1].strip()
+            if inner:
+                variations.extend(
+                    clean_book_note(v) for v in inner.split(";") if clean_book_note(v)
+                )
+        i = j
+    cleaned = re.sub(r"\s+", " ", "".join(built)).strip()
+    return cleaned, variations
+
+
+def _split_layers(comment: str) -> tuple[str, str, list[str]]:
+    comment, variations = _extract_vars_blocks(comment)
     book = engine = ""
     if " | " in comment and ("[Book" in comment or "[Engine" in comment):
         parts = comment.split(" | ")
@@ -353,7 +402,7 @@ def render_html(
     }}
     * {{ box-sizing: border-box; }}
     html, body {{ height: 100%; }}
-    html {{ background: var(--bg); }}
+    html {{ background: var(--bg); font-size: 18px; }}
     body {{
       margin: 0;
       font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -796,12 +845,35 @@ def render_html(
   }}
 
   function stripTag(text) {{
-    return String(text || "")
-      .replace(/^\\[Book:[^\\]]*\\]\\s*/i, "")
-      .replace(/^\\[Engine\\/RAG\\]\\s*/i, "")
-      .replace(/\\s*\\[Vars:[^\\]]*\\]\\s*/ig, " ")
-      .replace(/\\s+/g, " ")
-      .trim();
+    let out = String(text || "");
+    out = out.replace(/^\\[Book:[^\\]]*\\]\\s*/i, "");
+    out = out.replace(/^\\[Engine\\/RAG\\]\\s*/i, "");
+    let built = "";
+    let i = 0;
+    while (i < out.length) {{
+      const lower = out.slice(i).toLowerCase();
+      const at = lower.indexOf("[vars:");
+      if (at < 0) {{
+        built += out.slice(i);
+        break;
+      }}
+      built += out.slice(i, i + at);
+      let depth = 0;
+      let j = i + at;
+      for (; j < out.length; j++) {{
+        if (out[j] === "[") depth++;
+        else if (out[j] === "]") {{
+          depth--;
+          if (depth === 0) {{
+            j++;
+            break;
+          }}
+        }}
+      }}
+      i = j;
+      built = built.replace(/\\s+$/, " ");
+    }}
+    return built.replace(/\\s+/g, " ").trim();
   }}
 
 
@@ -1811,6 +1883,7 @@ def write_viewer(pgn_path: Path, out_html: Path) -> Path:
     assets_dir = ensure_stockfish_assets(viewer_root / "stockfish")
     worker_url = _worker_url_for(out_html, assets_dir)
     ensure_textbook_badge(out_html)
+    ensure_book_mark_badges(out_html)
     white = game.headers.get("White", "White")
     black = game.headers.get("Black", "Black")
     out_html.write_text(
@@ -1973,6 +2046,7 @@ def write_chapter_book(
     assets_dir = ensure_stockfish_assets(viewer_root / "stockfish")
     worker_url = _worker_url_for(out_html, assets_dir)
     ensure_textbook_badge(out_html)
+    ensure_book_mark_badges(out_html)
     data_json = json.dumps(
         {
             "book": book,

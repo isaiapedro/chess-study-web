@@ -1,0 +1,6 @@
+expect:
+- fullmove: 19
+  side: white
+  san_contains: cxd5?
+  text_prefix: xcl+ 18... ghd8? 18... bS Another al
+source: Chess Structures Ch.14 Stojanovic-Ding

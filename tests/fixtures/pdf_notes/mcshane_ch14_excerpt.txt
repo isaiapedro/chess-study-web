@@ -1,0 +1,70 @@
+Something to note is how White can improve 
+slowly, while Black can't The move 24.id3 
+clears e2 for the queen, prepares against ... f6-f5, 
+and gives extra protection to the c2-square. 
+Meanwhile, Black controls the c-file, but cannot 
+do much with it. 
+Less accurate is 24.if2 since Black immediately 
+gains counterplay with 24 ... f5!. A possible 
+continuation is 25 .id3 fxe4 26.fxe4 if6 27.a4 
+ig5 and Black is closer to equality than in the 
+game. 
+24 ... %\'m 
+There is nothing better than spending a tempo 
+to prepare ... f6-f5. White was planning to follow 
+with a3-a4, 'Wie2, ltJc4 and only then bring his 
+bishop back to f2. Black cannot afford to wait 
+with his queen on e7, as ... f6-f5 is his only 
+constructive plan. 
+Attempting to "use" the c-file with 24 .. J'k3 
+does not really go anywhere after 25.a4 when 
+White can continue with his plans, ignoring 
+the rook on c3 (but not 25. E:b3?! since trading 
+pieces alleviates Black's space problems) and 
+Black cannot insist with 25 ... E:a3? since the rook 
+gets trapped after: 26. ltJc4 E:c3 (or 26 ... E:a2 
+27.'Wib3 +-) 27.E:b4+- Followed by 'Wid2. 
+25.J.fl 
+There is nothing else to do on h4, so the bishop 
+comes to f2, aiming at the queenside. 
+25 ... 5 26.a4 
+Getting ready to create a weakness in Black's 
+camp with a4-a5. 
+a b c d e f g h 
+26 .. J�.5c7 
+Black is not ready to close the position with 
+26 ... f4? as White continues with the typical 
+manoeuvre 27 .l/Jc2 E:5c7 28. l/Jb4 followed by 
+ltJc6 with a near-winning position. For example: 
+28 ... g5 29.h3 (preventing ... g5-g4) 29 ... l/Jg8 
+30.l/Jc6 h5 31 .a5 g4 32.axb6 axb6 33.ixb6 E:b7 
+34.ia?! Followed by b5-b6 and ia6 winning, 
+while Black's kingside attack is not getting 
+anywhere; and if34 ... ixc6?! 35 .dxc6 E:xa7 36.b6 
+and the passed pawns decide the game. 
+264 Family Four - King's Indian 
+27.h3 
+This prophylactic move protects the g4-square, 
+and prepares against a future ... 5-f4 followed by 
+... g6-g5-g4. 
+If27. lllc2, to follow with lllb4-c6, then McShane 
+was ready establish contact on the kingside with 
+27 ... g5 28.lil b4 g4 with counterplay. 
+27 ••• J.£6 28.f?d2 
+Preparing a4-a5 to create a weakness on the 
+queenside. 
+If28.lilc 2 McShane intended to gain counterplay 
+with 28 ... fxe4 29.fx e4 g5 followed by ... g5-g4 
+with reasonable fighting chances. For example: 
+30.g4 (or 30.�d2 g4 3 l. 1'.e3 lllg8 32.h xg4 1'.xg4 
+with counterplay; but not 30.�e2?! g4 3 l .h4 
+g3! 32.hg3 '{!ig7 33.1'.f2 .§g8 with excellent 
+compensation for the pawn) 30 ... lllg8 3 Llilb4 
+llle7 32.lilc 6 lilg6 33.a5 lllf4 34.1'.fl h5 With 
+sharp tactical complications. 
+2s .• .1'.g5 
+If 28 ... f4?! 29.lilc2 g5 30.lilb4 lllf7 3 l. a5!± 
+and White's attack arrives faster. 
+29.a5 
+a b c d e f g h 
+Black must make a difficult decision between 

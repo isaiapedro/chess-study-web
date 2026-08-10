@@ -51,8 +51,9 @@
       --r-pill: 999px;
 
       --mono: ui-monospace, SFMono-Regular, Menlo, "JetBrains Mono", monospace;
-      /* board never grows past this, so annotations always stay on screen */
+      /* desktop: board capped; mobile overrides via max-width */
       --board-max: min(58dvh, 620px);
+      --eval-bar-w: 14px;
       --measure: 66rem;
     }
 
@@ -62,6 +63,7 @@
       width: 100%;
       max-width: 100%;
       overflow-x: clip;
+      font-size: 18px;
     }
     html, body { margin: 0; height: 100%; }
     body {
@@ -142,8 +144,7 @@
 
     /* ---------- fixed board dock ---------- */
     .board-dock {
-      /* 10% eval + 90% board; keep inside viewport and centered */
-      width: min(100%, calc(var(--board-max) / 0.9));
+      width: min(100%, calc(var(--board-max) + var(--eval-bar-w) + 0.4rem));
       max-width: 100%;
       margin-inline: auto;
       justify-self: center;
@@ -216,10 +217,13 @@
 
     .board-row {
       display: grid;
-      grid-template-columns: 10% 90%;
+      grid-template-columns: var(--eval-bar-w) minmax(0, 1fr);
       grid-template-rows: auto 1fr;
-      align-items: stretch; gap: 0;
-      width: 100%; max-width: 100%; min-height: 0;
+      align-items: stretch; gap: 0.4rem;
+      width: 100%;
+      max-width: 100%;
+      margin-inline: auto;
+      min-height: 0;
       overflow: hidden;
       box-sizing: border-box;
     }
@@ -383,7 +387,16 @@
     .move-label {
       margin: 0 0 0.6rem;
       font-size: 0.9375rem; font-weight: 600; letter-spacing: -0.1px; color: var(--text);
+      display: flex; align-items: center; flex-wrap: wrap; gap: 0.35rem;
     }
+    .move-label .move-mark-icon {
+      width: 1.35rem; height: 1.35rem;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+      flex: 0 0 auto;
+    }
+    .move-label .move-glyph { color: var(--accent); }
     .empty { margin: 0; color: var(--text-dim); font-size: 0.8125rem; line-height: 1.5; }
 
     /* notes */
@@ -536,35 +549,108 @@
 
     .hint, .engine-status { display: none !important; }
 
-    /* ---------- responsive ---------- */
+    /* ---------- responsive (mobile only; desktop unchanged above) ---------- */
     @media (max-width: 720px) {
-      :root { --board-max: min(52dvh, 560px); }
-      .top { padding: 0.55rem 0.7rem; gap: 0.5rem; }
-      .top h1 { font-size: 0.85rem; }
-      .stage {
+      :root {
+        --board-max: min(46dvh, calc(100vw - 0.7rem));
+        --eval-bar-w: 12px;
+      }
+      html { font-size: 16px; }
+      .top {
+        padding: 0.45rem 0.55rem;
         gap: 0.4rem;
-        padding: 0.45rem 0.4rem 0.4rem;
-        justify-items: center;
+      }
+      .top .mark { width: 22px; height: 22px; font-size: 0.8rem; }
+      .top h1 { font-size: 0.8125rem; }
+      .count { font-size: 0.625rem; padding: 0.18rem 0.45rem; }
+      .shell { justify-items: stretch; }
+      .stage {
+        width: 100%;
+        max-width: 100%;
+        gap: 0.28rem;
+        padding: 0.3rem 0.35rem 0.25rem;
+        justify-items: stretch;
+      }
+      .game-head {
+        width: 100%;
+        max-width: 100%;
+        margin-inline: 0;
+      }
+      .game-head .page-meta {
+        font-size: 0.75rem;
+        line-height: 1.3;
+        -webkit-line-clamp: 1;
       }
       .board-dock {
         width: 100%;
         max-width: 100%;
-        margin-inline: auto;
+        margin-inline: 0;
+        justify-self: stretch;
+        gap: 0.28rem;
       }
-      .eval-score { font-size: 1.1rem; }
-      .board-dock { gap: 0.4rem; }
-      .move-keys { gap: 0.32rem; width: 100%; }
-      .move-keys button { min-height: 2.6rem; }
-      .panel { padding: 0.7rem 0.75rem; border-radius: var(--r-sm); }
-      .note.book { font-size: 0.9375rem; }
-      .note { font-size: 0.875rem; }
-      .book-scroll { padding-bottom: 1rem; width: 100%; max-width: 100%; }
-      .game-head { width: 100%; max-width: 100%; }
-      .toc { max-height: min(30dvh, 14rem); }
+      .board-row {
+        width: 100%;
+        max-width: 100%;
+        gap: 0.28rem;
+      }
+      .board-chrome {
+        min-height: 2.1rem;
+        margin: 0 0 0.2rem;
+      }
+      .ply-badge {
+        min-width: 2.4rem;
+        height: 2.2rem;
+        padding: 0 0.4rem;
+        font-size: 0.95rem;
+      }
+      .ply-badge.is-empty { font-size: 1rem; }
+      .board-wrap {
+        border-radius: var(--r-sm);
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.5);
+      }
+      .eval-readout {
+        gap: 0.12rem;
+        min-height: calc(1.05rem + 0.12rem + 3 * 1.25em + 2 * 0.06rem);
+      }
+      .eval-score { font-size: 1.05rem; }
+      .eval-lines {
+        font-size: 0.625rem;
+        line-height: 1.25;
+        height: calc(3 * 1.25em + 2 * 0.06rem);
+        gap: 0.06rem;
+      }
+      .eval-lines li { grid-template-columns: 1rem 2.3rem minmax(0, 1fr); gap: 0.25rem; }
+      .move-keys { gap: 0.28rem; width: 100%; }
+      .move-keys button { min-height: 2.35rem; border-radius: var(--r-md); }
+      .move-keys .ico { width: 1.1em; height: 1.1em; }
+      .book-scroll {
+        width: 100%;
+        max-width: 100%;
+        padding: 0.1rem 0 0.85rem;
+        gap: 0.45rem;
+      }
+      .panel { padding: 0.65rem 0.7rem; border-radius: var(--r-sm); }
+      .eyebrow { font-size: 0.625rem; margin-bottom: 0.35rem; }
+      .move-label { font-size: 0.875rem; }
+      .note.book { font-size: 0.9375rem; line-height: 1.5; }
+      .note { font-size: 0.875rem; line-height: 1.45; }
+      .moves { font-size: 0.78rem; line-height: 1.85; }
+      .move-legend { font-size: 0.625rem; gap: 0.55rem; }
+      .toc { max-height: min(28dvh, 12rem); }
+      .toc-item { font-size: 0.78rem; padding: 0.4rem 0.45rem; }
     }
     @media (max-width: 420px) {
-      .move-legend { gap: 0.5rem; font-size: 0.625rem; }
-      .toc-item { font-size: 0.78rem; padding: 0.38rem 0.42rem; }
+      :root {
+        --board-max: min(44dvh, calc(100vw - 0.55rem));
+        --eval-bar-w: 10px;
+      }
+      .stage { padding: 0.25rem 0.28rem 0.2rem; gap: 0.22rem; }
+      .board-dock { gap: 0.22rem; }
+      .move-keys button { min-height: 2.2rem; }
+      .ply-badge { height: 2rem; min-width: 2.2rem; font-size: 0.875rem; }
+      .eval-score { font-size: 1rem; }
+      .move-legend { gap: 0.4rem; font-size: 0.6rem; }
+      .toc-item { font-size: 0.75rem; padding: 0.35rem 0.4rem; }
     }
     @media (prefers-reduced-motion: reduce) {
       * { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
@@ -620,7 +706,9 @@
           <div class="moves" id="moveList"></div>
           <p class="move-legend">
             <span class="lg book"><i></i> this book</span>
+            <!-- TEMP: engine / PGN variation books hidden — book notes + session user lines only
             <span class="lg engine"><i></i> engine / variants</span>
+            -->
             <span class="lg explore"><i></i> your line</span>
             <span class="lg arrow"><i></i> arrows = next options</span>
           </p>
@@ -644,12 +732,15 @@
   const GAMES = data.games;
   const LIVE_DEPTH = data.liveDepth || 22;
   const ENGINE_WORKER_URL = data.engineWorkerUrl;
+  // TEMP: hide engine/RAG notes + PGN book/engine forks; keep book notes + user lines
+  const SHOW_ENGINE_VAR_BOOKS = false;
   let gIdx = 0;
   let idx = -1;
   let fork = null;
   let explore = null;
   let pendingFrom = null;
   let orientation = "white";
+  let selectToggleArmed = false;
   let engine = null;
   let engineReady = false;
   let analyzeToken = 0;
@@ -661,6 +752,7 @@
   let activeEvalByMp = null;
   let suppressBoardClick = false;
   const MULTIPV = 3;
+  const userVariantsByGame = {};
 
   const PIECE_THEME = "https://chessboardjs.com/img/chesspieces/wikipedia/{piece}.png";
   function canDragPiece(piece) {
@@ -682,28 +774,38 @@
     trashSpeed: 0,
     onDragStart: function (source, piece) {
       if (!canDragPiece(piece)) return false;
-      suppressBoardClick = true;
+      selectToggleArmed = pendingFrom === source;
       paintSelection(source);
       return true;
     },
     onDrop: function (source, target) {
-      suppressBoardClick = true;
-      setTimeout(function () { suppressBoardClick = false; }, 40);
       if (!target || target === "offboard" || source === target) {
-        clearPending();
+        // Second click on same square → deselect; first click keeps highlights.
+        if (selectToggleArmed) {
+          clearPending();
+          selectToggleArmed = false;
+        } else {
+          setTimeout(function () { repaintPending(); }, 0);
+        }
         return "snapback";
       }
+      selectToggleArmed = false;
+      // Real drop — suppress the following pointerup so we don't double-move.
+      suppressBoardClick = true;
+      setTimeout(function () { suppressBoardClick = false; }, 40);
       if (tryUserMove(source, target)) return;
-      clearPending();
+      setTimeout(function () { paintSelection(source); }, 0);
       return "snapback";
     },
     onSnapEnd: function () {
       board.position(fenNow(), false);
       queueArrows();
+      repaintPending();
     },
     onSnapbackEnd: function () {
       board.position(fenNow(), false);
       queueArrows();
+      repaintPending();
     }
   });
   const _boardPosition = board.position;
@@ -711,6 +813,13 @@
     const result = _boardPosition.apply(board, arguments);
     queueArrows();
     try { updateBookHint(); } catch (e) {}
+    // chessboardjs rebuilds square DOM — restore sticky legal highlights
+    if (pendingFrom) {
+      const from = pendingFrom;
+      requestAnimationFrame(function () {
+        if (pendingFrom === from) paintSelection(from);
+      });
+    }
     return result;
   };
   const _boardOrientation = board.orientation;
@@ -725,8 +834,10 @@
     const boardEl = document.getElementById("board");
     const dock = document.getElementById("boardDock");
     if (dock) {
-      dock.style.marginLeft = "auto";
-      dock.style.marginRight = "auto";
+      dock.style.width = "";
+      dock.style.maxWidth = "";
+      dock.style.marginLeft = "";
+      dock.style.marginRight = "";
     }
     if (wrap && boardEl) {
       const size = Math.max(1, Math.floor(wrap.getBoundingClientRect().width));
@@ -767,11 +878,96 @@
   const elBoardRow = document.getElementById("boardRow");
   let arrowTimer = 0;
   const BOOK_BADGE_IMG = '<img src="textbook-chess.gif" alt="" width="32" height="32" decoding="async">';
+  const MARK_BADGE = {
+    "!!": { src: "chess-great-move.gif", label: "brilliant move" },
+    "!": { src: "chess-great-move.gif", label: "good move" },
+    "!?": { src: "chess-inaccuracy.gif", label: "interesting move" },
+    "?!": { src: "chess-inaccuracy.gif", label: "inaccuracy" },
+    "?": { src: "chess-mistake.gif", label: "mistake" },
+    "??": { src: "chess-blunder.gif", label: "blunder" }
+  };
+  function primaryMark(glyphs) {
+    const g = String(glyphs || "");
+    const order = ["!!", "??", "!?", "?!", "!", "?"];
+    for (let i = 0; i < order.length; i++) {
+      if (g.indexOf(order[i]) >= 0) return order[i];
+    }
+    return "";
+  }
+  function markBadgeHtml(glyphs) {
+    const mark = primaryMark(glyphs);
+    const info = MARK_BADGE[mark];
+    if (!info) return BOOK_BADGE_IMG;
+    return '<img src="' + info.src + '" alt="' + escapeHtml(info.label) + '" width="32" height="32" decoding="async">';
+  }
+  function markHeadlineHtml(glyphs) {
+    const mark = primaryMark(glyphs);
+    const info = MARK_BADGE[mark];
+    if (!info) {
+      return glyphs ? ' <span class="move-glyph">' + escapeHtml(glyphs) + "</span>" : "";
+    }
+    return ' <img class="move-mark-icon" src="' + info.src + '" alt="' + escapeHtml(mark + " " + info.label) + '" title="' + escapeHtml(mark + " — " + info.label) + '" width="28" height="28" decoding="async">';
+  }
 
   function game() { return GAMES[gIdx]; }
   function plies() { return game().plies || []; }
+  function sessionVariants() {
+    if (!userVariantsByGame[gIdx]) userVariantsByGame[gIdx] = [];
+    return userVariantsByGame[gIdx];
+  }
+  function newUserVariantId() {
+    return "uv-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 7);
+  }
+  function variantIdentity(v) {
+    const stem = v.stem
+      ? ("s:" + v.stem.ply + ":" + v.stem.fi + ":" + v.stem.through)
+      : ("b:" + v.baseIdx);
+    const first = (v.moves && v.moves[0] && v.moves[0].uci) || "";
+    return stem + "|" + first;
+  }
+  function syncExploreToSession() {
+    if (!explore || !(explore.moves || []).length) return;
+    const list = sessionVariants();
+    let i = -1;
+    if (explore.id) i = list.findIndex((v) => v.id === explore.id);
+    if (i < 0) {
+      const key = variantIdentity(explore);
+      i = list.findIndex((v) => variantIdentity(v) === key);
+    }
+    const record = {
+      id: i >= 0 ? list[i].id : newUserVariantId(),
+      baseIdx: explore.baseIdx,
+      baseFen: explore.baseFen,
+      stem: explore.stem || null,
+      moves: explore.moves.map((m) => Object.assign({}, m))
+    };
+    explore.id = record.id;
+    if (i >= 0) list[i] = record;
+    else list.push(record);
+  }
+  function enterUserVariant(id, depth) {
+    const v = sessionVariants().find((x) => x.id === id);
+    if (!v || !(v.moves || []).length) return;
+    fork = null;
+    clearPending();
+    lastEnginePv = [];
+    lastEngineLines = [];
+    activeEvalFen = null;
+    explore = {
+      id: v.id,
+      baseIdx: v.baseIdx,
+      baseFen: v.baseFen,
+      stem: v.stem || null,
+      moves: v.moves.map((m) => Object.assign({}, m)),
+      depth: depth == null ? v.moves.length - 1 : Math.max(-1, Math.min(v.moves.length - 1, depth))
+    };
+    idx = v.baseIdx;
+    board.position(fenNow(), false);
+    renderNotes(); renderMoveList(); setButtons(); updateBookHint(); requestEval();
+    queueArrows();
+  }
   function forkMoves() {
-    if (!fork) return null;
+    if (!SHOW_ENGINE_VAR_BOOKS || !fork) return null;
     const p = plies()[fork.ply];
     return (p && p.forks && p.forks[fork.fi] && p.forks[fork.fi].moves) || null;
   }
@@ -817,7 +1013,7 @@
       if (moves[explore.depth + 1]) pushArrow(moves[explore.depth + 1].uci, "explore", 0.9);
       return out;
     }
-    if (fork) {
+    if (SHOW_ENGINE_VAR_BOOKS && fork) {
       const p = plies()[fork.ply];
       const fk = p && p.forks && p.forks[fork.fi];
       const kind = (fk && fk.kind) || "line";
@@ -826,7 +1022,7 @@
       return out;
     }
     const next = plies()[idx + 1];
-    if (next) {
+    if (next && SHOW_ENGINE_VAR_BOOKS) {
       (next.forks || []).forEach(function (fk) {
         const m0 = (fk.moves || [])[0];
         if (m0) pushArrow(m0.uci, fk.kind || "line", 0.9);
@@ -898,7 +1094,36 @@
     return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
   }
   function stripTag(text) {
-    return String(text||"").replace(/^\[Book:[^\]]*\]\s*/i,"").replace(/^\[Engine\/RAG\]\s*/i,"").replace(/\s*\[Vars:[^\]]*\]\s*/ig," ").replace(/\s+/g," ").trim();
+    let out = String(text || "");
+    out = out.replace(/^\[Book:[^\]]*\]\s*/i, "");
+    out = out.replace(/^\[Engine\/RAG\]\s*/i, "");
+    // Nested brackets inside [Vars: … [alt] …] — scan balanced depth
+    let built = "";
+    let i = 0;
+    while (i < out.length) {
+      const lower = out.slice(i).toLowerCase();
+      const at = lower.indexOf("[vars:");
+      if (at < 0) {
+        built += out.slice(i);
+        break;
+      }
+      built += out.slice(i, i + at);
+      let depth = 0;
+      let j = i + at;
+      for (; j < out.length; j++) {
+        if (out[j] === "[") depth++;
+        else if (out[j] === "]") {
+          depth--;
+          if (depth === 0) {
+            j++;
+            break;
+          }
+        }
+      }
+      i = j;
+      built = built.replace(/\s+$/, " ");
+    }
+    return built.replace(/\s+/g, " ").trim();
   }
   function ocrCleanMoveToken(token) {
     let out = String(token || "").replace(/[\u2018\u2019\u02bc]/g, "'").replace(/\\/g, "").replace(/×/g, "x").trim();
@@ -909,22 +1134,17 @@
     out = out.trim();
     out = out.replace(/^0\s*-{1,3}\s*0\s*-{1,3}\s*0$/g, "O-O-O").replace(/^0\s*-{1,3}\s*0$/g, "O-O");
     out = out.replace(/^([NBRQK][a-h]?[1-8]?x?[a-h][1-8]|[a-h]x[a-h][1-8]|[a-h][1-8]|O-O-O|O-O)t$/g, "$1+");
-    out = out.replace(/^(?:°1W|'l!|1!f\/|1!f|'!ti|'!t[ií]|'\(!i|'Wi|1W|lW)/g, "Q");
+    out = applyPieceOcrPrefix(out);
     out = out.replace(/^W(?=x[gfh]|[gfh][1-8])/g, "K").replace(/^W(?=x[a-e]|[a-e][1-8])/g, "Q");
     out = out.replace(/^@(?=[a-h]|x)/g, "K");
-    out = out.replace(/^(?:ltJ|l\/J|ll'l|lt'l|ltl'|lll|lil|liJ|llJ|l2J|4J|0\.J)/g, "N");
     out = out.replace(/^J'(?=k[1-8]|[a-h][1-8]|x[a-h])/g, "N");
     out = out.replace(/^Nk([1-8])$/g, "Nc$1").replace(/^Nkx(?=[a-h])/g, "Ncx");
     out = out.replace(/^N([a-h])\s+([1-8])$/g, "N$1$2");
     out = out.replace(/^([NBRQK])\s+([a-h][1-8])$/g, "$1$2");
-    out = out.replace(/^1'\.?/g, "B");
-    out = out.replace(/^\.i\.|^i\.(?=[a-h])/g, "B");
-    out = out.replace(/^\.!L?i|^&\.?(?=[a-h])/g, "B");
+    out = out.replace(/^\.!L?i/g, "B");
     out = out.replace(/^i(?=[a-h][1-8]$|[a-h]x|x[a-h])/g, "B");
-    out = out.replace(/^(?::§:|E:|§|El)(?=[a-hx])/g, "R");
-    out = out.replace(/^l'hcl$/g, "Rxc1").replace(/^l'hc/g, "Rxc");
-    out = out.replace(/^l'kl$/g, "Rc1").replace(/^l'k([1-8])$/g, "Rc$1");
-    out = out.replace(/^(?:i'!|l"k|l'k|l'h)/g, "R");
+    out = out.replace(/^J\.([a-h][1-8])$/g, "B$1");
+    out = out.replace(/^(?:§)(?=[a-hx])/g, "R");
     out = out.replace(/^([NBRQK])x?c[lI]$/g, "$1xc1");
     out = out.replace(/^([NBRQK])([a-h])[lI]$/g, function (_m, p, f) { return p + f + "1"; });
     out = out.replace(/([a-h])[lI](?=[+#?!]*$)/g, "$11");
@@ -940,6 +1160,92 @@
     if (compact !== out && /^(?:O-O-O|O-O|[NBRQK]?[a-h]?[1-8]?x?[a-h][1-8](?:=[NBRQ])?[+#?!]*)$/i.test(compact)) out = compact;
     return out.trim();
   }
+  // Mirrors notation_dict.PIECE_OCR_GLYPHS (longest first).
+  const PIECE_OCR_GLYPHS = [
+    ["%'m", "Qf8"], ["%'M", "Qf8"], ["l'hcl", "Rxc1"], ["l'kl", "Rc1"],
+    ["J.fl", "Bf2"], ["J.f1", "Bf2"], ["J.fI", "Bf2"], ["J.£6", "Bf6"], ["J.f6", "Bf6"],
+    ["f?", "Q"],
+    ["'Wie", "Qe"], ["Wie", "Qe"], ["Wid", "Qd"], ["'Wi", "Q"],
+    ["'l!", "Q"], ["°1W", "Q"], ["1!f/", "Q"], ["1!f", "Q"], ["'!ti", "Q"], ["'!tí", "Q"],
+    ["'{!i", "Q"], ["'{!", "Q"], ["'(!i", "Q"], ["1W", "Q"], ["lW", "Q"], ["%'", "Q"],
+    ["ltJ", "N"], ["l/J", "N"], ["ll'l", "N"], ["lt'l", "N"], ["ltl'", "N"], ["llil", "N"],
+    ["liJ", "N"], ["llJ", "N"], ["l2J", "N"], ["0.J", "N"], ["4J", "N"], ["lll", "N"], ["lil", "N"], ["ill", "N"],
+    ["ttl", "N"], ["ttI", "N"], ["tli", "N"],
+    ["l'hc", "Rxc"], ["l'k", "Rc"], ["l'h", "R"], ['l"k', "R"], ["i'!", "R"], [":§:", "R"],
+    ["E:", "R"], ["El", "R"], [".§", "R"], ["§", "R"], ["ilx", "Rx"], ["llx", "Rx"],
+    ["1'.", "B"], ["1'", "B"], [".i.", "B"], ["i.", "B"], ["&.", "B"], ["&", "B"]
+  ].sort(function (a, b) { return b[0].length - a[0].length || (a[0] < b[0] ? -1 : 1); });
+  const PIECE_OCR_PROSE_SAFE = {
+    "%'m":1,"%'M":1,"%'":1,"'Wie":1,"Wie":1,"Wid":1,"'Wi":1,"'!ti":1,"'!tí":1,"'{!i":1,"'{!":1,"'(!i":1,"ltJ":1,"l/J":1,"ll'l":1,"lt'l":1,
+    "ltl'":1,"llil":1,"liJ":1,"llJ":1,"l2J":1,"0.J":1,"4J":1,"lll":1,"lil":1,"ill":1,"ttl":1,"ttI":1,"tli":1,"l'hcl":1,"l'hc":1,"l'kl":1,"l'k":1,
+    "l'h":1,'l"k':1,"i'!":1,":§:":1,"E:":1,"El":1,".§":1,"§":1,"ilx":1,"llx":1,"1'.":1,".i.":1,"J.fl":1,"J.f1":1,"J.fI":1,
+    "J.£6":1,"J.f6":1,"f?":1
+  };
+  function applyPieceOcrPrefix(token) {
+    const t = String(token || "");
+    for (let i = 0; i < PIECE_OCR_GLYPHS.length; i++) {
+      const glyph = PIECE_OCR_GLYPHS[i][0];
+      const repl = PIECE_OCR_GLYPHS[i][1];
+      if (t.length < glyph.length) continue;
+      const head = t.slice(0, glyph.length);
+      if (head !== glyph && head.toLowerCase() !== glyph.toLowerCase()) continue;
+      const rest = t.slice(glyph.length);
+      if (/^[NBRQK][a-h]?[1-8]?x?[a-h][1-8]$/.test(repl)) {
+        if (!rest || /^[+#?!]*$/.test(rest)) return repl + rest;
+        continue;
+      }
+      if (!rest.trim()) continue;
+      if (/^\s*(?:[a-h]?\s*[1-8]?\s*x\s*[a-h]\s*[1-8]|[a-h]\s*[1-8]|[a-h][1-8]|x\s*[a-h]|[1-8])(?:-\s*[a-h]\s*[1-8])?[+#?!]*/.test(rest)
+          || (/^[NBRQK][a-h]$/.test(repl) && /^\s*[1-8]/.test(rest))) {
+        return repl + (rest.charAt(0) === " " || rest.charAt(0) === "\t" ? rest.replace(/^\s+/, "") : rest);
+      }
+    }
+    return t;
+  }
+  function replacePieceOcrGlyphs(text) {
+    let out = String(text || "");
+    for (let i = 0; i < PIECE_OCR_GLYPHS.length; i++) {
+      const glyph = PIECE_OCR_GLYPHS[i][0];
+      const repl = PIECE_OCR_GLYPHS[i][1];
+      if (!PIECE_OCR_PROSE_SAFE[glyph]) continue;
+      const esc = glyph.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      if (/^[NBRQK][a-h]?[1-8]?x?[a-h][1-8]$/.test(repl)) {
+        out = out.replace(new RegExp("(?<![A-Za-z0-9])" + esc + "(?![A-Za-z0-9])", "g"), repl);
+        continue;
+      }
+      out = out.replace(
+        new RegExp(
+          "(?<![A-Za-z0-9])" + esc + "\\s*(?=(?:[a-h]?\\s*[1-8]?\\s*x\\s*[a-h]\\s*[1-8]|[a-h]\\s*[1-8]|[a-h][1-8]|x\\s*[a-h]|[1-8])(?:-\\s*[a-h]\\s*[1-8])?[+#?!]*)",
+          "g"
+        ),
+        repl
+      );
+    }
+    return out;
+  }
+  function glueSpacedSan(text) {
+    let out = String(text || "");
+    out = out.replace(/\bfic\s*([a-h])\s*([1-8])\b/gi, "fx$1$2");
+    out = out.replace(/\b([a-h])x\s+([a-h][1-8])\b/gi, "$1x$2");
+    out = out.replace(/\b([a-h])\s+x\s+([a-h][1-8])\b/gi, "$1x$2");
+    // Pawn capture missing x: adjacent files, but NOT leading h (bishop figurine).
+    // Case-sensitive on file letter so Ba7 stays bishop (not bxa7).
+    out = out.replace(/\b([a-hA-H])([a-h][1-8])\b/g, function (_m, a, dest) {
+      if (a !== a.toLowerCase()) return _m;
+      const fa = a.toLowerCase();
+      const fb = dest.charAt(0).toLowerCase();
+      if (fa === "h") return _m;
+      if (Math.abs(fa.charCodeAt(0) - fb.charCodeAt(0)) !== 1) return _m;
+      return fa + "x" + dest.toLowerCase();
+    });
+    // Bishop figurine OCR as h / .h: hc4 → Bxc4, hg3 → Bxg3
+    out = out.replace(/\.h(?=[a-h][1-8])/g, "Bx");
+    out = out.replace(/\bh([a-h][1-8])\b/gi, "Bx$1");
+    out = out.replace(/\b([NBRQK])([a-h])\s+([1-8])\b/g, "$1$2$3");
+    out = out.replace(/\b([NBRQK])\s+([a-h][1-8])\b/g, "$1$2");
+    out = out.replace(/\b([NBRQK][a-h]?[1-8]?)x\s+([a-h][1-8])\b/g, "$1x$2");
+    return out;
+  }
   function splitGluedMoveToken(token) {
     return String(token || "").split(/\.(?=[NBRQK])/).map(ocrCleanMoveToken).filter(Boolean);
   }
@@ -948,21 +1254,70 @@
     if (!t) return false;
     t = t.replace(/^(?:[•·∙⋅]+\s*|'+\s*\(!?\s*|\(\s*!\s*)+/g, "").trim() || t;
     if (/^(?:and|or|with|the|to|for|when|then|while|black|white|as|if|but|after|since|excellent|compensation)\b/i.test(t)) return false;
-    if (/^[a-z]/.test(t) && !/^[a-h](x[a-h])?[1-8]/.test(t)) return false;
-    return /^(?:O-O-O|O-O|[NBRQK]|[1lI]'|[iltJ@&§]|ll|[a-h]x|[a-h][1-8])/i.test(t)
+    const cleaned = ocrCleanMoveToken(t);
+    if (/^(?:O-O-O|O-O|[NBRQK]?[a-h]?[1-8]?x?[a-h][1-8](?:=[NBRQ])?[+#?!]*|[a-h]x[a-h][1-8](?:=[NBRQ])?[+#?!]*|[a-h][1-8](?:=[NBRQ])?[+#?!]*)$/i.test(cleaned)) return true;
+    if (/^[a-z]/.test(t) && !/^[a-h](x[a-h])?[1-8]/.test(t) && !/^(?:il|ll|lt|l'|i'|%')/i.test(t)) return false;
+    return /^(?:O-O-O|O-O|[NBRQK]|[1lI]'|[iltJ@&§%]|ll|il|[a-h]x|[a-h][1-8])/i.test(t)
       || /[a-h][1-8lI][+#?!]*$/i.test(t);
   }
   function ocrCleanClient(text) {
-    let out = String(text || "").replace(/\u00a0/g, " ").replace(/[\u2018\u2019\u02bc]/g, "'").replace(/\\/g, "");
+    let out = String(text || "").replace(/\u00a0/g, " ");
+    // Queen figurine → U+FFFD before square/capture: 30.�d2 / 31.� xa5 → Q…
+    out = out.replace(/\uFFFD\s*(?=x?[a-h][1-8])/g, "Q");
+    out = out.replace(/\uFFFD\s*f[lI]\b/g, "Qf1");
+    out = out.replace(/\uFFFD(?=[a-h][l1I])/g, "Q");
+    out = out.replace(/\uFFFD/g, "").replace(/[\u2018\u2019\u02bc]/g, "'").replace(/\\/g, "");
     out = out.replace(/0\s*-{1,3}\s*0\s*-{1,3}\s*0/g, "O-O-O").replace(/0\s*-{1,3}\s*0/g, "O-O");
     out = out.replace(/\b([a-z]{2,}[a-egh])\+/g, "$1t");
     out = out.replace(/([a-h][1-8])\.(?=If\b)/g, "$1. ");
     out = out.replace(/\bBf\s+(?=\d)/g, "If ");
     out = out.replace(/\bBf(?=\d{2}\.)/g, "If ");
     out = out.replace(/\bIf(?=\d)/g, "If ");
+    out = out.replace(/\b2[sS](?=\s*\.)/g, "28");
+    out = out.replace(/[•·∙⋅]{2,}/g, "...");
+    out = out.replace(/\.\s*[•·∙⋅]+\s*\./g, "...");
+    out = out.replace(/\b(\d+)\s*\.\s*[•·∙⋅]+\s*\.\s*/g, "$1... ");
+    out = out.replace(/\b(\d+)\s+[•·∙⋅]+\s*\.\s*/g, "$1... ");
     out = out.replace(/\b(\d+)\s*\.\s*\.\.\s*/g, "$1...");
     out = out.replace(/\b(\d+)\s+\.\.\.?\s*/g, "$1...");
-    const headRe = /\b(\d+)\s*(\.\.\.|\.)\s*/g;
+    out = out.replace(/\b(\d+)\s*\.\s*\.\s+/g, "$1... ");
+    out = out.replace(/\b(\d+)\.\.(?!\.)(?=[NBRQK]|[1lI'"%@&§]|id|if|il|lt|l')/g, "$1.");
+    // Move-number OCR: 3 Llilb4 → 31.lilb4
+    out = out.replace(/\b(\d)[ \t]+[lI][ \t]*\.\s*/g, function (_m, d) { return d + "1."; });
+    out = out.replace(/\b(\d)[ \t]+L(?=[NBRQK1'lia-hlt/])/g, function (_m, d) { return d + "1."; });
+    out = out.replace(/\b(\d)[ \t]+L\.(?=[NBRQK1'lia-hlt/])/g, function (_m, d) { return d + "1."; });
+    // Rook OCR E:b3 / E:5c7 (colon breaks tokenRe)
+    out = out.replace(/(?<![A-Za-z0-9])E:(?=[a-h1-8x])/g, "R");
+    out = out.replace(/\.§(?=[a-h])/g, "R");
+    out = out.replace(/(?<![A-Za-z0-9])§(?=[a-h])/g, "R");
+    // Bishop OCR lost-dot ixb6 / ia6 / ia?!
+    out = out.replace(/(?<![A-Za-z0-9])i(?=x[a-h][1-8])/g, "B");
+    out = out.replace(/(?<![A-Za-z0-9])i(?=a[1-8])/g, "B");
+    out = out.replace(/(?<![A-Za-z0-9])ia\?!/g, "Ba7!");
+    out = out.replace(/(?<![A-Za-z0-9])i\s+([a-h][1-8])/g, "B$1");
+    out = out.replace(/\{(?=\s*or\b)/gi, "(");
+    out = out.replace(/\{(?=\s*\d+\.)/g, "(");
+    out = out.replace(/\bJk(?=[a-h][1-8])/g, "Rc");
+    out = out.replace(/\bJ(?=[a-h][1-8])/g, "R");
+    out = out.replace(/\b(\d+)\.\s*[Gg](?=[a-h][1-8]\b)/g, "$1. R");
+
+    // Knight OCR illfl / illf1 → Nf7
+    out = out.replace(/\billf[l1I]\b/gi, "Nf7");
+    // Score-line figurine bootstrap: ffe2 / !:ib7 / ttlc4 / @hi / f?ds / m:t
+    out = out.replace(/\bff(?=[a-h][1-8])/g, "Q");
+    out = out.replace(/\bttl(?=[a-h])/gi, "N");
+    out = out.replace(/\btli(?=[a-h])/gi, "N");
+    out = out.replace(/!:i(?=[a-h])/g, "R");
+    out = out.replace(/!:(?=[a-h][1-8])/g, "R");
+    out = out.replace(/:t:/g, "±");
+    out = out.replace(/(?<=[NBRQKa-h1-8])\s*:t\b/g, "±");
+    out = out.replace(/@(?=[a-h])/g, "K");
+    out = out.replace(/\bKh[iI]\b/g, "Kh1");
+    out = out.replace(/\bf\?d[sS8]\b/g, "Qd8");
+    out = out.replace(/\bm:t\b/g, "Rf1");
+    out = out.replace(/\bQd[sS]\b/g, "Qd8");
+    // Rule A: move number not a rank after file / hyphen (a4-a5. / exd5.)
+    const headRe = /(?:(?<![a-h\-])(\d{1,3})\s*(\.\.\.|\.)|(?<!\d)(\.\.\.))\s*/g;
     const junkRe = /^(?:[•·∙⋅]+\s*|'+\s*\(!?\s*|\(\s*!\s*)+/;
     const tokenRe = /(?:O-O-O|O-O|[NBRQK]\s+[a-h][1-8][=NBRQ]?[+#?!]*|[a-h]\s+x\s*[a-h][1-8][=NBRQ]?[+#?!]*|[a-h]\s+[a-h][1-8][=NBRQ]?[+#?!]*|[a-h]\s+[1-8][=NBRQ]?[+#?!]*|[^\s,;:\[\](){}]{1,18})/i;
     let built = "";
@@ -970,7 +1325,7 @@
     let m;
     while ((m = headRe.exec(out)) !== null) {
       built += out.slice(pos, m.index);
-      const prefix = m[2].indexOf("..") === 0 ? (m[1] + "...") : (m[1] + ".");
+      const prefix = m[3] ? "..." : (m[2].indexOf("..") === 0 ? (m[1] + "...") : (m[1] + "."));
       let cursor = m.index + m[0].length;
       let rest = out.slice(cursor);
       const junk = rest.match(junkRe);
@@ -992,7 +1347,7 @@
         const junk2 = out.slice(nxt).match(junkRe);
         if (junk2) nxt += junk2[0].length;
         const after = out.slice(nxt);
-        if (!/^\d+\s*\./.test(after)) {
+        if (!/^(?:\d+\s*\.|\.\.\.)/.test(after)) {
           const nm = after.match(tokenRe);
           if (nm && nm.index === 0 && looksLikeMoveToken(nm[0])) {
             splitGluedMoveToken(nm[0]).forEach(function (r) { piece += " " + r; });
@@ -1007,8 +1362,54 @@
     built += out.slice(pos);
     built = built.replace(/\b([NBRQK][a-h]?[1-8]?x?[a-h][1-8][+#]?)\.([NBRQK][a-hx])/g, "$1 $2");
     built = built.replace(/[ \t]+/g, " ");
+    built = replacePieceOcrGlyphs(built);
+    built = glueSpacedSan(built);
+    // Rook / knight / king / queen salad mid-prose (Quality Chess)
+    built = built.replace(/\bE'\.?(?=x)/g, "R");
+    built = built.replace(/\bl0\s*x\s*([a-h][1-8])/g, "Nx$1");
+    built = built.replace(/\bl0\s+([a-h][1-8])/g, "N$1");
+    built = built.replace(/\bl0(?=[a-h][1-8]|x)/g, "N");
+    built = built.replace(/'itl(?=[a-h])/gi, "K");
+    built = built.replace(/(?<![A-Za-z0-9])itl(?=[a-h])/gi, "K");
+    built = built.replace(/lt>K?(?=[a-h])/g, "K");
+    built = built.replace(/'Ml'?(?=x?[a-h])/g, "Q");
+    built = built.replace(/(?<![A-Za-z0-9])i(?=[a-h][1-8](?:[+#!=]|\b))/g, "B");
+    built = built.replace(/\biB(?=[a-h])/g, "B");
+    built = built.replace(/\bEl(?=x[a-h])/g, "R");
+    built = built.replace(/!'l:/g, "R");
+    built = built.replace(/!'\s*l:/g, "R");
     built = built.replace(
-      /((?:O-O-O|O-O|[NBRQK]?[a-h]?[1-8]?x?[a-h][1-8](?:=[NBRQ])?[+#]?|[a-h]x[a-h][1-8]|[a-h][1-8])[!?]{0,3});[il1]+;?/gi,
+      /\b([NBRQK][a-h]?[1-8]?x?[a-h][1-8][+#?!]*)(?=[NBRQK][a-hx])/g,
+      "$1 "
+    );
+
+    built = built.replace(/\b(\d)[oO]\.(?=\s*[NBRQKa-h])/g, "$10.");
+    built = built.replace(/\bhf[l1]\b/gi, "Bxf1");
+    built = built.replace(
+      /\b([NBRQK]?[a-h]?[1-8]?x?[a-h][1-8]|O-O-O|O-O)t(?=\s|$|[;,)\]}?!])/g,
+      "$1+"
+    );
+    built = built.replace(
+      /\b([NBRQK]?[a-h]?[1-8]?x?[a-h][1-8]|O-O-O|O-O)([!?]?)\+-/g,
+      "$1$2 +-"
+    );
+    built = built.replace(/;t\b/g, " ⩲");
+    // Piece+file+l: Rooks→1, Knights→7, B/Q/K→7; captures →1
+    built = built.replace(/\b([NBRQK]x[a-h])\s*[lI]\b/g, "$11");
+    built = built.replace(/\b([NBRQK]x[a-h])[lI]\b/g, "$11");
+    built = built.replace(/\bR([a-h])[lI](?=[+#?!]|\b)/g, "R$11");
+    built = built.replace(/\bN([a-h])[lI](?=[+#?!]|\b)/g, "N$17");
+    built = built.replace(/\b([BQK][a-h])[lI](?=[+#?!]|\b)/g, "$17");
+    built = built.replace(/\b(\d+)\.\.(?!\.)(?=[NBRQK])/g, "$1.");
+    // Queen OCR lost figurine: 38.fl?! / Qfl → Qf1
+    built = built.replace(/\b(\d+)\.\s*f[lI](?=[+#?!]|\b)/g, "$1. Qf1");
+    built = built.replace(/\bQf[lI]\b/g, "Qf1");
+    built = built.replace(
+      /((?:O-O-O|O-O|[NBRQK]?[a-h]?[1-8]?x?[a-h][1-8](?:=[NBRQ])?[+#]?|[a-h]x[a-h][1-8]|[a-h][1-8])[!?]{0,3})(?:;!;|!;!;|;[il1I]+;?)/gi,
+      "$1 ⩲"
+    );
+    built = built.replace(
+      /((?:O-O-O|O-O|[NBRQK]?[a-h]?[1-8]?x?[a-h][1-8](?:=[NBRQ])?|[a-h]x[a-h][1-8]|[a-h][1-8])!\?);!;?/gi,
       "$1 ⩲"
     );
     built = built.replace(
@@ -1046,8 +1447,9 @@
     const blocks = text.split(/\n\n+/);
     const san = "(?:O-O-O|O-O|[NBRQK][a-h]?[1-8]?x?[a-h][1-8](?:=[NBRQ])?[+#?!]*|[a-h]x[a-h][1-8](?:=[NBRQ])?[+#?!]*|[a-h][1-8](?:=[NBRQ])?[+#?!]*)";
     const ply = "\\d+\\.(?:\\.\\.)?\\s+" + san + "(?:\\s+" + san + ")?";
-    const seqRe = new RegExp("(?:" + ply + "(?:\\s+" + ply + ")*)", "g");
+    const seqRe = new RegExp("(?:" + ply + "(?:\\s+" + ply + ")*|(?<![A-Za-z0-9.])" + san + "(?![A-Za-z0-9]))", "g");
     const oneRe = new RegExp("(\\d+\\.(?:\\.\\.)?\\s+)(" + san + ")", "g");
+    const bareSanRe = new RegExp("^" + san + "$");
     function formatInline(chunk) {
       const line = chunk.replace(/\n/g, " ");
       let out = "";
@@ -1056,9 +1458,15 @@
       seqRe.lastIndex = 0;
       while ((m = seqRe.exec(line)) !== null) {
         out += escapeHtml(line.slice(last, m.index));
+        const hit = m[0];
+        if (bareSanRe.test(hit)) {
+          out += formatSanToken(hit);
+          last = m.index + hit.length;
+          continue;
+        }
         let inner = "";
         let sm;
-        const seq = m[0];
+        const seq = hit;
         oneRe.lastIndex = 0;
         let sLast = 0;
         while ((sm = oneRe.exec(seq)) !== null) {
@@ -1075,7 +1483,7 @@
         }
         inner += escapeHtml(seq.slice(sLast));
         out += '<span class="move-seq">' + inner + "</span>";
-        last = m.index + m[0].length;
+        last = m.index + hit.length;
       }
       out += escapeHtml(line.slice(last));
       return out;
@@ -1091,9 +1499,15 @@
   function isMissing() { return !!game().missing; }
   function clearPending() {
     pendingFrom = null;
+    clearPendingClasses();
+  }
+  function clearPendingClasses() {
     elBoard.querySelectorAll(".explore-select, .legal-dot, .legal-capture").forEach((el) => {
       el.classList.remove("explore-select", "legal-dot", "legal-capture");
     });
+  }
+  function repaintPending() {
+    if (pendingFrom) paintSelection(pendingFrom);
   }
   function matchesUci(stored, from, to, promotion) {
     if (!stored) return false;
@@ -1148,7 +1562,7 @@
     return targets;
   }
   function paintSelection(from) {
-    clearPending();
+    clearPendingClasses();
     pendingFrom = from;
     const cell = elBoard.querySelector(".square-" + from);
     if (cell) cell.classList.add("explore-select");
@@ -1187,7 +1601,8 @@
     const list = plies();
     const next = list[idx + 1];
     if (next && matchesUci(next.uci, from, to, promotion)) { goTo(idx + 1); return true; }
-    if (next) {
+    // TEMP: PGN book/engine forks disabled — deviate into a session user line instead
+    if (SHOW_ENGINE_VAR_BOOKS && next) {
       const forks = next.forks || [];
       for (let fi = 0; fi < forks.length; fi++) {
         const first = (forks[fi].moves || [])[0];
@@ -1207,7 +1622,16 @@
     clearPending();
     if (followTreeMove(record.from, record.to, record.promotion)) return true;
     if (!explore) {
-      const stem = fork
+      const matched = sessionVariants().find((v) => {
+        if (v.stem || v.baseIdx !== idx) return false;
+        const first = (v.moves || [])[0];
+        return first && matchesUci(first.uci, record.from, record.to, record.promotion);
+      });
+      if (matched) {
+        enterUserVariant(matched.id, 0);
+        return true;
+      }
+      const stem = SHOW_ENGINE_VAR_BOOKS && fork
         ? { ply: fork.ply, fi: fork.fi, through: fork.depth }
         : null;
       explore = {
@@ -1223,6 +1647,7 @@
     }
     explore.moves.push(record);
     explore.depth = explore.moves.length - 1;
+    syncExploreToSession();
     board.position(record.fen, false);
     renderNotes(); renderMoveList(); setButtons(); updateBookHint(); requestEval();
     return true;
@@ -1249,7 +1674,11 @@
       if (piece && piece.color === ch.turn()) paintSelection(sq);
       return;
     }
-    if (pendingFrom === sq) { clearPending(); return; }
+    if (pendingFrom === sq) {
+      clearPending();
+      selectToggleArmed = false;
+      return;
+    }
     const selPiece = ch.get(pendingFrom);
     const targets = legalTargets(pendingFrom);
     if (
@@ -1293,6 +1722,7 @@
     return true;
   }
   function enterFork(ply, fi, depth) {
+    if (!SHOW_ENGINE_VAR_BOOKS) return;
     if (isMissing()) return;
     const p = plies()[ply];
     if (!p || !(p.forks || [])[fi]) return;
@@ -1367,16 +1797,18 @@
     clearBookSquareBadge();
     updatePlyBadge();
     const list = plies();
-    const on = !fork && !explore && idx >= 0 && Boolean(list[idx] && list[idx].book);
+    const p = !fork && !explore && idx >= 0 ? list[idx] : null;
+    const mark = p ? primaryMark(p.glyphs) : "";
+    const on = Boolean(p && (p.book || mark));
     if (!on || !elBoard) return;
-    const to = plyToSquare(list[idx]);
+    const to = plyToSquare(p);
     if (!to) return;
     const cell = elBoard.querySelector(".square-" + to);
     if (!cell) return;
     const badge = document.createElement("span");
     badge.className = "book-sq-badge";
-    badge.setAttribute("aria-label", "Book note on this move");
-    badge.innerHTML = BOOK_BADGE_IMG;
+    badge.setAttribute("aria-label", mark ? ("Book mark " + mark) : "Book note on this move");
+    badge.innerHTML = mark ? markBadgeHtml(p.glyphs) : BOOK_BADGE_IMG;
     cell.appendChild(badge);
   }
   function step(dir) {
@@ -1471,7 +1903,7 @@
       elMove.textContent = cur ? ("your line · " + cur.san) : "your line · branch point";
       let html = pinnedBookHtml(anchor);
       html += '<div class="note book" style="border-left-color:var(--explore);background:rgba(52,199,89,0.08)">';
-      html += "Ephemeral — not saved. Green solid = your tries; dashed gray = PGN forks.</div>";
+      html += "Session line — kept while this chapter stays open. Click green moves in the tree to reopen.</div>";
       html += '<button type="button" class="play-line" id="btnExitExplore"><span class="kind">main</span>back to book line</button>';
       withNotesKey(bookNotesKey("explore:" + (explore.stem ? explore.stem.ply : explore.baseIdx)), function () {
         elNotes.innerHTML = html;
@@ -1479,7 +1911,7 @@
       document.getElementById("btnExitExplore").onclick = () => exitExplore();
       return;
     }
-    if (fork) {
+    if (SHOW_ENGINE_VAR_BOOKS && fork) {
       const p = plies()[fork.ply];
       const fk = p.forks[fork.fi];
       const moves = fk.moves || [];
@@ -1503,31 +1935,36 @@
       if (game().startBook) {
         html += '<div class="note book">' + formatNoteHtml(game().startBook) + "</div>";
       } else {
-        html = '<p class="empty">Drag a piece or tap square → square. Deviating starts your own line (live Stockfish).</p>';
+        html = '<p class="empty">Drag a piece or tap square → square. Deviating starts your own line (kept for this session).</p>';
       }
       withNotesKey("start", function () { elNotes.innerHTML = html; });
       return;
     }
     const dots = p.side === "white" ? "." : "...";
-    elMove.innerHTML = p.fullmove + dots + " " + escapeHtml(p.san) + (p.glyphs ? ' <span style="color:var(--accent)">' + escapeHtml(p.glyphs) + "</span>" : "");
+    elMove.innerHTML = p.fullmove + dots + " " + escapeHtml(p.san) + markHeadlineHtml(p.glyphs);
     let html = "";
     if (p.book) html += '<div class="note book">' + formatNoteHtml(p.book) + "</div>";
-    if (p.engine) html += '<div class="note engine"><span class="tag">Engine / RAG</span>' + formatNoteHtml(p.engine) + "</div>";
-    const forks = p.forks || [];
-    if (forks.length) {
-      html += '<div class="note vars"><span class="tag">Playable forks</span>';
-      forks.forEach((fk, fi) => {
-        const line = (fk.moves || []).map((m) => m.san).join(" ");
-        html += '<button type="button" class="play-line" data-fi="' + fi + '"><span class="kind">'
-          + escapeHtml(fk.kind || "line") + "</span>" + escapeHtml(line) + "</button>";
-      });
-      html += "</div>";
+    // TEMP: engine/RAG notes + PGN playable forks hidden
+    if (SHOW_ENGINE_VAR_BOOKS) {
+      if (p.engine) html += '<div class="note engine"><span class="tag">Engine / RAG</span>' + formatNoteHtml(p.engine) + "</div>";
+      const forks = p.forks || [];
+      if (forks.length) {
+        html += '<div class="note vars"><span class="tag">Playable forks</span>';
+        forks.forEach((fk, fi) => {
+          const line = (fk.moves || []).map((m) => m.san).join(" ");
+          html += '<button type="button" class="play-line" data-fi="' + fi + '"><span class="kind">'
+            + escapeHtml(fk.kind || "line") + "</span>" + escapeHtml(line) + "</button>";
+        });
+        html += "</div>";
+      }
     }
     if (!html) html = '<p class="empty">No book note on this move.</p>';
     withNotesKey(p.book ? ("book:" + idx) : ("main:" + idx), function () { elNotes.innerHTML = html; });
-    elNotes.querySelectorAll("button.play-line[data-fi]").forEach((btn) => {
-      btn.addEventListener("click", () => enterFork(idx, Number(btn.dataset.fi), 0));
-    });
+    if (SHOW_ENGINE_VAR_BOOKS) {
+      elNotes.querySelectorAll("button.play-line[data-fi]").forEach((btn) => {
+        btn.addEventListener("click", () => enterFork(idx, Number(btn.dataset.fi), 0));
+      });
+    }
   }
   function pinnedBookHtml(anchor) {
     if (!anchor || !anchor.book) return "";
@@ -1550,7 +1987,28 @@
       });
       html += '<span class="explore-mark">]</span></span> ';
     }
+    function appendSessionVariant(v) {
+      if (!v || !(v.moves || []).length) return;
+      if (explore && explore.id === v.id) {
+        appendExploreMoves();
+        return;
+      }
+      html += '<span class="explore"><span class="explore-mark">[</span>';
+      v.moves.forEach((m, di) => {
+        html += '<button type="button" class="explore-move" data-uv="' + escapeHtml(v.id) + '" data-d="' + di + '">'
+          + escapeHtml(m.san) + "</button>";
+      });
+      html += '<span class="explore-mark">]</span></span> ';
+    }
+    function appendSessionVariantsAt(plyIdx) {
+      sessionVariants().forEach((v) => {
+        if (v.stem) return;
+        if (v.baseIdx !== plyIdx) return;
+        appendSessionVariant(v);
+      });
+    }
     function appendForkMoves(fk, fi, plyIdx, throughDepth) {
+      if (!SHOW_ENGINE_VAR_BOOKS) return;
       const moves = fk.moves || [];
       const limit = throughDepth == null ? moves.length - 1 : throughDepth;
       html += '<span class="fork ' + escapeHtml(fk.kind || "") + '"><span class="fork-mark">(</span>';
@@ -1567,56 +2025,65 @@
       });
       html += '<span class="fork-mark">)</span></span> ';
     }
-    if (explore && explore.baseIdx < 0 && !explore.stem) {
-      appendExploreMoves();
-      elList.innerHTML = html || '<span class="empty">No moves</span>';
-    } else {
-      const list = plies();
-      const lastMain = explore
-        ? (explore.stem ? explore.stem.ply : explore.baseIdx)
-        : list.length - 1;
+
+    appendSessionVariantsAt(-1);
+
+    const list = plies();
+    const lastMain = explore
+      ? (explore.stem ? explore.stem.ply : explore.baseIdx)
+      : list.length - 1;
+    const hideMainWhileExploringFromStart = explore && explore.baseIdx < 0 && !explore.stem;
+    if (!hideMainWhileExploringFromStart) {
       list.forEach((p, i) => {
         if (i > lastMain) return;
         if (p.side === "white") html += p.fullmove + ".";
         const cls = ["move"];
         if (
           (!fork && !explore && i === idx) ||
-          (fork && fork.ply === i) ||
+          (SHOW_ENGINE_VAR_BOOKS && fork && fork.ply === i) ||
           (explore && !explore.stem && explore.baseIdx === i && explore.depth < 0)
         ) cls.push("active");
         if (p.book) cls.push("has-book");
-        else if (p.engine || (p.forks && p.forks.length) || (p.variations && p.variations.length) || (p.comment && !p.book)) cls.push("has-other");
+        else if (SHOW_ENGINE_VAR_BOOKS && (p.engine || (p.forks && p.forks.length) || (p.variations && p.variations.length) || (p.comment && !p.book))) cls.push("has-other");
         html += '<button type="button" class="' + cls.join(" ") + '" data-i="' + i + '">' + escapeHtml(p.san + (p.glyphs||"")) + "</button> ";
-        (p.forks || []).forEach((fk, fi) => {
-          if (explore && explore.stem && explore.stem.ply === i && explore.stem.fi === fi) {
-            appendForkMoves(fk, fi, i, explore.stem.through);
-            appendExploreMoves();
-            return;
-          }
-          if (explore && explore.stem && explore.stem.ply === i) {
+        if (SHOW_ENGINE_VAR_BOOKS) {
+          (p.forks || []).forEach((fk, fi) => {
+            if (explore && explore.stem && explore.stem.ply === i && explore.stem.fi === fi) {
+              appendForkMoves(fk, fi, i, explore.stem.through);
+              appendExploreMoves();
+              return;
+            }
+            if (explore && explore.stem && explore.stem.ply === i) {
+              appendForkMoves(fk, fi, i, null);
+              return;
+            }
+            if (explore && !explore.stem) return;
+            if (fork && fork.ply === i) {
+              appendForkMoves(fk, fi, i, null);
+              return;
+            }
+            if (idx < i - 1) return;
             appendForkMoves(fk, fi, i, null);
-            return;
-          }
-          if (explore && !explore.stem) return;
-          if (fork && fork.ply === i) {
-            appendForkMoves(fk, fi, i, null);
-            return;
-          }
-          // Spoilers off: only reveal after reaching the branch position
-          // (fen_before of this ply = position prior to the variation's first move).
-          if (idx < i - 1) return;
-          appendForkMoves(fk, fi, i, null);
-        });
-        if (explore && !explore.stem && explore.baseIdx === i) appendExploreMoves();
+          });
+        }
+        appendSessionVariantsAt(i);
       });
-      elList.innerHTML = html || '<span class="empty">No moves</span>';
     }
+    elList.innerHTML = html || '<span class="empty">No moves</span>';
+
     elList.querySelectorAll("button.move").forEach((btn) => btn.addEventListener("click", () => { explore = null; fork = null; clearPending(); goTo(Number(btn.dataset.i)); }));
-    elList.querySelectorAll("button.fork-move").forEach((btn) => btn.addEventListener("click", () => {
-      explore = null;
-      enterFork(Number(btn.dataset.i), Number(btn.dataset.fi), Number(btn.dataset.d));
-    }));
+    if (SHOW_ENGINE_VAR_BOOKS) {
+      elList.querySelectorAll("button.fork-move").forEach((btn) => btn.addEventListener("click", () => {
+        explore = null;
+        enterFork(Number(btn.dataset.i), Number(btn.dataset.fi), Number(btn.dataset.d));
+      }));
+    }
     elList.querySelectorAll("button.explore-move").forEach((btn) => btn.addEventListener("click", () => {
+      const uv = btn.dataset.uv;
+      if (uv) {
+        enterUserVariant(uv, Number(btn.dataset.d));
+        return;
+      }
       if (!explore) return;
       explore.depth = Number(btn.dataset.d);
       board.position(fenNow(), false);
@@ -1671,7 +2138,7 @@
       i += dir;
       if (i < 0 || i >= list.length) break;
       const p = list[i];
-      if (p.book || p.engine || (p.forks && p.forks.length) || p.comment) { goTo(i); return; }
+      if (p.book || (SHOW_ENGINE_VAR_BOOKS && (p.engine || (p.forks && p.forks.length) || p.comment))) { goTo(i); return; }
     }
   }
 

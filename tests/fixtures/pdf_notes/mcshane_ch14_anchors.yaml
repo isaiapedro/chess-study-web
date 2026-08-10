@@ -1,0 +1,30 @@
+expect:
+  - fullmove: 24
+    side: black
+    san_contains: Qf8
+    text_prefix: "There is nothing better"
+  - fullmove: 25
+    side: white
+    san_contains: Bf2
+    text_prefix: "There is nothing else"
+  - fullmove: 26
+    side: white
+    san_contains: a4
+    text_prefix: "Getting ready"
+  - fullmove: 26
+    side: black
+    san_contains: R5c7
+    text_prefix: "Black is not ready"
+  - fullmove: 27
+    side: white
+    san_contains: h3
+    text_prefix: "This prophylactic"
+  - fullmove: 28
+    side: white
+    san_contains: Qd2
+    text_prefix: "Preparing a4-a5"
+  - fullmove: 28
+    side: black
+    san_contains: Bg5
+    text_prefix: "If 28"
+source: Chess Structures Ch.14 Carlsen-McShane
