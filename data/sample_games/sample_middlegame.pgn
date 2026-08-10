@@ -1,0 +1,14 @@
+[Event "Chess Coach Middlegame Sample"]
+[Site "Local"]
+[Date "2024.06.01"]
+[Round "1"]
+[White "CoachWhite"]
+[Black "CoachBlack"]
+[Result "1-0"]
+[ECO "B20"]
+[Opening "Sicilian Defense"]
+
+1. e4 c5 2. Nf3 d6 3. d4 cxd4 4. Nxd4 Nf6 5. Nc3 a6 6. Be2 e5 7. Nb3 Be7
+8. O-O O-O 9. Be3 Be6 10. f4 exf4 11. Rxf4 Nbd7 12. Qd2 Rc8 13. Raf1 Ne5
+14. Nd4 Nc4 15. Bxc4 Rxc4 16. Nxe6 fxe6 17. Rxf6 Bxf6 18. Rxf6 Qxf6 19. Nd5 Qd8
+20. Bb6 Qd7 21. Nc7 Rxc7 22. Bxc7 Qxc7 23. Qxd6 Qxd6 24. e5 Qd4+ 25. Kh1 Qxe5 1-0

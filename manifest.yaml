@@ -1,0 +1,15 @@
+name: "chess_coach"
+type: "experiment"
+version: "0.1.0"
+description: "Local CLI chess coaching pipeline: PGN, Stockfish, RAG books, Ollama commentary"
+status: "active"
+owner: "user"
+stack:
+  - "python-chess"
+  - "stockfish"
+  - "chromadb"
+  - "ollama"
+entrypoints:
+  - "python -m chess_coach"
+layers:
+  - "Layer 4: Knowledge System"

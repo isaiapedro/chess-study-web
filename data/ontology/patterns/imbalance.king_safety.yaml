@@ -1,0 +1,21 @@
+id: imbalance.king_safety
+label: King Safety / Attack
+phase: middlegame
+family: imbalance
+aliases:
+  - king safety
+  - kingside attack
+keywords:
+  - king safety
+  - attack on the king
+  - kingside attack
+  - opposite side castling
+rules_of_thumb:
+  - When kings face opposite wings, pawn storms beat slow manoeuvres.
+  - Extra attackers near the king outweigh small material if files open.
+plans:
+  - Open lines toward the enemy king; do not trade attacking pieces lightly.
+related:
+  - opening.sicilian_dragon
+detect: board_king_safety
+exemplars: []

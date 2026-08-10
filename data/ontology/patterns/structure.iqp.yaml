@@ -1,0 +1,29 @@
+id: structure.iqp
+label: Isolated Queen Pawn
+phase: middlegame
+family: chess_structures
+aliases:
+- isolated queen pawn
+- iqp
+- isolani
+keywords:
+- isolated queen pawn
+- isolani
+- IQP
+- isolated d-pawn
+- blockade d5
+rules_of_thumb:
+- Side with IQP seeks activity, kingside attack, and piece play before endgame.
+- Opponent blockades the pawn (often on d5/d4), trades pieces, aims for favorable endgame.
+- Outposts on c5/e5 (or c4/e4) are classic for the IQP side's knights.
+plans:
+- 'IQP side: lift rook, use open c/e files, avoid wholesale exchanges.'
+- 'Defender: sit on the blockade square, trade queens, pressure the isolani.'
+related:
+- structure.hanging_pawns
+- imbalance.bishop_pair
+- structure.open_c_file
+detect: board_iqp
+exemplars:
+- Karpov vs Kasparov, Moscow 1984/85 (IQP battles)
+- Arutinian vs Efimenko, 2007 (chapter Family structures)

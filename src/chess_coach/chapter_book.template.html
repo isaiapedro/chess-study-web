@@ -1,0 +1,1980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="dark" />
+  <title>@@HEADING@@ — Chapter book</title>
+  <link rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" />
+  <style>
+    /* Chess Wrapped tokens — design/identity/chess-wrapped/README.md */
+    :root {
+      --bg: #000000;
+      --charcoal: #0d0d0d;
+      --surface: #121212;
+      --surface-raised: #181818;
+      --fill-muted: #1c1c1c;
+      --fill-alt: #242424;
+      --border: rgba(255, 255, 255, 0.07);
+      --border-soft: rgba(255, 255, 255, 0.05);
+      --rim: rgba(255, 255, 255, 0.14);
+      --accent: #D32531;
+      --accent-dim: #a0000f;
+      --sage: #34C759;
+      --blue: #0084d2;
+      --cream: #ede7d3;
+      --text: #ffffff;
+      --text-soft: #e6e6e6;
+      --text-muted: #a1a1a1;
+      --text-dim: #7a7a7a;
+      --text-disabled: #4a4a4a;
+      --board-light: #C7C7C7;
+      --board-dark: #71828F;
+
+      /* semantic aliases used by the annotation / move-tree language */
+      --book: var(--cream);
+      --engine: var(--blue);
+      --explore: var(--sage);
+      --book-fill: rgba(237, 231, 211, 0.16);
+      --other-fill: rgba(0, 132, 210, 0.20);
+
+      --r-xs: 8px;
+      --r-sm: 12px;
+      --r-md: 18px;
+      --r-lg: 24px;
+      --r-xl: 32px;
+      --r-pill: 999px;
+
+      --mono: ui-monospace, SFMono-Regular, Menlo, "JetBrains Mono", monospace;
+      /* board never grows past this, so annotations always stay on screen */
+      --board-max: min(58dvh, 620px);
+      --measure: 66rem;
+    }
+
+    * { box-sizing: border-box; }
+    html {
+      background: var(--bg);
+      width: 100%;
+      max-width: 100%;
+      overflow-x: clip;
+    }
+    html, body { margin: 0; height: 100%; }
+    body {
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(120% 78% at 50% 0%, #101010 0%, #000000 60%) no-repeat;
+      color: var(--text);
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+      height: 100dvh;
+      max-height: 100dvh;
+      width: 100%;
+      max-width: 100%;
+      overflow: hidden;
+      overflow-x: clip;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    /* ---------- chrome ---------- */
+    .top {
+      display: flex; align-items: center; gap: 0.75rem;
+      padding: 0.7rem clamp(0.65rem, 2vw, 1.1rem);
+      background: rgba(18, 18, 18, 0.56);
+      backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; z-index: 20;
+    }
+    .top .mark {
+      width: 26px; height: 26px; flex: none;
+      display: grid; place-items: center;
+      border-radius: var(--r-xs);
+      background: var(--accent); color: #fff;
+      font-size: 0.9rem; line-height: 1;
+    }
+    .top h1 {
+      margin: 0; flex: 1; min-width: 0;
+      font-size: 0.95rem; font-weight: 600; letter-spacing: -0.3px;
+      color: var(--text);
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .count {
+      flex: none;
+      font-size: 0.6875rem; font-weight: 500; letter-spacing: 0.04em;
+      font-variant-numeric: tabular-nums;
+      color: var(--text-muted);
+      background: var(--fill-alt); border: 1px solid var(--border);
+      border-radius: var(--r-pill); padding: 0.22rem 0.6rem;
+    }
+
+    .shell {
+      display: grid; grid-template-columns: minmax(0, 1fr);
+      min-height: 0; height: 100%; overflow: hidden;
+      width: 100%; max-width: 100%;
+      justify-items: center;
+      overflow-anchor: none;
+    }
+    .stage {
+      display: grid; grid-template-rows: auto auto minmax(0, 1fr);
+      min-height: 0; overflow: hidden;
+      gap: 0.55rem;
+      padding: 0.6rem clamp(0.5rem, 2vw, 1.1rem) 0.5rem;
+      width: 100%; max-width: 100%;
+      justify-items: center;
+      box-sizing: border-box;
+      overflow-anchor: none;
+    }
+
+    /* ---------- game meta ---------- */
+    .game-head { width: min(100%, var(--measure)); margin-inline: auto; justify-self: stretch; }
+    .game-head .page-meta {
+      margin: 0;
+      color: var(--text-muted);
+      font-size: 0.8125rem; line-height: 1.45;
+      overflow-wrap: anywhere; word-break: break-word;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    }
+
+    /* ---------- fixed board dock ---------- */
+    .board-dock {
+      /* 10% eval + 90% board; keep inside viewport and centered */
+      width: min(100%, calc(var(--board-max) / 0.9));
+      max-width: 100%;
+      margin-inline: auto;
+      justify-self: center;
+      display: flex; flex-direction: column; gap: 0.5rem;
+      min-height: 0; flex: none;
+      overflow: hidden;
+      box-sizing: border-box;
+    }
+    .eval-readout {
+      display: flex; flex-direction: column; align-items: stretch;
+      gap: 0.28rem; margin: 0; min-width: 0;
+      width: 100%;
+      font-variant-numeric: tabular-nums;
+      min-height: calc(1.25rem + 0.28rem + 3 * 1.35em + 2 * 0.12rem);
+    }
+    .eval-top {
+      display: flex; align-items: center; justify-content: flex-start;
+      gap: 0.5rem; min-width: 0; width: 100%;
+    }
+    .eval-score-row { display: inline-flex; align-items: center; gap: 0.4rem; min-width: 0; }
+    .eval-score {
+      font-size: 1.25rem; font-weight: 700; letter-spacing: -0.4px; color: var(--text);
+    }
+    .eval-lines {
+      display: flex; flex-direction: column; gap: 0.12rem;
+      margin: 0; padding: 0; list-style: none;
+      font-family: var(--mono); font-size: 0.6875rem; line-height: 1.35;
+      color: var(--text-soft); min-width: 0;
+      height: calc(3 * 1.35em + 2 * 0.12rem);
+      overflow: hidden;
+    }
+    .eval-lines.is-stale { opacity: 0.45; }
+    .eval-lines li {
+      display: grid; grid-template-columns: 1.1rem 2.6rem minmax(0, 1fr);
+      gap: 0.35rem; align-items: baseline; min-width: 0;
+    }
+    .eval-lines .rank { color: var(--text-dim); }
+    .eval-lines .score { color: var(--text); font-weight: 600; }
+    .eval-lines .pv {
+      min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+      color: var(--text-muted);
+    }
+    .eval-lines li:first-child .pv { color: var(--blue); }
+    #board .square-55d63 { position: relative; }
+    .book-sq-badge {
+      position: absolute;
+      top: 2%;
+      right: 2%;
+      width: max(1.1rem, 32%);
+      height: max(1.1rem, 32%);
+      max-width: 1.65rem;
+      max-height: 1.65rem;
+      border-radius: 50%;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 7;
+      pointer-events: none;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
+      overflow: hidden;
+    }
+    .book-sq-badge img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    .board-row {
+      display: grid;
+      grid-template-columns: 10% 90%;
+      grid-template-rows: auto 1fr;
+      align-items: stretch; gap: 0;
+      width: 100%; max-width: 100%; min-height: 0;
+      overflow: hidden;
+      box-sizing: border-box;
+    }
+    .eval-bar {
+      position: relative;
+      grid-row: 2;
+      grid-column: 1;
+      width: 100%;
+      max-width: 100%;
+      align-self: stretch;
+      min-width: 0;
+      background: var(--fill-muted);
+      border: 1px solid var(--border);
+      border-radius: var(--r-pill);
+      overflow: hidden;
+      box-sizing: border-box;
+    }
+    .eval-white {
+      position: absolute; left: 0; right: 0; bottom: 0; height: 50%;
+      background: var(--cream);
+    }
+    .board-wrap {
+      position: relative;
+      grid-row: 2;
+      grid-column: 2;
+      width: 100%; max-width: 100%; aspect-ratio: 1 / 1; min-width: 0;
+      border-radius: var(--r-md); overflow: hidden;
+      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.55);
+      box-sizing: border-box;
+    }
+    #board {
+      width: 100% !important; height: 100% !important; margin: 0;
+      max-width: 100% !important;
+      touch-action: none; user-select: none; -webkit-user-select: none;
+    }
+    #board .board-b72b1 {
+      width: 100% !important; height: 100% !important; border: none;
+      max-width: 100% !important;
+    }
+    #board .white-1e1d7 { background-color: var(--board-light); color: var(--board-dark); }
+    #board .black-3c85d { background-color: var(--board-dark); color: var(--board-light); }
+    #board .notation-322f9 {
+      font-family: Inter, sans-serif; font-size: 0.625rem; font-weight: 500; opacity: 0.85;
+    }
+    #board .piece-417db { cursor: grab; }
+    #board .piece-417db:active { cursor: grabbing; }
+    .board-arrows {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      pointer-events: none; z-index: 8; overflow: hidden;
+    }
+    .board-chrome {
+      grid-row: 1;
+      grid-column: 2;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      min-height: 2.85rem;
+      margin: 0 0 0.4rem;
+      padding: 0 0.05rem;
+      box-sizing: border-box;
+    }
+    .ply-badge {
+      position: static;
+      min-width: 3rem;
+      height: 3rem;
+      padding: 0 0.55rem;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      background: rgba(20, 18, 14, 0.88);
+      color: var(--cream);
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+      font-size: 1.125rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      pointer-events: none;
+      border: 1px solid rgba(237, 231, 211, 0.28);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.45);
+    }
+    .ply-badge.is-black {
+      background: rgba(237, 231, 211, 0.95);
+      color: #1c1914;
+      border-color: rgba(28, 25, 20, 0.2);
+    }
+    .ply-badge.is-empty {
+      opacity: 0.55;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    /* selection + legal-move language (UI kit: sage select, red legal) */
+    .explore-select { box-shadow: inset 0 0 0 3px var(--sage) !important; }
+    .legal-dot, .legal-capture { position: relative; }
+    .legal-dot::after {
+      content: ""; position: absolute; left: 50%; top: 50%;
+      width: 22%; height: 22%; margin: -11% 0 0 -11%;
+      border-radius: 50%; background: rgba(211, 37, 49, 0.45);
+      pointer-events: none; z-index: 2;
+    }
+    .legal-capture::after {
+      content: ""; position: absolute; inset: 6%;
+      border: 3px solid rgba(211, 37, 49, 0.55); border-radius: 50%;
+      pointer-events: none; z-index: 2;
+    }
+
+    /* ---------- controls ---------- */
+    .controls.move-keys, .move-keys {
+      display: grid; grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 0.4rem; width: 100%; flex: none;
+    }
+    button { font: inherit; }
+    .move-keys button {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-height: 2.75rem; padding: 0.35rem 0.2rem; line-height: 1;
+      width: 100%; min-width: 0; cursor: pointer;
+      color: var(--text-soft);
+      background: var(--fill-muted);
+      border: 1px solid var(--rim); border-radius: var(--r-pill);
+      transition: background 0.12s ease, opacity 0.12s ease;
+    }
+    .move-keys button:hover { background: var(--fill-alt); }
+    .move-keys button:active { opacity: 0.55; }
+    .move-keys button.primary { background: var(--accent); border-color: transparent; color: #fff; }
+    .move-keys button.primary:hover { background: var(--accent-dim); }
+    .move-keys button:disabled {
+      background: var(--fill-muted); color: var(--text-disabled);
+      border-color: var(--border); cursor: default; opacity: 1;
+    }
+    .move-keys .ico { width: 1.2em; height: 1.2em; display: block; flex-shrink: 0; }
+    .move-keys button:focus-visible { outline: 2px solid var(--sage); outline-offset: 2px; }
+
+    /* ---------- scrollable reading column ---------- */
+    .book-scroll {
+      min-height: 0; overflow-y: auto; overflow-x: hidden;
+      -webkit-overflow-scrolling: touch; overscroll-behavior: contain;
+      overflow-anchor: none;
+      width: min(100%, var(--measure)); margin-inline: auto;
+      justify-self: stretch;
+      padding: 0.15rem 0.1rem 1.5rem;
+      display: flex; flex-direction: column; gap: 0.6rem;
+      scrollbar-width: thin; scrollbar-color: var(--fill-alt) transparent;
+    }
+    .book-scroll::-webkit-scrollbar { width: 8px; }
+    .book-scroll::-webkit-scrollbar-thumb {
+      background: var(--fill-alt); border-radius: var(--r-pill);
+    }
+    .panel {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--r-md); padding: 0.85rem 0.9rem;
+      width: 100%; max-width: 100%;
+      overflow-wrap: anywhere; word-break: break-word;
+    }
+    .eyebrow {
+      margin: 0 0 0.5rem;
+      font-size: 0.6875rem; font-weight: 500; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--text-dim);
+    }
+    .move-label {
+      margin: 0 0 0.6rem;
+      font-size: 0.9375rem; font-weight: 600; letter-spacing: -0.1px; color: var(--text);
+    }
+    .empty { margin: 0; color: var(--text-dim); font-size: 0.8125rem; line-height: 1.5; }
+
+    /* notes */
+    .note {
+      margin: 0 0 0.55rem; padding: 0.7rem 0.8rem;
+      border-left: 3px solid var(--border); border-radius: var(--r-sm);
+      background: var(--surface-raised);
+      font-size: 0.9375rem; line-height: 1.55; color: var(--text-soft);
+    }
+    .note:last-child { margin-bottom: 0; }
+    .note.book {
+      border-left-color: var(--cream); background: rgba(237, 231, 211, 0.06);
+      color: var(--text); font-size: 1rem; line-height: 1.6;
+    }
+    .note .para { display: block; margin: 0 0 0.65em; }
+    .note .para:last-child { margin-bottom: 0; }
+    .note .move-seq {
+      display: inline;
+      padding: 0.12em 0.4em;
+      margin: 0 0.05em;
+      border-radius: 5px;
+      background: rgba(237, 231, 211, 0.16);
+      box-shadow: inset 0 0 0 1px rgba(237, 231, 211, 0.22);
+      -webkit-box-decoration-break: clone;
+      box-decoration-break: clone;
+    }
+    .note .move-seq .san { color: var(--cream); }
+    .note.engine {
+      border-left-color: var(--blue); background: rgba(0, 132, 210, 0.09); color: #d7e9f5;
+    }
+    .note.vars { border-left-color: var(--accent); background: rgba(211, 37, 49, 0.07); }
+    .note .tag { display: none; }
+    .note.engine .tag, .note.vars .tag {
+      display: block; margin-bottom: 0.3rem;
+      font-size: 0.625rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+      background: transparent; padding: 0;
+    }
+    .note.engine .tag { color: var(--blue); }
+    .note.vars .tag { color: var(--accent); }
+    .note .san { font-family: var(--mono); font-weight: 600; letter-spacing: 0.01em; }
+    .note .sq { font-family: var(--mono); color: color-mix(in srgb, var(--cream) 70%, var(--text)); }
+    .note .fig {
+      display: inline-block; width: 1.1em; height: 1.1em;
+      vertical-align: -0.2em; margin: 0 0.04em 0 0.02em;
+    }
+    .vars-list { margin: 0; padding-left: 1.1rem; font-family: var(--mono); font-size: 0.875rem; }
+
+    button.play-line {
+      display: block; width: 100%; text-align: left; cursor: pointer;
+      margin: 0.3rem 0 0; padding: 0.45rem 0.6rem;
+      background: var(--fill-muted); color: var(--text-soft);
+      border: 1px solid var(--border); border-radius: var(--r-sm);
+      font-family: var(--mono); font-size: 0.8125rem;
+      transition: background 0.12s ease;
+    }
+    button.play-line:hover { background: var(--fill-alt); border-color: var(--rim); }
+    button.play-line:active { opacity: 0.55; }
+    button.play-line .kind {
+      color: var(--accent); font-size: 0.6875rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.06em; margin-right: 0.45rem;
+    }
+
+    /* move tree */
+    .moves {
+      font-family: var(--mono); font-size: 0.8125rem; line-height: 1.95;
+      color: var(--text-soft); overflow-wrap: anywhere;
+    }
+    .moves button.move {
+      background: transparent; border: none; color: var(--text-soft);
+      padding: 0.1rem 0.3rem; border-radius: var(--r-xs); cursor: pointer; font: inherit;
+    }
+    .moves button.move:hover { background: var(--fill-alt); }
+    .moves button.move.has-book { background: var(--book-fill); color: var(--cream); font-weight: 600; }
+    .moves button.move.has-other { background: var(--other-fill); color: #8ecdf3; font-weight: 600; }
+    .moves button.move.active { box-shadow: inset 0 0 0 2px var(--accent); color: var(--text); }
+    .moves .fork {
+      display: inline-flex; align-items: center; gap: 0.1rem;
+      margin: 0 0.14rem; padding: 0.05rem 0.22rem;
+      border: 1px dashed var(--rim); border-radius: var(--r-xs); vertical-align: middle;
+    }
+    .moves button.fork-move {
+      background: transparent; border: none; color: var(--text-muted);
+      padding: 0.05rem 0.2rem; border-radius: 6px; font: inherit; cursor: pointer;
+    }
+    .moves button.fork-move:hover { color: var(--text); }
+    .moves button.fork-move.active { background: var(--blue); color: #fff; font-weight: 600; }
+    .moves .fork-mark { color: var(--text-dim); font-size: 0.75em; }
+    .moves .explore {
+      display: inline-flex; align-items: center; gap: 0.12rem;
+      margin: 0 0.16rem; padding: 0.08rem 0.28rem;
+      border: 1.5px solid var(--sage); background: rgba(52, 199, 89, 0.14);
+      border-radius: var(--r-xs); vertical-align: middle;
+    }
+    .moves button.explore-move {
+      background: transparent; border: none; color: var(--sage);
+      padding: 0.06rem 0.2rem; border-radius: 6px; font: inherit; font-weight: 600; cursor: pointer;
+    }
+    .moves button.explore-move:hover { color: var(--text); }
+    .moves button.explore-move.active { background: var(--sage); color: #05210f; }
+    .moves .explore-mark { color: var(--sage); font-size: 0.8em; font-weight: 700; padding: 0 0.05rem; }
+
+    .move-legend {
+      display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem;
+      margin: 0.7rem 0 0; padding-top: 0.6rem;
+      border-top: 1px solid var(--border);
+      color: var(--text-dim); font-size: 0.6875rem; letter-spacing: 0.01em;
+    }
+    .move-legend .lg { display: inline-flex; align-items: center; gap: 0.35rem; }
+    .move-legend .lg i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; }
+    .move-legend .lg.book i { background: var(--cream); }
+    .move-legend .lg.engine i { background: var(--blue); }
+    .move-legend .lg.explore i { background: var(--sage); }
+    .move-legend .lg.arrow i {
+      width: 15px; height: 3px; border-radius: 2px;
+      background: linear-gradient(90deg, var(--cream), var(--blue));
+    }
+
+    /* game selection */
+    .toc {
+      max-height: min(38dvh, 20rem); overflow: auto;
+      display: flex; flex-direction: column; gap: 0.15rem;
+      scrollbar-width: thin; scrollbar-color: var(--fill-alt) transparent;
+    }
+    .toc::-webkit-scrollbar { width: 6px; }
+    .toc::-webkit-scrollbar-thumb { background: var(--fill-alt); border-radius: var(--r-pill); }
+    .toc-item {
+      display: grid; grid-template-columns: 1.6rem minmax(0, 1fr) auto;
+      align-items: center; gap: 0.5rem;
+      width: 100%; text-align: left; cursor: pointer;
+      padding: 0.42rem 0.5rem;
+      background: transparent; color: var(--text-soft);
+      border: 1px solid transparent; border-radius: var(--r-sm);
+      font-size: 0.8125rem;
+      transition: background 0.12s ease;
+    }
+    .toc-item:hover { background: var(--fill-muted); }
+    .toc-item:active { opacity: 0.55; }
+    .toc-item.active {
+      background: rgba(211, 37, 49, 0.12); border-color: var(--accent); color: var(--text);
+    }
+    .toc-item.missing { color: var(--text-dim); }
+    .toc-item.missing .toc-n { color: var(--accent); }
+    .toc-n {
+      font-family: var(--mono); font-size: 0.75rem; color: var(--text-dim);
+      font-variant-numeric: tabular-nums;
+    }
+    .toc-item.active .toc-n { color: var(--accent); }
+    .toc-t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .toc-y { font-family: var(--mono); font-size: 0.6875rem; color: var(--text-dim); }
+
+    .hint, .engine-status { display: none !important; }
+
+    /* ---------- responsive ---------- */
+    @media (max-width: 720px) {
+      :root { --board-max: min(52dvh, 560px); }
+      .top { padding: 0.55rem 0.7rem; gap: 0.5rem; }
+      .top h1 { font-size: 0.85rem; }
+      .stage {
+        gap: 0.4rem;
+        padding: 0.45rem 0.4rem 0.4rem;
+        justify-items: center;
+      }
+      .board-dock {
+        width: 100%;
+        max-width: 100%;
+        margin-inline: auto;
+      }
+      .eval-score { font-size: 1.1rem; }
+      .board-dock { gap: 0.4rem; }
+      .move-keys { gap: 0.32rem; width: 100%; }
+      .move-keys button { min-height: 2.6rem; }
+      .panel { padding: 0.7rem 0.75rem; border-radius: var(--r-sm); }
+      .note.book { font-size: 0.9375rem; }
+      .note { font-size: 0.875rem; }
+      .book-scroll { padding-bottom: 1rem; width: 100%; max-width: 100%; }
+      .game-head { width: 100%; max-width: 100%; }
+      .toc { max-height: min(30dvh, 14rem); }
+    }
+    @media (max-width: 420px) {
+      .move-legend { gap: 0.5rem; font-size: 0.625rem; }
+      .toc-item { font-size: 0.78rem; padding: 0.38rem 0.42rem; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      * { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="top">
+    <span class="mark" aria-hidden="true">♟</span>
+    <h1>@@HEADING@@</h1>
+    <span class="count" id="gameCount"></span>
+  </header>
+  <div class="shell">
+    <main class="stage" id="stage">
+      <div class="game-head">
+        <p class="page-meta" id="gameMeta"></p>
+      </div>
+      <div class="board-dock" id="boardDock">
+        <div class="eval-readout">
+          <div class="eval-top">
+            <span class="eval-score-row">
+              <span class="eval-score" id="evalScore">—</span>
+            </span>
+          </div>
+          <ol class="eval-lines" id="evalLines" aria-label="Top engine lines"></ol>
+        </div>
+        <div class="board-row" id="boardRow">
+          <div class="eval-bar" title="White-POV eval"><div class="eval-white" id="evalWhite"></div></div>
+          <div class="board-chrome">
+            <div class="ply-badge is-empty" id="plyBadge" title="Current move">—</div>
+          </div>
+          <div class="board-wrap" id="boardWrap">
+            <div id="board"></div>
+            <svg class="board-arrows" id="boardArrows" aria-hidden="true"></svg>
+          </div>
+        </div>
+        <div class="controls move-keys" role="group" aria-label="Move controls">
+          <button type="button" id="btnFirst" title="Start (Home)" aria-label="First move"><svg class="ico" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true" focusable="false"><path fill="currentColor" d="M18.4 5.5 10.9 12l7.5 6.5V5.5zM7.6 5.5h2.2v13H7.6z"/></svg></button>
+          <button type="button" id="btnPrev" title="Previous (←)" aria-label="Previous move"><svg class="ico" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true" focusable="false"><path fill="currentColor" d="M15.5 5.5 8 12l7.5 6.5 1.6-1.85L11.7 12l5.4-4.65L15.5 5.5z"/></svg></button>
+          <button type="button" id="btnNext" class="primary" title="Next (→)" aria-label="Next move"><svg class="ico" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8.5 5.5 6.9 7.35 12.3 12 6.9 16.65 8.5 18.5 16 12 8.5 5.5z"/></svg></button>
+          <button type="button" id="btnLast" title="End (End)" aria-label="Last move"><svg class="ico" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true" focusable="false"><path fill="currentColor" d="M5.6 5.5 13.1 12l-7.5 6.5V5.5zM14.2 5.5h2.2v13h-2.2z"/></svg></button>
+          <button type="button" id="btnFlip" title="Flip board" aria-label="Flip board"><svg class="ico" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 4.5 8.5 8h2.4v3.1h2.2V8h2.4L12 4.5zm0 15L15.5 16h-2.4v-3.1h-2.2V16H8.5L12 19.5z"/></svg></button>
+        </div>
+      </div>
+      <div class="book-scroll" id="bookScroll">
+        <section class="panel" aria-label="Annotation">
+          <p class="eyebrow">Annotation</p>
+          <p class="move-label" id="moveLabel"></p>
+          <div id="notes"></div>
+        </section>
+        <section class="panel" aria-label="Move tree">
+          <p class="eyebrow">Move tree</p>
+          <div class="moves" id="moveList"></div>
+          <p class="move-legend">
+            <span class="lg book"><i></i> this book</span>
+            <span class="lg engine"><i></i> engine / variants</span>
+            <span class="lg explore"><i></i> your line</span>
+            <span class="lg arrow"><i></i> arrows = next options</span>
+          </p>
+        </section>
+        <section class="panel" aria-label="Games in chapter">
+          <p class="eyebrow">Games in chapter</p>
+          <div class="toc" id="toc">
+            @@TOC@@
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+  <script type="application/json" id="book-data">@@DATA_JSON@@</script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
+  <script>
+(function () {
+  const data = JSON.parse(document.getElementById("book-data").textContent);
+  const GAMES = data.games;
+  const LIVE_DEPTH = data.liveDepth || 22;
+  const ENGINE_WORKER_URL = data.engineWorkerUrl;
+  let gIdx = 0;
+  let idx = -1;
+  let fork = null;
+  let explore = null;
+  let pendingFrom = null;
+  let orientation = "white";
+  let engine = null;
+  let engineReady = false;
+  let analyzeToken = 0;
+  let lastEnginePv = [];
+  let lastEngineLines = [];
+  let engineSearching = false;
+  let pendingEvalFen = null;
+  let activeEvalFen = null;
+  let activeEvalByMp = null;
+  let suppressBoardClick = false;
+  const MULTIPV = 3;
+
+  const PIECE_THEME = "https://chessboardjs.com/img/chesspieces/wikipedia/{piece}.png";
+  function canDragPiece(piece) {
+    if (isMissing() || typeof Chess === "undefined") return false;
+    const ch = new Chess(fenNow());
+    if (ch.game_over()) return false;
+    return (ch.turn() === "w" && piece[0] === "w") || (ch.turn() === "b" && piece[0] === "b");
+  }
+  const board = Chessboard("board", {
+    position: GAMES[0].startFen,
+    orientation,
+    pieceTheme: PIECE_THEME,
+    showNotation: true,
+    draggable: true,
+    appearSpeed: 0,
+    moveSpeed: 0,
+    snapbackSpeed: 0,
+    snapSpeed: 0,
+    trashSpeed: 0,
+    onDragStart: function (source, piece) {
+      if (!canDragPiece(piece)) return false;
+      suppressBoardClick = true;
+      paintSelection(source);
+      return true;
+    },
+    onDrop: function (source, target) {
+      suppressBoardClick = true;
+      setTimeout(function () { suppressBoardClick = false; }, 40);
+      if (!target || target === "offboard" || source === target) {
+        clearPending();
+        return "snapback";
+      }
+      if (tryUserMove(source, target)) return;
+      clearPending();
+      return "snapback";
+    },
+    onSnapEnd: function () {
+      board.position(fenNow(), false);
+      queueArrows();
+    },
+    onSnapbackEnd: function () {
+      board.position(fenNow(), false);
+      queueArrows();
+    }
+  });
+  const _boardPosition = board.position;
+  board.position = function () {
+    const result = _boardPosition.apply(board, arguments);
+    queueArrows();
+    try { updateBookHint(); } catch (e) {}
+    return result;
+  };
+  const _boardOrientation = board.orientation;
+  board.orientation = function () {
+    const result = _boardOrientation.apply(board, arguments);
+    queueArrows();
+    try { updateBookHint(); } catch (e) {}
+    return result;
+  };
+  function resizeBoard() {
+    const wrap = document.getElementById("boardWrap");
+    const boardEl = document.getElementById("board");
+    const dock = document.getElementById("boardDock");
+    if (dock) {
+      dock.style.marginLeft = "auto";
+      dock.style.marginRight = "auto";
+    }
+    if (wrap && boardEl) {
+      const size = Math.max(1, Math.floor(wrap.getBoundingClientRect().width));
+      boardEl.style.width = size + "px";
+      boardEl.style.height = size + "px";
+      boardEl.style.maxWidth = "100%";
+      try { board.resize(); } catch (e) {}
+      const widget = boardEl.querySelector(".board-b72b1");
+      if (widget) {
+        widget.style.width = size + "px";
+        widget.style.height = size + "px";
+        widget.style.maxWidth = "100%";
+      }
+    } else {
+      try { board.resize(); } catch (e) {}
+    }
+    queueArrows();
+  }
+  function fitBoardToScreen() { resizeBoard(); }
+  window.addEventListener("resize", resizeBoard);
+  if (window.visualViewport) window.visualViewport.addEventListener("resize", resizeBoard);
+  setTimeout(resizeBoard, 40);
+  setTimeout(resizeBoard, 250);
+
+  const elScore = document.getElementById("evalScore");
+  const elLines = document.getElementById("evalLines");
+  const elWhite = document.getElementById("evalWhite");
+  const elMove = document.getElementById("moveLabel");
+  const elNotes = document.getElementById("notes");
+  const elList = document.getElementById("moveList");
+  const elBookScroll = document.getElementById("bookScroll");
+  const elGameMeta = document.getElementById("gameMeta");
+  const elBoard = document.getElementById("board");
+  const elBoardWrap = document.getElementById("boardWrap");
+  const elArrows = document.getElementById("boardArrows");
+  const elPlyBadge = document.getElementById("plyBadge");
+  const elGameCount = document.getElementById("gameCount");
+  const elBoardRow = document.getElementById("boardRow");
+  let arrowTimer = 0;
+  const BOOK_BADGE_IMG = '<img src="textbook-chess.gif" alt="" width="32" height="32" decoding="async">';
+
+  function game() { return GAMES[gIdx]; }
+  function plies() { return game().plies || []; }
+  function forkMoves() {
+    if (!fork) return null;
+    const p = plies()[fork.ply];
+    return (p && p.forks && p.forks[fork.fi] && p.forks[fork.fi].moves) || null;
+  }
+  function uciSquares(uci) {
+    const u = String(uci || "").toLowerCase();
+    if (u.length < 4) return null;
+    return { from: u.slice(0, 2), to: u.slice(2, 4) };
+  }
+  function arrowColor(kind) {
+    const k = String(kind || "").toLowerCase();
+    if (k.indexOf("book") >= 0) return "#ede7d3";
+    if (k.indexOf("engine") >= 0) return "#0084d2";
+    if (k.indexOf("explore") >= 0) return "#34C759";
+    if (k.indexOf("main") >= 0) return "#a1a1a1";
+    return "#D32531";
+  }
+  function sqCenter(sq) {
+    if (!elBoard || !elBoardWrap) return null;
+    const cell = elBoard.querySelector(".square-" + sq);
+    if (!cell) return null;
+    const er = cell.getBoundingClientRect();
+    const wr = elBoardWrap.getBoundingClientRect();
+    if (er.width < 2 || wr.width < 2) return null;
+    return {
+      x: er.left - wr.left + er.width / 2,
+      y: er.top - wr.top + er.height / 2,
+      size: er.width
+    };
+  }
+  function collectVariationArrows() {
+    const out = [];
+    const seen = {};
+    function pushArrow(uci, kind, opacity) {
+      const sq = uciSquares(uci);
+      if (!sq) return;
+      const key = sq.from + sq.to;
+      if (seen[key]) return;
+      seen[key] = true;
+      out.push({ from: sq.from, to: sq.to, kind: kind || "line", opacity: opacity == null ? 0.88 : opacity });
+    }
+    if (explore) {
+      const moves = explore.moves || [];
+      if (moves[explore.depth + 1]) pushArrow(moves[explore.depth + 1].uci, "explore", 0.9);
+      return out;
+    }
+    if (fork) {
+      const p = plies()[fork.ply];
+      const fk = p && p.forks && p.forks[fork.fi];
+      const kind = (fk && fk.kind) || "line";
+      const moves = forkMoves() || [];
+      if (moves[fork.depth + 1]) pushArrow(moves[fork.depth + 1].uci, kind, 0.9);
+      return out;
+    }
+    const next = plies()[idx + 1];
+    if (next) {
+      (next.forks || []).forEach(function (fk) {
+        const m0 = (fk.moves || [])[0];
+        if (m0) pushArrow(m0.uci, fk.kind || "line", 0.9);
+      });
+    }
+    (lastEnginePv || []).slice(0, 1).forEach(function (uci) {
+      pushArrow(uci, "engine", out.length ? 0.45 : 0.72);
+    });
+    (lastEngineLines || []).slice(1, 3).forEach(function (line) {
+      const u = (line.pvUci || [])[0];
+      if (u) pushArrow(u, "engine", 0.32);
+    });
+    return out;
+  }
+  function renderArrows() {
+    if (!elArrows || !elBoardWrap) return;
+    const wr = elBoardWrap.getBoundingClientRect();
+    elArrows.setAttribute("viewBox", "0 0 " + Math.max(1, wr.width) + " " + Math.max(1, wr.height));
+    elArrows.setAttribute("width", "100%");
+    elArrows.setAttribute("height", "100%");
+    const arrows = isMissing() ? [] : collectVariationArrows();
+    let defs = "";
+    let body = "";
+    arrows.forEach(function (arrow, i) {
+      const a = sqCenter(arrow.from);
+      const b = sqCenter(arrow.to);
+      if (!a || !b) return;
+      const dx = b.x - a.x;
+      const dy = b.y - a.y;
+      const len = Math.hypot(dx, dy) || 1;
+      const shrink = Math.max(8, a.size * 0.26);
+      const ux = dx / len;
+      const uy = dy / len;
+      const x1 = a.x + ux * shrink * 0.55;
+      const y1 = a.y + uy * shrink * 0.55;
+      const x2 = b.x - ux * shrink;
+      const y2 = b.y - uy * shrink;
+      const color = arrowColor(arrow.kind);
+      const id = "ah" + i;
+      const head = Math.max(9, a.size * 0.28);
+      defs += '<marker id="' + id + '" markerWidth="3" markerHeight="3" refX="1.6" refY="1.5" orient="auto" markerUnits="strokeWidth">'
+        + '<path d="M0,0 L3,1.5 L0,3 Z" fill="' + color + '"></path></marker>';
+      body += '<line x1="' + x1.toFixed(1) + '" y1="' + y1.toFixed(1) + '" x2="' + x2.toFixed(1) + '" y2="' + y2.toFixed(1) + '"'
+        + ' stroke="' + color + '" stroke-width="' + Math.max(5, a.size * 0.14).toFixed(1) + '"'
+        + ' stroke-linecap="round" opacity="' + arrow.opacity + '" marker-end="url(#' + id + ')"></line>';
+    });
+    elArrows.innerHTML = (defs ? "<defs>" + defs + "</defs>" : "") + body;
+  }
+  function queueArrows() {
+    if (arrowTimer) cancelAnimationFrame(arrowTimer);
+    arrowTimer = requestAnimationFrame(function () {
+      arrowTimer = 0;
+      renderArrows();
+    });
+  }
+  function fenNow() {
+    if (explore) {
+      if (explore.depth < 0) return explore.baseFen;
+      return explore.moves[Math.min(explore.depth, explore.moves.length - 1)].fen;
+    }
+    const moves = forkMoves();
+    if (moves) {
+      if (fork.depth < 0) return plies()[fork.ply].fen_before;
+      return moves[Math.min(fork.depth, moves.length - 1)].fen;
+    }
+    return idx < 0 ? game().startFen : plies()[idx].fen;
+  }
+  function escapeHtml(s) {
+    return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+  }
+  function stripTag(text) {
+    return String(text||"").replace(/^\[Book:[^\]]*\]\s*/i,"").replace(/^\[Engine\/RAG\]\s*/i,"").replace(/\s*\[Vars:[^\]]*\]\s*/ig," ").replace(/\s+/g," ").trim();
+  }
+  function ocrCleanMoveToken(token) {
+    let out = String(token || "").replace(/[\u2018\u2019\u02bc]/g, "'").replace(/\\/g, "").replace(/×/g, "x").trim();
+    out = out.replace(/^[•·∙⋅]+/g, "");
+    out = out.replace(/^'+\(!?(?=[a-h][1-8])/g, "Q");
+    out = out.replace(/^'+\(!?\s*(?=[NBRQK])/g, "");
+    out = out.replace(/^\(\s*!\s*(?=[NBRQKa-h])/g, "");
+    out = out.trim();
+    out = out.replace(/^0\s*-{1,3}\s*0\s*-{1,3}\s*0$/g, "O-O-O").replace(/^0\s*-{1,3}\s*0$/g, "O-O");
+    out = out.replace(/^([NBRQK][a-h]?[1-8]?x?[a-h][1-8]|[a-h]x[a-h][1-8]|[a-h][1-8]|O-O-O|O-O)t$/g, "$1+");
+    out = out.replace(/^(?:°1W|'l!|1!f\/|1!f|'!ti|'!t[ií]|'\(!i|'Wi|1W|lW)/g, "Q");
+    out = out.replace(/^W(?=x[gfh]|[gfh][1-8])/g, "K").replace(/^W(?=x[a-e]|[a-e][1-8])/g, "Q");
+    out = out.replace(/^@(?=[a-h]|x)/g, "K");
+    out = out.replace(/^(?:ltJ|l\/J|ll'l|lt'l|ltl'|lll|lil|liJ|llJ|l2J|4J|0\.J)/g, "N");
+    out = out.replace(/^J'(?=k[1-8]|[a-h][1-8]|x[a-h])/g, "N");
+    out = out.replace(/^Nk([1-8])$/g, "Nc$1").replace(/^Nkx(?=[a-h])/g, "Ncx");
+    out = out.replace(/^N([a-h])\s+([1-8])$/g, "N$1$2");
+    out = out.replace(/^([NBRQK])\s+([a-h][1-8])$/g, "$1$2");
+    out = out.replace(/^1'\.?/g, "B");
+    out = out.replace(/^\.i\.|^i\.(?=[a-h])/g, "B");
+    out = out.replace(/^\.!L?i|^&\.?(?=[a-h])/g, "B");
+    out = out.replace(/^i(?=[a-h][1-8]$|[a-h]x|x[a-h])/g, "B");
+    out = out.replace(/^(?::§:|E:|§|El)(?=[a-hx])/g, "R");
+    out = out.replace(/^l'hcl$/g, "Rxc1").replace(/^l'hc/g, "Rxc");
+    out = out.replace(/^l'kl$/g, "Rc1").replace(/^l'k([1-8])$/g, "Rc$1");
+    out = out.replace(/^(?:i'!|l"k|l'k|l'h)/g, "R");
+    out = out.replace(/^([NBRQK])x?c[lI]$/g, "$1xc1");
+    out = out.replace(/^([NBRQK])([a-h])[lI]$/g, function (_m, p, f) { return p + f + "1"; });
+    out = out.replace(/([a-h])[lI](?=[+#?!]*$)/g, "$11");
+    out = out.replace(/^([a-h])\s+x\s*([a-h][1-8])/g, "$1x$2");
+    out = out.replace(/^([a-h])\s+([a-h][1-8])$/g, "$1$2");
+    out = out.replace(/^([a-h])\s+([1-8])$/g, "$1$2");
+    out = out.replace(/\?[fF]$/g, "?!");
+    out = out.replace(/![fF]$/g, "!?");
+    out = out.replace(/([!?]{1,3});[il1!]+;?$/g, "$1 ⩲");
+    out = out.replace(/^([NBRQK][a-h])\s*\?(?=[!?]|$)/g, "$17");
+    out = out.replace(/^([NBRQK])\.(?=[a-h])/g, "$1");
+    const compact = out.replace(/\s+/g, "");
+    if (compact !== out && /^(?:O-O-O|O-O|[NBRQK]?[a-h]?[1-8]?x?[a-h][1-8](?:=[NBRQ])?[+#?!]*)$/i.test(compact)) out = compact;
+    return out.trim();
+  }
+  function splitGluedMoveToken(token) {
+    return String(token || "").split(/\.(?=[NBRQK])/).map(ocrCleanMoveToken).filter(Boolean);
+  }
+  function looksLikeMoveToken(token) {
+    let t = String(token || "").trim();
+    if (!t) return false;
+    t = t.replace(/^(?:[•·∙⋅]+\s*|'+\s*\(!?\s*|\(\s*!\s*)+/g, "").trim() || t;
+    if (/^(?:and|or|with|the|to|for|when|then|while|black|white|as|if|but|after|since|excellent|compensation)\b/i.test(t)) return false;
+    if (/^[a-z]/.test(t) && !/^[a-h](x[a-h])?[1-8]/.test(t)) return false;
+    return /^(?:O-O-O|O-O|[NBRQK]|[1lI]'|[iltJ@&§]|ll|[a-h]x|[a-h][1-8])/i.test(t)
+      || /[a-h][1-8lI][+#?!]*$/i.test(t);
+  }
+  function ocrCleanClient(text) {
+    let out = String(text || "").replace(/\u00a0/g, " ").replace(/[\u2018\u2019\u02bc]/g, "'").replace(/\\/g, "");
+    out = out.replace(/0\s*-{1,3}\s*0\s*-{1,3}\s*0/g, "O-O-O").replace(/0\s*-{1,3}\s*0/g, "O-O");
+    out = out.replace(/\b([a-z]{2,}[a-egh])\+/g, "$1t");
+    out = out.replace(/([a-h][1-8])\.(?=If\b)/g, "$1. ");
+    out = out.replace(/\bBf\s+(?=\d)/g, "If ");
+    out = out.replace(/\bBf(?=\d{2}\.)/g, "If ");
+    out = out.replace(/\bIf(?=\d)/g, "If ");
+    out = out.replace(/\b(\d+)\s*\.\s*\.\.\s*/g, "$1...");
+    out = out.replace(/\b(\d+)\s+\.\.\.?\s*/g, "$1...");
+    const headRe = /\b(\d+)\s*(\.\.\.|\.)\s*/g;
+    const junkRe = /^(?:[•·∙⋅]+\s*|'+\s*\(!?\s*|\(\s*!\s*)+/;
+    const tokenRe = /(?:O-O-O|O-O|[NBRQK]\s+[a-h][1-8][=NBRQ]?[+#?!]*|[a-h]\s+x\s*[a-h][1-8][=NBRQ]?[+#?!]*|[a-h]\s+[a-h][1-8][=NBRQ]?[+#?!]*|[a-h]\s+[1-8][=NBRQ]?[+#?!]*|[^\s,;:\[\](){}]{1,18})/i;
+    let built = "";
+    let pos = 0;
+    let m;
+    while ((m = headRe.exec(out)) !== null) {
+      built += out.slice(pos, m.index);
+      const prefix = m[2].indexOf("..") === 0 ? (m[1] + "...") : (m[1] + ".");
+      let cursor = m.index + m[0].length;
+      let rest = out.slice(cursor);
+      const junk = rest.match(junkRe);
+      if (junk) { cursor += junk[0].length; rest = out.slice(cursor); }
+      const tm = rest.match(tokenRe);
+      if (!tm || tm.index !== 0 || /^(?:and|or|with|the|to|for|when|then|while|black|white|as|if|but)\b/i.test(tm[0])) {
+        built += out.slice(m.index, m.index + m[0].length);
+        pos = m.index + m[0].length;
+        headRe.lastIndex = pos;
+        continue;
+      }
+      const parts = splitGluedMoveToken(tm[0]);
+      let piece = prefix + (parts[0] ? (" " + parts[0]) : "");
+      for (let i = 1; i < parts.length; i++) piece += " " + parts[i];
+      cursor += tm[0].length;
+      const gap = out.slice(cursor).match(/^[ \t]+/);
+      if (gap) {
+        let nxt = cursor + gap[0].length;
+        const junk2 = out.slice(nxt).match(junkRe);
+        if (junk2) nxt += junk2[0].length;
+        const after = out.slice(nxt);
+        if (!/^\d+\s*\./.test(after)) {
+          const nm = after.match(tokenRe);
+          if (nm && nm.index === 0 && looksLikeMoveToken(nm[0])) {
+            splitGluedMoveToken(nm[0]).forEach(function (r) { piece += " " + r; });
+            cursor = nxt + nm[0].length;
+          }
+        }
+      }
+      built += piece;
+      pos = cursor;
+      headRe.lastIndex = cursor;
+    }
+    built += out.slice(pos);
+    built = built.replace(/\b([NBRQK][a-h]?[1-8]?x?[a-h][1-8][+#]?)\.([NBRQK][a-hx])/g, "$1 $2");
+    built = built.replace(/[ \t]+/g, " ");
+    built = built.replace(
+      /((?:O-O-O|O-O|[NBRQK]?[a-h]?[1-8]?x?[a-h][1-8](?:=[NBRQ])?[+#]?|[a-h]x[a-h][1-8]|[a-h][1-8])[!?]{0,3});[il1]+;?/gi,
+      "$1 ⩲"
+    );
+    built = built.replace(
+      /((?:O-O-O|O-O|[NBRQK]?[a-h]?[1-8]?x?[a-h][1-8](?:=[NBRQ])?|[a-h]x[a-h][1-8]|[a-h][1-8])[!?]*)\?[fF](?=\s|$|[.;,)\]}])/gi,
+      "$1?!"
+    );
+    built = built.replace(
+      /((?:O-O-O|O-O|[NBRQK]?[a-h]?[1-8]?x?[a-h][1-8](?:=[NBRQ])?|[a-h]x[a-h][1-8]|[a-h][1-8])[!?]*)![fF](?=\s|$|[.;,)\]}])/gi,
+      "$1!?"
+    );
+    built = built.replace(/(\S)\s*\+=\b/g, "$1 ⩲").replace(/(\S)\s*=\+\b/g, "$1 ⩱");
+    return built.trim();
+  }
+  function pieceFig(letter) {
+    const L = String(letter || "").toUpperCase();
+    if ("KQRBN".indexOf(L) < 0) return escapeHtml(L);
+    return '<img class="fig" src="' + PIECE_THEME.replace("{piece}", "w" + L) + '" alt="' + L + '">';
+  }
+  function formatSanToken(san) {
+    if (san.indexOf("O-O") === 0) return '<span class="san">' + escapeHtml(san) + "</span>";
+    if (/^[NBRQK]/.test(san)) return pieceFig(san[0]) + '<span class="san">' + escapeHtml(san.slice(1)) + "</span>";
+    return '<span class="san">' + escapeHtml(san) + "</span>";
+  }
+  function formatNoteHtml(raw) {
+    let text = ocrCleanClient(stripTag(raw));
+    if (!text) return "";
+    text = text.replace(/\r\n?/g, "\n").replace(/[ \t]+\n/g, "\n").replace(/\n[ \t]+/g, "\n");
+    if (!/\n/.test(text)) {
+      text = text.replace(
+        /(?:\.(?!\.)|(?<=[a-z]{2})[!?]+)\s+(?=(?:The |This |White |Black |Better |Threatening |Followed |An interesting |A better |Not |Once |Again |His |In |After |Precision |Learning |Something |Creating |Preparing |Ignoring |Covering |Aiming |We |It |And as |For example|If ))/g,
+        function (m) { return m.replace(/\s+$/, "") + "\n\n"; }
+      );
+    }
+    text = text.replace(/\n{3,}/g, "\n\n").trim();
+    const blocks = text.split(/\n\n+/);
+    const san = "(?:O-O-O|O-O|[NBRQK][a-h]?[1-8]?x?[a-h][1-8](?:=[NBRQ])?[+#?!]*|[a-h]x[a-h][1-8](?:=[NBRQ])?[+#?!]*|[a-h][1-8](?:=[NBRQ])?[+#?!]*)";
+    const ply = "\\d+\\.(?:\\.\\.)?\\s+" + san + "(?:\\s+" + san + ")?";
+    const seqRe = new RegExp("(?:" + ply + "(?:\\s+" + ply + ")*)", "g");
+    const oneRe = new RegExp("(\\d+\\.(?:\\.\\.)?\\s+)(" + san + ")", "g");
+    function formatInline(chunk) {
+      const line = chunk.replace(/\n/g, " ");
+      let out = "";
+      let last = 0;
+      let m;
+      seqRe.lastIndex = 0;
+      while ((m = seqRe.exec(line)) !== null) {
+        out += escapeHtml(line.slice(last, m.index));
+        let inner = "";
+        let sm;
+        const seq = m[0];
+        oneRe.lastIndex = 0;
+        let sLast = 0;
+        while ((sm = oneRe.exec(seq)) !== null) {
+          inner += escapeHtml(seq.slice(sLast, sm.index));
+          inner += escapeHtml(sm[1]) + formatSanToken(sm[2]);
+          sLast = sm.index + sm[0].length;
+          const rest = seq.slice(sLast);
+          const reply = rest.match(new RegExp("^(\\s+)(" + san + ")(?=\\s+\\d+\\.|$)"));
+          if (reply) {
+            inner += escapeHtml(reply[1]) + formatSanToken(reply[2]);
+            sLast += reply[0].length;
+            oneRe.lastIndex = sLast;
+          }
+        }
+        inner += escapeHtml(seq.slice(sLast));
+        out += '<span class="move-seq">' + inner + "</span>";
+        last = m.index + m[0].length;
+      }
+      out += escapeHtml(line.slice(last));
+      return out;
+    }
+    if (blocks.length <= 1) return formatInline(text.replace(/\n/g, " "));
+    return blocks.map(function (b) {
+      return '<span class="para">' + formatInline(b) + "</span>";
+    }).join("");
+  }
+  function moveLabel(p) {
+    return p.fullmove + (p.side === "white" ? "." : "...") + " " + p.san + (p.glyphs || "");
+  }
+  function isMissing() { return !!game().missing; }
+  function clearPending() {
+    pendingFrom = null;
+    elBoard.querySelectorAll(".explore-select, .legal-dot, .legal-capture").forEach((el) => {
+      el.classList.remove("explore-select", "legal-dot", "legal-capture");
+    });
+  }
+  function matchesUci(stored, from, to, promotion) {
+    if (!stored) return false;
+    const u = String(stored).toLowerCase();
+    const base = (from + to).toLowerCase();
+    if (u.slice(0, 4) !== base) return false;
+    if (u.length <= 4) return true;
+    return u[4] === (promotion || "q");
+  }
+  function tryChessMove(fen, from, to) {
+    if (typeof Chess === "undefined" || from === to) return null;
+    const ch = new Chess(fen);
+    const fromPiece = ch.get(from);
+    if (!fromPiece) return null;
+    let legal = null;
+    if (fromPiece.type === "k") {
+      const dest = ch.get(to);
+      if (dest && dest.type === "r" && dest.color === fromPiece.color) {
+        const castles = ch.moves({ square: from, verbose: true }).filter((m) => m.flags.indexOf("k") >= 0 || m.flags.indexOf("q") >= 0);
+        const castle = castles.find((m) => (m.flags.indexOf("q") >= 0 ? to[0] === "a" : to[0] === "h"));
+        if (castle) legal = ch.move({ from: castle.from, to: castle.to });
+      }
+    }
+    if (!legal) {
+      const isPromo = fromPiece.type === "p" && ((fromPiece.color === "w" && to[1] === "8") || (fromPiece.color === "b" && to[1] === "1"));
+      legal = ch.move({ from: from, to: to, promotion: isPromo ? "q" : undefined });
+    }
+    if (!legal) return null;
+    return {
+      san: legal.san,
+      uci: legal.from + legal.to + (legal.promotion || ""),
+      fen: ch.fen(),
+      fullmove: parseInt(fen.split(" ")[5], 10) || 1,
+      side: legal.color === "w" ? "white" : "black",
+      from: legal.from,
+      to: legal.to,
+      promotion: legal.promotion || "",
+    };
+  }
+  function legalTargets(from) {
+    const ch = new Chess(fenNow());
+    const targets = new Set();
+    if (!ch.get(from)) return targets;
+    const moves = ch.moves({ square: from, verbose: true });
+    moves.forEach((m) => targets.add(m.to));
+    const piece = ch.get(from);
+    if (piece && piece.type === "k") {
+      moves.filter((m) => m.flags.indexOf("k") >= 0 || m.flags.indexOf("q") >= 0).forEach((castle) => {
+        targets.add((castle.flags.indexOf("q") >= 0 ? "a" : "h") + from[1]);
+      });
+    }
+    return targets;
+  }
+  function paintSelection(from) {
+    clearPending();
+    pendingFrom = from;
+    const cell = elBoard.querySelector(".square-" + from);
+    if (cell) cell.classList.add("explore-select");
+    legalTargets(from).forEach((sq) => {
+      const el = elBoard.querySelector(".square-" + sq);
+      if (!el) return;
+      el.classList.add(el.querySelector("img") ? "legal-capture" : "legal-dot");
+    });
+  }
+  function followTreeMove(from, to, promotion) {
+    if (explore) {
+      const next = explore.moves[explore.depth + 1];
+      if (next && matchesUci(next.uci, from, to, promotion)) { stepExplore(1); return true; }
+      if (explore.depth >= 0) return false;
+      const baseIdx = explore.baseIdx;
+      const baseFen = explore.baseFen;
+      const stem = explore.stem || null;
+      explore = null;
+      if (stem) {
+        fork = { ply: stem.ply, fi: stem.fi, depth: stem.through };
+        idx = stem.ply;
+      } else {
+        idx = baseIdx;
+      }
+      if (followTreeMove(from, to, promotion)) return true;
+      explore = { baseIdx: baseIdx, baseFen: baseFen, moves: [], depth: -1, stem: stem };
+      fork = null;
+      return false;
+    }
+    if (fork) {
+      const moves = forkMoves() || [];
+      const next = moves[fork.depth + 1];
+      if (next && matchesUci(next.uci, from, to, promotion)) { stepFork(1); return true; }
+      return false;
+    }
+    const list = plies();
+    const next = list[idx + 1];
+    if (next && matchesUci(next.uci, from, to, promotion)) { goTo(idx + 1); return true; }
+    if (next) {
+      const forks = next.forks || [];
+      for (let fi = 0; fi < forks.length; fi++) {
+        const first = (forks[fi].moves || [])[0];
+        if (first && matchesUci(first.uci, from, to, promotion)) {
+          enterFork(idx + 1, fi, 0);
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+  function tryUserMove(from, to) {
+    if (isMissing()) return false;
+    const fen = fenNow();
+    const record = tryChessMove(fen, from, to);
+    if (!record) return false;
+    clearPending();
+    if (followTreeMove(record.from, record.to, record.promotion)) return true;
+    if (!explore) {
+      const stem = fork
+        ? { ply: fork.ply, fi: fork.fi, through: fork.depth }
+        : null;
+      explore = {
+        baseIdx: stem ? stem.ply : idx,
+        baseFen: fen,
+        moves: [],
+        depth: -1,
+        stem: stem
+      };
+      fork = null;
+    } else if (explore.depth < explore.moves.length - 1) {
+      explore.moves = explore.moves.slice(0, explore.depth + 1);
+    }
+    explore.moves.push(record);
+    explore.depth = explore.moves.length - 1;
+    board.position(record.fen, false);
+    renderNotes(); renderMoveList(); setButtons(); updateBookHint(); requestEval();
+    return true;
+  }
+  function squareFromEvent(e) {
+    let el = e.target;
+    while (el && el !== elBoard) {
+      const m = String(el.className || "").match(/square-([a-h][1-8])/);
+      if (m) return m[1];
+      el = el.parentElement;
+    }
+    return null;
+  }
+  function handleBoardPointer(e) {
+    if (suppressBoardClick) return;
+    if (isMissing()) return;
+    if (e.type === "pointerdown" && e.pointerType === "mouse" && e.button !== 0) return;
+    const sq = squareFromEvent(e);
+    if (!sq || typeof Chess === "undefined") return;
+    e.preventDefault();
+    const ch = new Chess(fenNow());
+    const piece = ch.get(sq);
+    if (!pendingFrom) {
+      if (piece && piece.color === ch.turn()) paintSelection(sq);
+      return;
+    }
+    if (pendingFrom === sq) { clearPending(); return; }
+    const selPiece = ch.get(pendingFrom);
+    const targets = legalTargets(pendingFrom);
+    if (
+      piece && piece.color === ch.turn() &&
+      !(selPiece && selPiece.type === "k" && piece.type === "r" && targets.has(sq))
+    ) {
+      paintSelection(sq);
+      return;
+    }
+    tryUserMove(pendingFrom, sq) || clearPending();
+  }
+  function exitExplore() {
+    if (!explore) return;
+    const stem = explore.stem;
+    const base = explore.baseIdx;
+    explore = null;
+    clearPending();
+    if (stem) enterFork(stem.ply, stem.fi, stem.through);
+    else goTo(base);
+  }
+  function stepExplore(dir) {
+    if (!explore) return false;
+    const next = explore.depth + dir;
+    if (next < -1) {
+      const stem = explore.stem;
+      const base = explore.baseIdx;
+      explore = null;
+      clearPending();
+      if (stem) {
+        if (stem.through > 0) enterFork(stem.ply, stem.fi, stem.through - 1);
+        else goTo(Math.max(-1, stem.ply - 1));
+      } else {
+        goTo(Math.max(-1, base - 1));
+      }
+      return true;
+    }
+    if (next >= explore.moves.length) return true;
+    explore.depth = next;
+    board.position(fenNow(), false);
+    renderNotes(); renderMoveList(); setButtons(); updateBookHint(); requestEval();
+    return true;
+  }
+  function enterFork(ply, fi, depth) {
+    if (isMissing()) return;
+    const p = plies()[ply];
+    if (!p || !(p.forks || [])[fi]) return;
+    explore = null; clearPending();
+    lastEnginePv = [];
+    lastEngineLines = [];
+    activeEvalFen = null;
+    fork = { ply: ply, fi: fi, depth: depth == null ? 0 : depth };
+    idx = ply;
+    board.position(fenNow(), false);
+    renderNotes(); renderMoveList(); setButtons(); updateBookHint(); requestEval();
+  }
+  function exitFork() {
+    if (!fork) return;
+    const ply = fork.ply;
+    fork = null;
+    goTo(ply);
+  }
+  function stepFork(dir) {
+    const moves = forkMoves();
+    if (!moves) return false;
+    const next = fork.depth + dir;
+    if (next < 0) { exitFork(); return true; }
+    if (next >= moves.length) return true;
+    fork = { ply: fork.ply, fi: fork.fi, depth: next };
+    board.position(fenNow(), false);
+    renderNotes(); renderMoveList(); setButtons(); updateBookHint(); requestEval();
+    return true;
+  }
+  function clearBookSquareBadge() {
+    if (!elBoard) return;
+    elBoard.querySelectorAll(".book-sq-badge").forEach(function (el) { el.remove(); });
+  }
+  function plyToSquare(p) {
+    if (!p) return null;
+    if (p.to) return String(p.to).toLowerCase();
+    const u = String(p.uci || "").toLowerCase();
+    if (u.length >= 4) return u.slice(2, 4);
+    return null;
+  }
+  function updatePlyBadge() {
+    if (!elPlyBadge) return;
+    let label = "—";
+    let side = "";
+    function fromPly(p) {
+      if (!p || p.fullmove == null) return;
+      side = p.side === "black" ? "black" : "white";
+      label = p.fullmove + (side === "white" ? "." : "...");
+    }
+    if (!isMissing()) {
+      if (explore && explore.depth >= 0 && explore.moves[explore.depth]) {
+        fromPly(explore.moves[explore.depth]);
+      } else if (explore && explore.stem) {
+        const p = plies()[explore.stem.ply];
+        const fk = p && p.forks && p.forks[explore.stem.fi];
+        const moves = (fk && fk.moves) || [];
+        fromPly(moves[explore.stem.through]);
+      } else if (explore && explore.baseIdx >= 0) {
+        fromPly(plies()[explore.baseIdx]);
+      } else if (fork) {
+        const moves = forkMoves() || [];
+        fromPly(moves[Math.min(Math.max(fork.depth, 0), Math.max(0, moves.length - 1))]);
+      } else if (idx >= 0) {
+        fromPly(plies()[idx]);
+      }
+    }
+    elPlyBadge.textContent = label;
+    elPlyBadge.classList.toggle("is-black", side === "black");
+    elPlyBadge.classList.toggle("is-empty", label === "—");
+  }
+  function updateBookHint() {
+    clearBookSquareBadge();
+    updatePlyBadge();
+    const list = plies();
+    const on = !fork && !explore && idx >= 0 && Boolean(list[idx] && list[idx].book);
+    if (!on || !elBoard) return;
+    const to = plyToSquare(list[idx]);
+    if (!to) return;
+    const cell = elBoard.querySelector(".square-" + to);
+    if (!cell) return;
+    const badge = document.createElement("span");
+    badge.className = "book-sq-badge";
+    badge.setAttribute("aria-label", "Book note on this move");
+    badge.innerHTML = BOOK_BADGE_IMG;
+    cell.appendChild(badge);
+  }
+  function step(dir) {
+    if (explore && stepExplore(dir)) return;
+    if (fork && stepFork(dir)) return;
+    goTo(idx + dir);
+  }
+  function setGame(i) {
+    gIdx = Math.max(0, Math.min(GAMES.length - 1, i));
+    idx = -1;
+    fork = null;
+    explore = null;
+    lastEnginePv = [];
+    lastEngineLines = [];
+    activeEvalFen = null;
+    clearPending();
+    const miss = isMissing();
+    const g = game();
+    const detail = (g.subtitle || g.matchup || ("Game " + (gIdx + 1))).trim();
+    elGameMeta.textContent = detail + (miss ? " · PGN unavailable" : "");
+    if (elGameCount) elGameCount.textContent = (gIdx + 1) + " / " + GAMES.length;
+    document.querySelectorAll(".toc-item").forEach((b) => b.classList.toggle("active", Number(b.dataset.g) === gIdx));
+    const tocActive = document.querySelector('.toc-item[data-g="' + gIdx + '"]');
+    if (tocActive) tocActive.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    board.position(fenNow(), false);
+    try { board.resize(); } catch (e) {}
+    fitBoardToScreen();
+    renderNotes(); renderMoveList(); setButtons(); updateBookHint();
+    if (miss) {
+      elScore.textContent = "—";
+      if (elLines) elLines.innerHTML = "";
+      elWhite.style.height = "50%";
+      clearBookSquareBadge();
+
+    } else {
+      requestEval();
+    }
+  }
+
+  let lastNotesKey = "";
+  function withNotesKey(key, write) {
+    const keep = elBookScroll ? elBookScroll.scrollTop : 0;
+    write();
+    if (elBookScroll) elBookScroll.scrollTop = keep;
+    lastNotesKey = key || "";
+  }
+  function sideLineBookPly() {
+    if (fork) return fork.ply;
+    if (explore) {
+      if (explore.stem) return explore.stem.ply;
+      return explore.baseIdx + 1;
+    }
+    return null;
+  }
+  function bookAnchorFromSide() {
+    const i = sideLineBookPly();
+    if (i == null || i < 0) return null;
+    const p = plies()[i];
+    return p && p.book ? p : null;
+  }
+  function bookNotesKey(fallback) {
+    const i = sideLineBookPly();
+    if (i != null && i >= 0) {
+      const p = plies()[i];
+      if (p && p.book) return "book:" + i;
+    }
+    return fallback;
+  }
+  function renderNotes() {
+    if (isMissing()) {
+      const info = game().missingInfo || {};
+      elMove.textContent = "Missing PGN · " + game().matchup;
+      let html = '<div class="note engine"><span class="tag">Unavailable</span>'
+        + escapeHtml(info.reason || "No method could supply a playable PGN.") + "</div>";
+      const tries = info.attempts || [];
+      if (tries.length) {
+        html += '<div class="note vars"><span class="tag">Tried</span><ul class="vars-list">';
+        tries.forEach((t) => { html += "<li>" + escapeHtml(t) + "</li>"; });
+        html += "</ul></div>";
+      }
+      html += '<p class="empty">Book notes detected: ' + (info.notes_count || 0) + "</p>";
+      if (info.context_preview) {
+        html += '<div class="note book"><span class="tag">Book context preview</span>'
+          + escapeHtml(info.context_preview) + "</div>";
+      }
+      withNotesKey("missing", function () { elNotes.innerHTML = html; });
+      return;
+    }
+    if (explore) {
+      const cur = explore.depth < 0 ? null : explore.moves[explore.depth];
+      const anchor = bookAnchorFromSide();
+      elMove.textContent = cur ? ("your line · " + cur.san) : "your line · branch point";
+      let html = pinnedBookHtml(anchor);
+      html += '<div class="note book" style="border-left-color:var(--explore);background:rgba(52,199,89,0.08)">';
+      html += "Ephemeral — not saved. Green solid = your tries; dashed gray = PGN forks.</div>";
+      html += '<button type="button" class="play-line" id="btnExitExplore"><span class="kind">main</span>back to book line</button>';
+      withNotesKey(bookNotesKey("explore:" + (explore.stem ? explore.stem.ply : explore.baseIdx)), function () {
+        elNotes.innerHTML = html;
+      });
+      document.getElementById("btnExitExplore").onclick = () => exitExplore();
+      return;
+    }
+    if (fork) {
+      const p = plies()[fork.ply];
+      const fk = p.forks[fork.fi];
+      const moves = fk.moves || [];
+      const cur = moves[Math.min(Math.max(fork.depth, 0), moves.length - 1)];
+      elMove.textContent = (fk.kind || "line") + " fork · " + (cur ? cur.san : "?");
+      let html = pinnedBookHtml(p && p.book ? p : null);
+      if (!(p && p.book)) {
+        html += '<div class="note book"><span class="tag">Playable ' + escapeHtml(fk.kind || "line") + "</span>"
+          + escapeHtml(fk.label || "") + "</div>";
+      }
+      html += '<button type="button" class="play-line" id="btnExitFork"><span class="kind">main</span>back to '
+        + escapeHtml(moveLabel(p)) + "</button>";
+      withNotesKey(bookNotesKey("fork:" + fork.ply), function () { elNotes.innerHTML = html; });
+      document.getElementById("btnExitFork").onclick = () => exitFork();
+      return;
+    }
+    const p = idx < 0 ? null : plies()[idx];
+    if (!p) {
+      elMove.textContent = "Start position · " + game().matchup;
+      let html = "";
+      if (game().startBook) {
+        html += '<div class="note book">' + formatNoteHtml(game().startBook) + "</div>";
+      } else {
+        html = '<p class="empty">Drag a piece or tap square → square. Deviating starts your own line (live Stockfish).</p>';
+      }
+      withNotesKey("start", function () { elNotes.innerHTML = html; });
+      return;
+    }
+    const dots = p.side === "white" ? "." : "...";
+    elMove.innerHTML = p.fullmove + dots + " " + escapeHtml(p.san) + (p.glyphs ? ' <span style="color:var(--accent)">' + escapeHtml(p.glyphs) + "</span>" : "");
+    let html = "";
+    if (p.book) html += '<div class="note book">' + formatNoteHtml(p.book) + "</div>";
+    if (p.engine) html += '<div class="note engine"><span class="tag">Engine / RAG</span>' + formatNoteHtml(p.engine) + "</div>";
+    const forks = p.forks || [];
+    if (forks.length) {
+      html += '<div class="note vars"><span class="tag">Playable forks</span>';
+      forks.forEach((fk, fi) => {
+        const line = (fk.moves || []).map((m) => m.san).join(" ");
+        html += '<button type="button" class="play-line" data-fi="' + fi + '"><span class="kind">'
+          + escapeHtml(fk.kind || "line") + "</span>" + escapeHtml(line) + "</button>";
+      });
+      html += "</div>";
+    }
+    if (!html) html = '<p class="empty">No book note on this move.</p>';
+    withNotesKey(p.book ? ("book:" + idx) : ("main:" + idx), function () { elNotes.innerHTML = html; });
+    elNotes.querySelectorAll("button.play-line[data-fi]").forEach((btn) => {
+      btn.addEventListener("click", () => enterFork(idx, Number(btn.dataset.fi), 0));
+    });
+  }
+  function pinnedBookHtml(anchor) {
+    if (!anchor || !anchor.book) return "";
+    return '<div class="note book">' + formatNoteHtml(anchor.book) + "</div>";
+  }
+
+  function renderMoveList() {
+    if (isMissing()) {
+      elList.innerHTML = '<span class="empty">No moves — PGN missing</span>';
+      return;
+    }
+    let html = "";
+    function appendExploreMoves() {
+      if (!explore || !explore.moves.length) return;
+      html += '<span class="explore"><span class="explore-mark">[</span>';
+      explore.moves.forEach((m, di) => {
+        const fcls = ["explore-move"];
+        if (explore.depth === di) fcls.push("active");
+        html += '<button type="button" class="' + fcls.join(" ") + '" data-d="' + di + '">' + escapeHtml(m.san) + "</button>";
+      });
+      html += '<span class="explore-mark">]</span></span> ';
+    }
+    function appendForkMoves(fk, fi, plyIdx, throughDepth) {
+      const moves = fk.moves || [];
+      const limit = throughDepth == null ? moves.length - 1 : throughDepth;
+      html += '<span class="fork ' + escapeHtml(fk.kind || "") + '"><span class="fork-mark">(</span>';
+      moves.forEach((m, di) => {
+        if (di > limit) return;
+        const fcls = ["fork-move"];
+        if (fork && fork.ply === plyIdx && fork.fi === fi && fork.depth === di) fcls.push("active");
+        if (
+          explore && explore.stem &&
+          explore.stem.ply === plyIdx && explore.stem.fi === fi &&
+          explore.depth < 0 && di === explore.stem.through
+        ) fcls.push("active");
+        html += '<button type="button" class="' + fcls.join(" ") + '" data-i="' + plyIdx + '" data-fi="' + fi + '" data-d="' + di + '">' + escapeHtml(m.san) + "</button>";
+      });
+      html += '<span class="fork-mark">)</span></span> ';
+    }
+    if (explore && explore.baseIdx < 0 && !explore.stem) {
+      appendExploreMoves();
+      elList.innerHTML = html || '<span class="empty">No moves</span>';
+    } else {
+      const list = plies();
+      const lastMain = explore
+        ? (explore.stem ? explore.stem.ply : explore.baseIdx)
+        : list.length - 1;
+      list.forEach((p, i) => {
+        if (i > lastMain) return;
+        if (p.side === "white") html += p.fullmove + ".";
+        const cls = ["move"];
+        if (
+          (!fork && !explore && i === idx) ||
+          (fork && fork.ply === i) ||
+          (explore && !explore.stem && explore.baseIdx === i && explore.depth < 0)
+        ) cls.push("active");
+        if (p.book) cls.push("has-book");
+        else if (p.engine || (p.forks && p.forks.length) || (p.variations && p.variations.length) || (p.comment && !p.book)) cls.push("has-other");
+        html += '<button type="button" class="' + cls.join(" ") + '" data-i="' + i + '">' + escapeHtml(p.san + (p.glyphs||"")) + "</button> ";
+        (p.forks || []).forEach((fk, fi) => {
+          if (explore && explore.stem && explore.stem.ply === i && explore.stem.fi === fi) {
+            appendForkMoves(fk, fi, i, explore.stem.through);
+            appendExploreMoves();
+            return;
+          }
+          if (explore && explore.stem && explore.stem.ply === i) {
+            appendForkMoves(fk, fi, i, null);
+            return;
+          }
+          if (explore && !explore.stem) return;
+          if (fork && fork.ply === i) {
+            appendForkMoves(fk, fi, i, null);
+            return;
+          }
+          // Spoilers off: only reveal after reaching the branch position
+          // (fen_before of this ply = position prior to the variation's first move).
+          if (idx < i - 1) return;
+          appendForkMoves(fk, fi, i, null);
+        });
+        if (explore && !explore.stem && explore.baseIdx === i) appendExploreMoves();
+      });
+      elList.innerHTML = html || '<span class="empty">No moves</span>';
+    }
+    elList.querySelectorAll("button.move").forEach((btn) => btn.addEventListener("click", () => { explore = null; fork = null; clearPending(); goTo(Number(btn.dataset.i)); }));
+    elList.querySelectorAll("button.fork-move").forEach((btn) => btn.addEventListener("click", () => {
+      explore = null;
+      enterFork(Number(btn.dataset.i), Number(btn.dataset.fi), Number(btn.dataset.d));
+    }));
+    elList.querySelectorAll("button.explore-move").forEach((btn) => btn.addEventListener("click", () => {
+      if (!explore) return;
+      explore.depth = Number(btn.dataset.d);
+      board.position(fenNow(), false);
+      renderNotes(); renderMoveList(); setButtons(); updateBookHint(); requestEval();
+    }));
+  }
+
+  function setButtons() {
+    const miss = isMissing();
+    const btnPrev = document.getElementById("btnPrev");
+    const btnNext = document.getElementById("btnNext");
+    if (!btnPrev || !btnNext) return;
+    if (explore) {
+      const canBack = explore.depth >= 0
+        || (explore.stem && explore.stem.through >= 0)
+        || explore.baseIdx >= 0;
+      btnPrev.disabled = !canBack;
+      btnNext.disabled = explore.depth >= explore.moves.length - 1;
+    } else if (fork) {
+      const moves = forkMoves() || [];
+      btnPrev.disabled = false;
+      btnNext.disabled = fork.depth >= moves.length - 1;
+    } else {
+      btnPrev.disabled = miss || idx < 0;
+      btnNext.disabled = miss || idx >= plies().length - 1;
+    }
+  }
+
+  function goTo(next) {
+    if (isMissing()) return;
+    explore = null;
+    fork = null;
+    clearPending();
+    lastEnginePv = [];
+    lastEngineLines = [];
+    activeEvalFen = null;
+    idx = Math.max(-1, Math.min(plies().length - 1, next));
+    board.position(fenNow(), false);
+    renderNotes(); renderMoveList(); setButtons(); updateBookHint(); requestEval();
+    queueArrows();
+  }
+
+  function jumpNote(dir) {
+    if (isMissing()) return;
+    explore = null;
+    fork = null;
+    clearPending();
+    const list = plies();
+    if (!list.length) return;
+    let i = idx;
+    while (true) {
+      i += dir;
+      if (i < 0 || i >= list.length) break;
+      const p = list[i];
+      if (p.book || p.engine || (p.forks && p.forks.length) || p.comment) { goTo(i); return; }
+    }
+  }
+
+  function cpToBar(cp) {
+    const clamped = Math.max(-800, Math.min(800, cp));
+    return Math.max(2, Math.min(98, 50 + (clamped / 800) * 50));
+  }
+  function formatScore(cp, mate) {
+    if (mate != null) return (mate > 0 ? "M" : "-M") + Math.abs(mate);
+    if (cp == null) return "—";
+    const pawns = cp / 100;
+    return (pawns >= 0 ? "+" : "") + pawns.toFixed(2);
+  }
+  function pvToSan(fen, uciMoves, maxMoves) {
+    if (typeof Chess === "undefined" || !uciMoves || !uciMoves.length) return "";
+    try {
+      const parts = String(fen || "").split(/\s+/);
+      const ch = new Chess(fen);
+      const out = [];
+      let fullmove = Number(parts[5]) || 1;
+      let turn = parts[1] || "w";
+      const limit = maxMoves || 8;
+      for (let i = 0; i < uciMoves.length && out.length < limit; i++) {
+        const u = String(uciMoves[i] || "").toLowerCase();
+        if (u.length < 4) break;
+        const mv = ch.move({
+          from: u.slice(0, 2),
+          to: u.slice(2, 4),
+          promotion: u[4] || undefined
+        });
+        if (!mv) break;
+        if (turn === "w") out.push(fullmove + "." + mv.san);
+        else if (i === 0) out.push(fullmove + "..." + mv.san);
+        else out.push(mv.san);
+        if (turn === "b") fullmove += 1;
+        turn = turn === "w" ? "b" : "w";
+      }
+      return out.join(" ");
+    } catch (e) {
+      return uciMoves.slice(0, maxMoves || 8).join(" ");
+    }
+  }
+  function showEval(info) {
+    if (info.mate != null) {
+      elScore.textContent = formatScore(null, info.mate);
+      elWhite.style.height = info.mate > 0 ? "96%" : "4%";
+    } else if (info.cp != null) {
+      elScore.textContent = formatScore(info.cp, null);
+      elWhite.style.height = cpToBar(info.cp) + "%";
+    } else {
+      elScore.textContent = "…";
+    }
+    if (!elLines) return;
+    const lines = info.lines || [];
+    if (!lines.length) {
+      elLines.classList.add("is-stale");
+      return;
+    }
+    elLines.classList.remove("is-stale");
+    elLines.innerHTML = lines.map(function (line, i) {
+      const score = formatScore(line.cp, line.mate);
+      const pv = escapeHtml(line.pvSan || (line.pvUci || []).join(" ") || "");
+      return '<li><span class="rank">' + (i + 1) + ".</span>"
+        + '<span class="score">' + escapeHtml(score) + "</span>"
+        + '<span class="pv">' + pv + "</span></li>";
+    }).join("");
+  }
+
+  function startEngineSearch(fen) {
+    if (!engine || !engineReady || !fen) return;
+    const depthGo = window.__sfDepth || LIVE_DEPTH;
+    analyzeToken += 1;
+    activeEvalFen = fen;
+    activeEvalByMp = {};
+    engineSearching = true;
+    lastEnginePv = [];
+    lastEngineLines = [];
+    elScore.textContent = "…";
+    if (elLines) elLines.classList.add("is-stale");
+    queueArrows();
+    engine.postMessage("ucinewgame");
+    engine.postMessage("position fen " + fen);
+    engine.postMessage("go depth " + depthGo);
+  }
+
+  function flushPendingEval() {
+    if (!pendingEvalFen) return;
+    const fen = pendingEvalFen;
+    pendingEvalFen = null;
+    startEngineSearch(fen);
+  }
+
+  function handleEngineInfo(line) {
+    if (!activeEvalFen || !activeEvalByMp) return;
+    if (!line.startsWith("info") || line.indexOf(" score ") === -1) return;
+    if (line.indexOf(" lowerbound") !== -1 || line.indexOf(" upperbound") !== -1) return;
+    const fen = activeEvalFen;
+    const byMp = activeEvalByMp;
+    const depthGo = window.__sfDepth || LIVE_DEPTH;
+    const mpM = / multipv (\d+)/.exec(line);
+    const mp = mpM ? Number(mpM[1]) : 1;
+    if (mp > MULTIPV) return;
+    const depthM = / depth (\d+)/.exec(line);
+    const mateM = / score mate (-?\d+)/.exec(line);
+    const cpM = / score cp (-?\d+)/.exec(line);
+    const pvM = / pv (.+)$/.exec(line);
+    const depth = depthM ? Number(depthM[1]) : 0;
+    if (depth < Math.min(8, depthGo)) return;
+    let cp = mateM ? null : (cpM ? Number(cpM[1]) : null);
+    let mate = mateM ? Number(mateM[1]) : null;
+    if (fen.split(" ")[1] === "b") { if (cp != null) cp = -cp; if (mate != null) mate = -mate; }
+    const pvUci = pvM ? pvM[1].trim().split(/\s+/).filter(Boolean) : [];
+    byMp[mp] = {
+      multipv: mp,
+      cp: cp,
+      mate: mate,
+      depth: depth,
+      pvUci: pvUci,
+      pvSan: pvToSan(fen, pvUci, 8)
+    };
+    const arr = [];
+    for (let i = 1; i <= MULTIPV; i++) if (byMp[i]) arr.push(byMp[i]);
+    if (!arr.length || !byMp[1]) return;
+    lastEngineLines = arr;
+    lastEnginePv = (byMp[1].pvUci || []).slice(0, 4);
+    showEval({
+      cp: byMp[1].cp,
+      mate: byMp[1].mate,
+      depth: byMp[1].depth,
+      lines: arr
+    });
+    queueArrows();
+  }
+
+  function handleEngineBestmove() {
+    engineSearching = false;
+    const byMp = activeEvalByMp || {};
+    const arr = [];
+    for (let i = 1; i <= MULTIPV; i++) if (byMp[i]) arr.push(byMp[i]);
+    if (arr.length) {
+      lastEngineLines = arr;
+      lastEnginePv = (arr[0].pvUci || []).slice(0, 4);
+      showEval({
+        cp: arr[0].cp,
+        mate: arr[0].mate,
+        depth: arr[0].depth,
+        lines: arr
+      });
+      queueArrows();
+    }
+    activeEvalByMp = null;
+    if (pendingEvalFen) flushPendingEval();
+  }
+
+  function requestEval() {
+    if (isMissing()) return;
+    if (!engine || !engineReady) return;
+    const fen = fenNow();
+    if (!fen) return;
+    if (engineSearching) {
+      if (fen === activeEvalFen && !pendingEvalFen) return;
+      pendingEvalFen = fen;
+      elScore.textContent = "…";
+      if (elLines) elLines.classList.add("is-stale");
+      engine.postMessage("stop");
+      return;
+    }
+    if (fen === activeEvalFen && lastEngineLines.length) return;
+    startEngineSearch(fen);
+  }
+
+  function bootEngine() {
+    if (!ENGINE_WORKER_URL) {
+
+      return;
+    }
+    const mobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+      || (navigator.maxTouchPoints > 1 && Math.min(window.innerWidth, window.innerHeight) < 900);
+    const hashMb = mobile ? 16 : 64;
+    const depthCap = mobile ? Math.min(LIVE_DEPTH, 14) : LIVE_DEPTH;
+
+    try {
+      const jsUrl = new URL(ENGINE_WORKER_URL, window.location.href).href;
+      const wasmUrl = jsUrl.replace(/\.js(\?.*)?$/i, ".wasm$1");
+      engine = new Worker(jsUrl + "#" + encodeURIComponent(wasmUrl));
+    } catch (e) {
+
+      return;
+    }
+    let gotAny = false;
+    engine.onmessage = function (ev) {
+      gotAny = true;
+      const line = typeof ev.data === "string" ? ev.data : "";
+      if (!engineReady) {
+        if (line.indexOf("uciok") !== -1) {
+          engine.postMessage("setoption name Hash value " + hashMb);
+          engine.postMessage("setoption name MultiPV value " + MULTIPV);
+          engine.postMessage("isready");
+        } else if (line.indexOf("readyok") !== -1) {
+          engineReady = true;
+          window.__sfDepth = depthCap;
+          requestEval();
+        }
+        return;
+      }
+      if (line.indexOf("bestmove") === 0) {
+        handleEngineBestmove();
+        return;
+      }
+      handleEngineInfo(line);
+    };
+    engine.onerror = function (ev) {
+      const hint = ENGINE_WORKER_URL + " (wasm next to .js; serve from bookwalk/)";
+
+      console.error("Stockfish worker error", ev);
+    };
+    setTimeout(function () {
+      if (!engineReady && !gotAny) {
+
+      }
+    }, 12000);
+    setTimeout(function () { engine.postMessage("uci"); }, 0);
+  }
+
+  document.querySelectorAll(".toc-item").forEach((b) => b.addEventListener("click", () => setGame(Number(b.dataset.g))));
+
+  function goFirst() {
+    if (explore) { explore.depth = -1; }
+    explore = null; fork = null; clearPending();
+    goTo(-1);
+  }
+  function goLast() {
+    if (explore) {
+      explore.depth = explore.moves.length - 1;
+      board.position(fenNow(), false);
+      renderNotes(); renderMoveList(); setButtons(); updateBookHint(); requestEval();
+      return;
+    }
+    if (fork) {
+      const moves = forkMoves() || [];
+      enterFork(fork.ply, fork.fi, moves.length - 1);
+      return;
+    }
+    goTo(plies().length - 1);
+  }
+  function flipBoard() {
+    orientation = orientation === "white" ? "black" : "white";
+    board.orientation(orientation);
+    queueArrows();
+  }
+  function stepNav(dir) {
+    step(dir);
+    const ae = document.activeElement;
+    if (ae && typeof ae.blur === "function") ae.blur();
+  }
+  document.getElementById("btnFirst").onclick = function () { goFirst(); this.blur(); };
+  document.getElementById("btnPrev").onclick = function () { stepNav(-1); };
+  document.getElementById("btnNext").onclick = function () { stepNav(1); };
+  document.getElementById("btnLast").onclick = function () { goLast(); this.blur(); };
+  document.getElementById("btnFlip").onclick = function () { flipBoard(); this.blur(); };
+
+  let wheelAcc = 0;
+  let wheelLock = 0;
+  const elDock = document.getElementById("boardDock");
+  function onWheelMoves(e) {
+    if (isMissing()) return;
+    e.preventDefault();
+    const now = Date.now();
+    if (now - wheelLock < 90) return;
+    wheelAcc += e.deltaY;
+    if (Math.abs(wheelAcc) < 24) return;
+    step(wheelAcc > 0 ? 1 : -1);
+    wheelAcc = 0;
+    wheelLock = now;
+  }
+  elBoard.addEventListener("wheel", onWheelMoves, { passive: false });
+  elDock.addEventListener("wheel", onWheelMoves, { passive: false });
+  elBoard.addEventListener("pointerup", handleBoardPointer);
+
+  if (window.ResizeObserver && elBoardRow) {
+    new ResizeObserver(() => queueArrows()).observe(elBoardRow);
+  }
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowLeft") { e.preventDefault(); step(-1); }
+    else if (e.key === "ArrowRight") { e.preventDefault(); step(1); }
+    else if (e.key === "Escape") {
+      e.preventDefault();
+      if (pendingFrom) clearPending();
+      else if (explore) exitExplore();
+      else if (fork) exitFork();
+    }
+    else if (e.key === "Home") { e.preventDefault(); goFirst(); }
+    else if (e.key === "End") { e.preventDefault(); goLast(); }
+    else if (e.key === "f" || e.key === "F") { flipBoard(); }
+    else if (e.key === "PageDown" || e.key === "]") { e.preventDefault(); setGame(gIdx + 1); }
+    else if (e.key === "PageUp" || e.key === "[") { e.preventDefault(); setGame(gIdx - 1); }
+    else if (e.key === "n" || e.key === "N") { jumpNote(1); }
+  });
+
+  setGame(0);
+  bootEngine();
+})();
+  </script>
+</body>
+</html>

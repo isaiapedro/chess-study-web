@@ -1,0 +1,49 @@
+id: opening.french
+label: French Defence
+phase: opening
+family: french
+aliases:
+- french defence
+- french defense
+keywords:
+- French Defence
+- French Defense
+- Winawer
+- Advance Variation
+- '...e6 ...d5'
+eco_prefixes:
+- C00
+- C01
+- C02
+- C03
+- C04
+- C05
+- C06
+- C07
+- C08
+- C09
+- C10
+- C11
+- C12
+- C13
+- C14
+- C15
+- C16
+- C17
+- C18
+- C19
+opening_tokens:
+- french
+rules_of_thumb:
+- Black challenges e4 with ...d5; the light-squared bishop is the problem child.
+- Plans revolve around ...c5 breaks and play against a fixed e5 pawn in the Advance.
+plans:
+- Black — ...c5, pressure d4, free the c8 bishop later.
+- White — space on kingside or central bind; meet ...c5 carefully.
+related:
+- structure.pawn_chain
+- structure.iqp
+detect: eco_or_opening
+exemplars:
+- Korchnoi vs Karpov, Candidates 1974
+- Uhlmann French classics

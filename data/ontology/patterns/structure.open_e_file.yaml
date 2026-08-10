@@ -1,0 +1,20 @@
+id: structure.open_e_file
+label: Open / Half-Open e-file
+phase: middlegame
+family: chess_structures
+aliases:
+  - open e-file
+keywords:
+  - open e-file
+  - half-open e-file
+  - rook on the e-file
+rules_of_thumb:
+  - Central files host rooks after exchanges on e4/e5; entry on e7/e2 is thematic.
+  - Often paired with IQP or open games after ...exd4 / dxe5.
+plans:
+  - Occupy e-file, invade the 7th, support central outposts.
+related:
+  - structure.iqp
+  - structure.open_c_file
+detect: board_open_e_file
+exemplars: []

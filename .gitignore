@@ -1,0 +1,20 @@
+.env
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.tools/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Local / large artifacts (keep samples + ontology)
+data/books/
+data/chroma/
+data/masters/
+data/viewer_out/
+data/annotated/
+data/pgn_archive/
+*.pdf
+*.wasm
+*.sqlite

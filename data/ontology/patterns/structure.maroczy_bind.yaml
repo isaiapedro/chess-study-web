@@ -1,0 +1,25 @@
+id: structure.maroczy_bind
+label: Maróczy Bind
+phase: middlegame
+family: chess_structures
+aliases:
+- maroczy bind
+- maróczy
+keywords:
+- Maroczy Bind
+- Maróczy
+- c4 and e4
+- bind on d5
+rules_of_thumb:
+- White pawns on c4+e4 clamp ...d5; Black plays for ...b5/...f5 or a delayed ...d5.
+- White avoids careless piece trades that release the bind without compensation.
+plans:
+- White — squeeze, knight to d5/c4, queenside space.
+- Black — ...a6/...b5, piece pressure on c4, or ...f5 breaks.
+related:
+- opening.sicilian_scheveningen
+- imbalance.space
+detect: board_maroczy
+exemplars:
+- Petrosian vs Fischer, Candidates 1971
+- Ponomariov vs Radjabov, 2010 (chapter)

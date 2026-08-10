@@ -1,0 +1,24 @@
+id: imbalance.opposite_bishops
+label: Opposite-Colored Bishops
+phase: any
+family: imbalance
+aliases:
+- opposite colored bishops
+- opposite-coloured bishops
+keywords:
+- opposite-colored bishops
+- opposite coloured bishops
+- bishops of opposite color
+rules_of_thumb:
+- Middlegame — attack is stronger; defender struggles to cover the weak color complex.
+- Pure opposite-bishop endgames are often drawish even a pawn down.
+plans:
+- Attacker — pile on the color the enemy bishop cannot defend.
+- Defender — trade into a pure opposite-bishop ending if down material.
+related:
+- imbalance.bishop_pair
+- imbalance.king_safety
+detect: board_opposite_bishops
+exemplars:
+- Fischer vs Taimanov, Vancouver 1971
+- Opposite-bishop attacking middlegames (Averbakh)

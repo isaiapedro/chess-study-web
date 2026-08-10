@@ -1,0 +1,22 @@
+id: structure.open_c_file
+label: Open / Half-Open c-file
+phase: middlegame
+family: chess_structures
+aliases:
+  - open c-file
+  - half-open c-file
+keywords:
+  - open c-file
+  - half-open file
+  - rook on c-file
+  - c-file pressure
+rules_of_thumb:
+  - Rooks belong on open files; the seventh rank and entry squares matter.
+  - In IQP/hanging positions the c-file is often the highway for pressure.
+plans:
+  - Double rooks on c, look for entry on c7/c2 or trade into favorable ending.
+related:
+  - structure.iqp
+  - structure.hanging_pawns
+detect: board_open_c_file
+exemplars: []

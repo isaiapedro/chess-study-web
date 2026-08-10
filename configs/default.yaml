@@ -1,0 +1,36 @@
+stockfish_path: .tools/stockfish/stockfish-ubuntu-x86-64-avx2
+analyze_depth: 12
+critical_cp_threshold: 120
+ollama_host: http://localhost:11434
+chat_model: qwen3:8b
+embed_model: nomic-embed-text
+masters:
+  enabled: true
+  # Lumbra Gigabase (or any) OTB .pgn dumps — see data/masters/README.md
+  pgn_dir: data/masters/pgn
+  index_path: data/masters/index.sqlite
+  soft_year: true
+  chessgames_fallback: true
+  chessgames_delay_s: 1.8
+annotate:
+  # lighter than "every opening ply" — critical + book anchors + samples
+  opening_plies: 12
+  sample_every_ply: 4
+  min_delta_for_note: 40
+lichess:
+  # Token via LICHESS_TOKEN env (see .env.example). Scope: study:write
+  visibility: unlisted
+  delay_s: 0.35
+ontology:
+  dir: data/ontology/patterns
+  expand_hops: 1
+rag:
+  persist_dir: data/chroma
+  collection: chess_books
+  top_k: 4
+  top_k_opening: 5
+  min_score: 0.45
+  min_score_opening: 0.50
+chunk:
+  max_chars: 700
+  overlap_chars: 80

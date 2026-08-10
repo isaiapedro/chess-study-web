@@ -1,0 +1,21 @@
+id: imbalance.space
+label: Space Advantage
+phase: middlegame
+family: imbalance
+aliases:
+  - space advantage
+keywords:
+  - space advantage
+  - cramp
+  - territorial advantage
+rules_of_thumb:
+  - Side with more space manoeuvres behind the pawn wall; avoid premature trades of attacking pieces.
+  - Cramped side seeks pawn breaks and piece trades to free the position.
+plans:
+  - Space side — improve pieces, restrain breaks, prepare a wing attack.
+  - Cramped side — timely break (...c5/...e5/...f5) or simplify.
+related:
+  - structure.pawn_chain
+  - opening.kings_indian
+detect: board_space
+exemplars: []

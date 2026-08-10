@@ -1,0 +1,17 @@
+Chapter 1: New York 1927
+
+In this chapter we study a famous struggle: Alekhine vs Capablanca, New York 1927.
+The game illustrates Capablanca's calm defense and the conversion of a structural edge.
+
+1. d4 Nf6 Capablanca invites an Indian setup. 2. c4 e6 3. Nf3 b6 The Queen's Indian idea:
+Black fianchettoes and contests e4. 4. g3 Bb7 5. Bg2 c5 A modern Benoni-flavored break.
+6. d5 Capablanca accepts a central space wedge. After the middlegame complications,
+watch how Black's pieces coordinate on the long diagonal while White's knight wanders.
+
+Later Capablanca vs Alekhine, Capablanca - Alekhine World Championship, 1927 also shows
+similar pawn-structure themes with hanging pawns and minority ideas.
+
+Chapter 2: Endgame Technique
+
+Capablanca vs Tartakower, New York 1924 is the classic rook endgame model.
+14... Kf6 Black activates the king early. 15. Ke3 The opposition battle begins.

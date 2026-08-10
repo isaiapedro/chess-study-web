@@ -1,0 +1,23 @@
+id: imbalance.bishop_pair
+label: Bishop Pair
+phase: any
+family: imbalance
+aliases:
+- bishop pair
+- two bishops
+keywords:
+- bishop pair
+- two bishops
+- open position bishops
+rules_of_thumb:
+- Bishop pair thrives in open positions; avoid locking the centre.
+- Side without the pair seeks closed structures or knight outposts.
+plans:
+- Open lines, trade into endgames where bishops rake both wings.
+related:
+- structure.iqp
+- structure.hanging_pawns
+detect: board_bishop_pair
+exemplars:
+- Fischer vs Petrosian, Buenos Aires 1971
+- Open-position two-bishop conversions

@@ -1,0 +1,25 @@
+id: structure.passed_pawn
+label: Passed Pawn
+phase: any
+family: chess_structures
+aliases:
+- passed pawn
+- passer
+keywords:
+- passed pawn
+- outside passed pawn
+- protected passed pawn
+- candidate passed pawn
+rules_of_thumb:
+- Passed pawns must be pushed; blockade them with a piece when defending.
+- Outside passers distract the enemy king in endgames.
+plans:
+- Owner — escort with king/rook; create a second weakness.
+- Defender — blockade, trade the passer, or create counterplay elsewhere.
+related:
+- endgame.lucena
+- endgame.philidor
+detect: board_passed_pawn
+exemplars:
+- Capablanca vs Tartakower, New York 1924
+- Carlsen vs McShane, London 2009 (passer conversion)

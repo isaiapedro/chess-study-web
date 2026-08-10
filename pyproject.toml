@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "chess-coach"
+version = "0.1.0"
+description = "Local CLI chess coaching: PGN + Stockfish + RAG + Ollama"
+requires-python = ">=3.11"
+dependencies = [
+  "python-chess>=1.999",
+  "chromadb>=0.5.0",
+  "httpx>=0.27.0",
+  "pyyaml>=6.0",
+  "pypdf>=4.0.0",
+]
+
+[project.scripts]
+chess-coach = "chess_coach.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

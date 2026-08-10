@@ -1,0 +1,71 @@
+id: opening.queens_gambit
+label: Queen's Gambit / QGD
+phase: opening
+family: queens_gambit
+aliases:
+- queen's gambit
+- queens gambit
+- qgd
+keywords:
+- Queen's Gambit
+- QGD
+- Orthodox Defence
+- Exchange Variation
+- Carlsbad
+eco_prefixes:
+- D06
+- D07
+- D08
+- D09
+- D30
+- D31
+- D32
+- D33
+- D34
+- D35
+- D36
+- D37
+- D38
+- D39
+- D40
+- D41
+- D42
+- D50
+- D51
+- D52
+- D53
+- D54
+- D55
+- D56
+- D57
+- D58
+- D59
+- D60
+- D61
+- D62
+- D63
+- D64
+- D65
+- D66
+- D67
+- D68
+- D69
+opening_tokens:
+- queen's gambit
+- queens gambit
+- qgd
+- orthodox
+rules_of_thumb:
+- Fight for d5/c4; Exchange/Carlsbad often leads to minority-attack structures.
+- Black chooses solid (...e6) or more active systems (Tarrasch, Semi-Slav ideas).
+plans:
+- White — pressure d5, minority attack, or central break e4.
+- Black — ...c5/...e5 freeing breaks, piece activity.
+related:
+- structure.minority_attack
+- structure.iqp
+- structure.hanging_pawns
+detect: eco_or_opening
+exemplars:
+- Botvinnik vs Capablanca, AVRO 1938
+- Wojtaszek vs Swiercz, 2011 (chapter)

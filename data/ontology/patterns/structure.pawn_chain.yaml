@@ -1,0 +1,26 @@
+id: structure.pawn_chain
+label: Pawn Chain / Locked Centre
+phase: middlegame
+family: chess_structures
+aliases:
+- pawn chain
+- locked center
+keywords:
+- pawn chain
+- locked centre
+- locked center
+- attack the base
+- French Advance
+rules_of_thumb:
+- Attack the base of the chain; play on the side where your chain points.
+- Breaks (...c5/...f6 or c4/f4) define the plans.
+plans:
+- Chain owner — space and wing attack in the chain direction.
+- Opponent — undermine the base and open a file.
+related:
+- opening.french
+- imbalance.space
+detect: board_pawn_chain
+exemplars:
+- Nimzowitsch vs Salwe, Carlsbad 1911 (chain attack)
+- French Advance classics — attack the base
