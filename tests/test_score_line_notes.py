@@ -27,8 +27,14 @@ def test_score_line_anchors(stem: str, excerpt_path: Path, anchors_path: Path):
     excerpt = excerpt_path.read_text(encoding="utf-8")
     spec = yaml.safe_load(anchors_path.read_text(encoding="utf-8"))
     expect = spec["expect"]
-    _pre, notes = extract_move_notes(excerpt)
+    preamble, notes = extract_move_notes(excerpt)
     assert notes, f"{stem}: no notes extracted"
+
+    pre_needle = spec.get("preamble_contains")
+    if pre_needle:
+        assert preamble and pre_needle in preamble, (
+            f"{stem}: preamble missing {pre_needle!r}; got={preamble[:120]!r}"
+        )
 
     for exp in expect:
         fm = exp["fullmove"]
@@ -50,6 +56,47 @@ def test_score_line_anchors(stem: str, excerpt_path: Path, anchors_path: Path):
         assert prefix in text or text.startswith(prefix), (
             f"{stem}: {fm} {side} text {text[:80]!r} missing prefix {prefix!r}"
         )
+
+
+def test_bouaziz_ng6_not_on_cxd5():
+    excerpt = (FIXTURES / "bouaziz_ch14_excerpt.txt").read_text(encoding="utf-8")
+    _pre, notes = extract_move_notes(excerpt)
+    ng6 = next(n for n in notes if n.fullmove == 18 and n.side == "black")
+    assert "good move for two reasons" in ng6.text
+    assert "g6" in (ng6.san_hint or "").lower()
+    assert "bxa4" in ng6.text.replace(" ", "")
+    assert not any(
+        n.fullmove == 18
+        and n.side == "white"
+        and "good move for two reasons" in n.text
+        for n in notes
+    )
+
+
+def test_bouaziz_bd3_not_sideline_junk():
+    excerpt = (FIXTURES / "bouaziz_ch14_excerpt.txt").read_text(encoding="utf-8")
+    _pre, notes = extract_move_notes(excerpt)
+    bd3 = next(n for n in notes if n.fullmove == 23 and n.side == "white")
+    assert "Of course" in bd3.text
+    assert "Ra7" in bd3.text
+    assert "dominating position after Bd3" not in bd3.text
+
+
+def test_different_continuation_stays_on_parent():
+    raw = """
+18...Ng6!
+This is a good move for two reasons. Black will improve his knight.
+A different continuation, such as 18...bxa4 19.bxa4 Rab8 20.Qe2 a5 21.Ne3
+Ng6 22.g3 Rec8 23.Bd2!, gives White a dominating position after Bd3 and Nc4.
+19.axb5 axb5 20.Bd2 Be7
+Something else about the main line.
+"""
+    from chess_coach.ocr_chess import ocr_clean_chess
+
+    _pre, notes = extract_move_notes(ocr_clean_chess(raw))
+    ng6 = next(n for n in notes if n.fullmove == 18 and n.side == "black")
+    assert "dominating position" in ng6.text
+    assert not any(n.fullmove == 23 and "dominating position" in n.text for n in notes)
 
 
 def test_mcshane_r5c7_not_on_a4():

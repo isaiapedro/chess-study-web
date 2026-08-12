@@ -34,7 +34,8 @@ MOVE_LABEL_RE = re.compile(
 # Scoped variation cues (secondary; not an 80-word endslist).
 _VARIATION_CUE_RE = re.compile(
     r"(?i)\b(?:if|after|with|followed\s+by|instead\s+of|manoeuvre|maneuver|"
-    r"continuation(?:\s+is)?|for\s+example|example|rather\s+than|"
+    r"continuation(?:\s+is)?|different\s+continuation|such\s+as|"
+    r"for\s+example|example|rather\s+than|"
     r"but\s+not|or)\s+$"
 )
 
@@ -42,6 +43,8 @@ _VARIATION_CUE_RE = re.compile(
 _VARIATION_TAIL_START_RE = re.compile(
     r"(?is)\s*(?:"
     r"(?:A\s+)?(?:possible\s+)?continuation\s+is\b|"
+    r"(?:A\s+)?different\s+continuation\b|"
+    r"such\s+as\b|"
     r"For\s+example\b:?|"
     r"Example\b:?|"
     r"followed\s+by\b|"
@@ -65,6 +68,7 @@ _COACHING_OPEN_RE = re.compile(
     r"It was preferable|Once again|The battle is|The only move|"
     r"We are close|The most accurate|Aiming for|Covering the |"
     r"And as usually|A better defence|Black missed|Weak is |"
+    r"Of course |It [a-z]+ |deserves |"
     r"The (?:knight|bishop|rook|queen|king|pawn|piece) |"
     r"But now|Suicidal is |"
     r"If |When |While |Although |Though |Should |"
@@ -95,8 +99,16 @@ def normalize_ellipsis_forms(text: str) -> str:
     out = text
     out = re.sub(r"[•·∙⋅]{2,}", "...", out)
     out = re.sub(r"\.\s*[•·∙⋅]+\s*\.", "...", out)
+    out = re.sub(r"[•·∙⋅]\s*\.\s*[•·∙⋅]", "...", out)
+    # "17 •.• cxd5" / "17 • • • cxd5"
+    out = re.sub(
+        r"\b(\d+)\s*[•·∙⋅]\s*\.\s*[•·∙⋅]\s*",
+        r"\1... ",
+        out,
+    )
     out = re.sub(r"\b(\d+)\s*\.\s*[•·∙⋅]+\s*\.\s*", r"\1... ", out)
     out = re.sub(r"\b(\d+)\s+[•·∙⋅]+\s*\.\s*", r"\1... ", out)
+    out = re.sub(r"\b(\d+)\s+[•·∙⋅]+\s*[•·∙⋅]\s*", r"\1... ", out)
     # Three spaced dots before two-dot rules: "44 .. . SAN" → "44... SAN"
     out = re.sub(r"\b(\d+)\s*\.\s*\.\s*\.\s*", r"\1... ", out)
     out = re.sub(r"\b(\d+)\s*\.\s*\.\.\s*", r"\1...", out)
@@ -185,7 +197,8 @@ def score_tail_is_variation(before: str) -> bool:
     head = region.lstrip()[:120]
     if re.match(
         r"(?i)(?:for\s+example|example|a\s+possible\s+continuation|"
-        r"continuation\s+is|followed\s+by)\b",
+        r"a\s+different\s+continuation|different\s+continuation|"
+        r"such\s+as|continuation\s+is|followed\s+by)\b",
         head,
     ):
         return True
@@ -286,8 +299,10 @@ def can_open_score_line(text: str, match: re.Match[str]) -> bool:
     # Full prefix for variation-tail detection (200-char window is too short for long sidelines).
     before_full = text[: match.start()]
     before = before_full[-200:] if len(before_full) > 200 else before_full
+    # "studying with:\n17..." is a mainline transition, not "with 17..." variation.
+    transition_with = bool(re.search(r"(?i)\bwith:\s*$", before_full))
     before_soft = re.sub(r"[,:;\"'”’)\]]+\s*$", " ", before)
-    if _VARIATION_CUE_RE.search(before_soft):
+    if not transition_with and _VARIATION_CUE_RE.search(before_soft):
         return False
     if match.start() == 0:
         return True
@@ -383,7 +398,7 @@ def segment_score_lines(text: str) -> tuple[str, list[ScoreLineNote]]:
         m_ev = re.match(r"\s*(?:\+-|-\+|±|∓)", text[prose_start:])
         if m_ev:
             prose_start += m_ev.end()
-        prose_end = opens[j].start() if j < len(opens) else min(len(text), prose_start + 4000)
+        prose_end = opens[j].start() if j < len(opens) else min(len(text), prose_start + 8000)
         # If next open is mid-prose variation that somehow got in, still cut there
         prose = text[prose_start:prose_end].strip()
         prose = re.sub(r"^(?:\+-|-\+|±|∓)\s*", "", prose)
@@ -396,7 +411,7 @@ def segment_score_lines(text: str) -> tuple[str, list[ScoreLineNote]]:
                         fullmove=int(last.group("num")),
                         side=_label_side(last),
                         san=last.group("move"),
-                        text=prose[:4000],
+                        text=prose[:8000],
                         label_start=last.start(),
                         label_end=last.end(),
                     )

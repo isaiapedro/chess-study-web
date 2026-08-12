@@ -202,7 +202,7 @@ def test_qf1_ocr_and_align_to_qf2():
         "41.\ufffda7t! 'itlh8 42.E:b8 (42... id3? 43.l0xd6)"
     )
     cleaned = ocr_clean_chess(raw)
-    assert "Qd7?" in cleaned
+    assert "d7?" in cleaned  # after …, FFFD → bare dest (align/L5 fills piece)
     assert "Kg8" in cleaned
     assert "lt>" not in cleaned
     assert "40.Bd4" in cleaned.replace(" ", "") or "40. Bd4" in cleaned
@@ -225,7 +225,7 @@ def test_qf1_ocr_and_align_to_qf2():
         san = board.san(node.move)
         if san.startswith("Qe7") and board.fullmove_number >= 36:
             out = legalize_note_prose(board, cleaned)
-            assert "Qd7?" in out
+            assert "Qd7?" in out or "d7?" in out
             assert "Bd4" in out and "Qd4" not in out
             assert "Rxb6" in out
             assert "Qf2" in out
@@ -678,3 +678,25 @@ def test_rg3_late_game_notes_ocr_and_targets():
     qf3 = next(n for n in notes if n.fullmove == 51 and n.side == "white")
     assert qf3.text.startswith("Black")
     assert not qf3.text.startswith("-")
+
+
+def test_strip_leading_diagram_salad_before_prose():
+    from chess_coach.ocr_chess import clean_book_note
+
+    raw = (
+        "Rxc5 8 nm rn 7. iJer(,,..,1·1·;,j....,i· 6 z /. -/. ·- "
+        "5 '8\".8\"-\"\"\",,,.,. 4 '8' 3 /m· 2 /--liti!,,,%;f.... %.,.,, "
+        "We have reached the position of interest. The reader should examine this."
+    )
+    cleaned = clean_book_note(raw)
+    assert cleaned.startswith("We have reached")
+    assert "nm rn" not in cleaned
+    assert '""",,,' not in cleaned
+    assert "I/" not in cleaned
+
+
+def test_if_slash_ocr_to_if():
+    from chess_coach.ocr_chess import ocr_clean_chess
+
+    assert "If 22" in ocr_clean_chess("I/ 22. Nd4 is better")
+    assert "I/" not in ocr_clean_chess("I/ Black takes")

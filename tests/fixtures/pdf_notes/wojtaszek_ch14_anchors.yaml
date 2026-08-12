@@ -16,4 +16,4 @@ expect:
   san_contains: g4
   text_prefix: If l 5... a5 preventing a4-a5, the w
 source: Chess Structures Ch.14 Wojtaszek-Swiercz
-# Note: score dump 10.e4 … 13.Qb6 retargets coaching onto 13...Qb6 (Layer 2).
+preamble_contains: "Learning objective"

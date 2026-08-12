@@ -154,6 +154,10 @@ PIECE_OCR_GLYPHS: Final[dict[str, str]] = {
     # Queen leftovers
     "'Ml'": "Q",
     "'Ml": "Q",
+    "Yea": "Qa",
+    "Ye": "Q",
+    "vti'": "Q",
+    "vti": "Q",
     # Bishop figurines
     "1'.": "B",
     "1'": "B",

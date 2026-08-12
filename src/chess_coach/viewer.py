@@ -712,6 +712,15 @@ def render_html(
       font-family: ui-monospace, Menlo, monospace; font-size: 0.76rem;
       color: var(--muted); align-self: center;
     }}
+    .note .para {{ display: block; margin: 0 0 0.65em; }}
+    .note .para:last-child {{ margin-bottom: 0; }}
+    .note .san {{
+      font-family: ui-monospace, Menlo, monospace; font-weight: 600; letter-spacing: 0.01em;
+    }}
+    .note .fig {{
+      display: inline-block; width: 1.1em; height: 1.1em;
+      vertical-align: -0.2em; margin: 0 0.04em 0 0.02em;
+    }}
   </style>
 </head>
 <body>
@@ -902,6 +911,7 @@ def render_html(
     out = out.replace(/([a-h][1-8])\.(?=If\b)/g, "$1. ");
     out = out.replace(/\bBf\s+(?=\d)/g, "If ");
     out = out.replace(/\bBf(?=\d{{2}}\.)/g, "If ");
+    out = out.replace(/\bI\/(?=\s*(?:\d|\.\.\.|[A-Za-z]|$))/g, "If ");
     out = out.replace(/\bIf(?=\d)/g, "If ");
     out = out.replace(/(^|[^A-Za-z0-9])\.?i(?=[a-h][1-8]\b|[a-h]x|x[a-h])/g, "$1B");
     out = out.replace(/:§:|El(?=[a-hx])/g, "R");
@@ -942,7 +952,7 @@ def render_html(
       let last = 0;
       let m;
       re.lastIndex = 0;
-      const line = chunk.replace(/\n/g, " ");
+      const line = chunk.replace(/\\n/g, " ");
       while ((m = re.exec(line)) !== null) {{
         out += escapeHtml(line.slice(last, m.index));
         out += escapeHtml(m[1] || "");
@@ -959,7 +969,7 @@ def render_html(
       out += escapeHtml(line.slice(last));
       return out;
     }}
-    if (blocks.length <= 1) return formatInline(text.replace(/\n/g, " "));
+    if (blocks.length <= 1) return formatInline(text.replace(/\\n/g, " "));
     return blocks.map(function (b) {{
       return '<span class="para">' + formatInline(b) + "</span>";
     }}).join("");

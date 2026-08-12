@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import functools
+import socket
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
@@ -15,6 +16,18 @@ class BookwalkHandler(SimpleHTTPRequestHandler):
         ".js": "text/javascript",
         ".mjs": "text/javascript",
     }
+
+
+def lan_ipv4() -> str:
+    try:
+        with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
+            sock.connect(("8.8.8.8", 80))
+            ip = sock.getsockname()[0]
+            if ip and not ip.startswith("127."):
+                return ip
+    except OSError:
+        pass
+    return "127.0.0.1"
 
 
 def main() -> None:
@@ -32,8 +45,12 @@ def main() -> None:
         raise SystemExit(f"Missing directory: {root}")
     handler = functools.partial(BookwalkHandler, directory=str(root))
     httpd = ThreadingHTTPServer((args.bind, args.port), handler)
+    host = lan_ipv4()
     print(f"Serving {root}")
-    print(f"Open http://192.168.1.19:{args.port}/ (or this machine's LAN IP)")
+    print(f"Open http://{host}:{args.port}/")
+    chapter = sorted(root.glob("*_chapter_book.html"), key=lambda p: p.stat().st_size, reverse=True)
+    if chapter:
+        print(f"Chapter: http://{host}:{args.port}/{chapter[0].name}")
     print("WASM MIME=application/wasm")
     httpd.serve_forever()
 

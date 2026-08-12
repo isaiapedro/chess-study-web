@@ -577,9 +577,89 @@ def _clean_preamble(head: str) -> str:
         lines.append(ln)
     text = clean_book_note(" ".join(lines))
     text = re.sub(r"\s+", " ", text).strip()
-    if not prose_is_usable(text, min_alpha=50):
+    # Drop trailing opening-score salad that never opened a score line (I.d4 …)
+    text = re.sub(
+        rf"(?i)(?:\s+\d+\.(?:\.\.)?\s*{MOVE_TOKEN}){{3,}}\s*$",
+        "",
+        text,
+    ).strip()
+    if not prose_is_usable(text, min_alpha=40):
         return ""
     return text[:2500]
+
+
+def _overview_window_start(text: str, header_start: int) -> int:
+    """
+    Rule E: include overview prose above the game header when present.
+
+    Many Quality Chess games put Learning objective *after* the name line — then
+    return ``header_start``. Only look back for overview cues immediately above
+    the header (section question / learning objective before a dash citation).
+    """
+    near = min(900, header_start)
+    near_text = text[header_start - near : header_start]
+    near_cues = list(
+        re.finditer(
+            r"(?im)(?:^|\n)\s*(?:"
+            r"Learning\s+objective|"
+            r"How\s+should\b|"
+            r"(?:Black|White)'s\s+(?:\w+\s+){0,4}(?:plan|chances|prospects)\b"
+            r")",
+            near_text,
+        )
+    )
+    if near_cues:
+        return header_start - near + near_cues[-1].start()
+    return header_start
+
+
+def _previous_fullmove_side(fullmove: int, side: str) -> tuple[int, str] | None:
+    """Ply immediately before (fullmove, side). None at game start."""
+    if side == "black":
+        return fullmove, "white"
+    if fullmove <= 1:
+        return None
+    return fullmove - 1, "black"
+
+
+def _split_midgame_preamble(raw_preamble: str) -> tuple[str, str]:
+    """
+    Rule F: last prose paragraph before the first scored move vs remaining overview.
+
+    Returns (overview_for_start, last_paragraph_for_previous_ply).
+    """
+    from chess_coach.ocr_chess import clean_book_note, prose_is_usable
+
+    text = (raw_preamble or "").strip()
+    if not text:
+        return "", ""
+    # Prefer blank-line paragraphs; else last sentence cluster after a period.
+    parts = [p.strip() for p in re.split(r"(?:\n\s*){2,}", text) if p.strip()]
+    if len(parts) >= 2:
+        last = clean_book_note(parts[-1])
+        overview = clean_book_note(" ".join(parts[:-1]))
+    else:
+        # Split on last ". " that leaves a usable final sentence (>= 40 alpha).
+        last = ""
+        overview = text
+        for m in reversed(list(re.finditer(r"\.\s+", text))):
+            cand = text[m.end() :].strip()
+            head = text[: m.end()].strip()
+            if prose_is_usable(cand, min_alpha=40) and prose_is_usable(head, min_alpha=40):
+                last = clean_book_note(cand)
+                overview = clean_book_note(head)
+                break
+        if not last:
+            # Single block: use all as previous-ply note when mid-game; overview empty.
+            last = clean_book_note(text)
+            overview = ""
+    last = re.sub(r"\s+", " ", last).strip()
+    overview = re.sub(r"\s+", " ", overview).strip()
+    if not prose_is_usable(last, min_alpha=40):
+        return _clean_preamble(text), ""
+    if overview and not prose_is_usable(overview, min_alpha=40):
+        overview = ""
+    return overview[:2500], last[:2500]
 
 
 def _retarget_early_score_note(note: BookMoveNote) -> BookMoveNote:
@@ -707,20 +787,57 @@ _TRAILING_BROKEN_MOVE_RE = re.compile(
 
 
 def extract_move_notes(text: str) -> tuple[str, list[BookMoveNote]]:
-    from chess_coach.chess_text_grammar import segment_score_lines
+    from chess_coach.chess_text_grammar import (
+        MOVE_LABEL_RE,
+        can_open_score_line,
+        segment_score_lines,
+    )
     from chess_coach.ocr_chess import clean_book_note, normalize_prose_breaks, ocr_clean_chess
 
     cleaned = ocr_clean_chess(text)
     raw_preamble, segments = segment_score_lines(cleaned)
     preamble = _clean_preamble(raw_preamble) if raw_preamble else ""
     notes: list[BookMoveNote] = []
+
+    # Rule F — mid-game start: gate on the *first open* fullmove (not the last
+    # ply of the first score-line group, which can be 5.Qd2 after 1.d4…).
+    first_open_fm: int | None = None
+    first_open_side: str | None = None
+    for m in MOVE_LABEL_RE.finditer(cleaned):
+        if can_open_score_line(cleaned, m):
+            first_open_fm = int(m.group("num"))
+            first_open_side = "black" if m.group("dots") else "white"
+            break
+
+    if (
+        first_open_fm is not None
+        and first_open_fm > 1
+        and first_open_side
+        and (raw_preamble or "").strip()
+    ):
+        overview, last_para = _split_midgame_preamble(raw_preamble)
+        prev = _previous_fullmove_side(first_open_fm, first_open_side)
+        if last_para and prev is not None:
+            notes.append(
+                BookMoveNote(
+                    fullmove=prev[0],
+                    side=prev[1],
+                    san_hint="",
+                    text=last_para[:4000],
+                )
+            )
+            preamble = overview if overview else ""
+        elif overview:
+            preamble = overview
+
     for seg in segments:
         prose = normalize_prose_breaks(seg.text)
         prose = _TRAILING_BROKEN_MOVE_RE.sub("", prose).strip()
         prose = re.sub(r"^(?:\+-|-\+|±|∓)\s*", "", prose)
         short_ok = bool(
             re.match(
-                r"(?i)(?:but now|threatening |covering the |suicidal is )\b",
+                r"(?i)(?:but now|threatening |covering the |suicidal is |"
+                r"deserves\b|of course\b)",
                 prose,
             )
         )
@@ -728,20 +845,25 @@ def extract_move_notes(text: str) -> tuple[str, list[BookMoveNote]]:
             continue
         if MOVE_LABEL_RE.fullmatch(prose.strip()):
             continue
+        if re.fullmatch(r"(?i)(?:and now:?\s*)+", prose.strip()):
+            continue
         if (
             len(clean_book_note(prose)) < 12
             and not short_ok
             and not re.search(
-                r"\b(?:The|White|Black|Better|Threatening|Precision|If|Getting|Preparing|Something|But)\b",
+                r"\b(?:The|White|Black|Better|Threatening|Precision|If|Getting|Preparing|Something|But|Of course|It took)\b",
                 prose,
             )
         ):
+            continue
+        # Score crumbs + "And now:" with no real coaching
+        if re.match(r"(?i)(?:\d+\.(?:\.\.)?\s*\S+\s*)+and now:?\s*$", prose.strip()):
             continue
         note = BookMoveNote(
             fullmove=seg.fullmove,
             side=seg.side,
             san_hint=seg.san,
-            text=prose[:4000],
+            text=prose[:8000],
         )
         note = _retarget_through_leading_score(note)
         notes.append(_retarget_early_score_note(note))
@@ -811,7 +933,7 @@ def extract_citations(chapter_text: str, *, book: str = "", chapter: str = "") -
         if not white or not black or year is None:
             continue
         event = (match.group("event") or "").strip(" ,")
-        window_start = max(0, match.start() - 80)
+        window_start = _overview_window_start(chapter_text, match.start())
         context = _citation_context(
             chapter_text,
             window_start,
@@ -903,9 +1025,10 @@ def _citations_from_dash_headers(
         if year is None:
             continue
         event = re.sub(r"\s+", " ", tail[: year_match.start()]).strip(" ,.")
+        window_start = _overview_window_start(text, match.start())
         context = _citation_context(
             text,
-            match.start(),
+            window_start,
             header_end=match.end() + year_match.end(),
             default_span=5000,
             max_span=16000,
@@ -950,9 +1073,10 @@ def _citations_from_game_headers(
         meta = re.sub(r"\s+", " ", match.group("meta")).strip()
         # keep opening name in event hint for ranking (Dutch Defence etc.)
         event = re.sub(rf",?\s*{re.escape(match.group('year'))}", "", meta).strip(" ,")
+        window_start = _overview_window_start(text, match.start())
         context = _citation_context(
             text,
-            match.start(),
+            window_start,
             header_end=match.end(),
             default_span=5000,
             max_span=16000,

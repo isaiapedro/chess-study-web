@@ -1,0 +1,26 @@
+expect:
+  - fullmove: 17
+    side: white
+    text_prefix: "After a Ruy Lopez opening"
+  - fullmove: 18
+    side: black
+    san_contains: g6
+    text_prefix: "This is a good move for two reasons"
+  - fullmove: 21
+    side: white
+    san_contains: Qa1
+    text_prefix: "If 21. Bd3"
+  - fullmove: 23
+    side: white
+    san_contains: Bd3
+    text_prefix: "Of course 23. Ra7"
+  - fullmove: 23
+    side: black
+    san_contains: Bb6
+    text_prefix: "It took five moves"
+  - fullmove: 32
+    side: white
+    san_contains: Ng3
+    text_prefix: "Final remarks"
+source: Chess Structures Ch.14 Bouaziz-Beliavsky
+preamble_contains: "How should Black play"

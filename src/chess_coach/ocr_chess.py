@@ -40,6 +40,7 @@ _PROSE_START_RE = re.compile(
     r"We are close|The most accurate|Aiming for|Covering the |"
     r"And as usually|And we have|A better defence|Black missed|Weak is |"
     r"Making things|This is the key|This is an |This is a |"
+    r"Of course |It [a-z]+ |deserves |"
     r"The (?:knight|bishop|rook|queen|king|pawn|piece) |"
     r"But now|Suicidal is |"
     r"If |When |While |Although |Though |Should |"
@@ -177,6 +178,8 @@ def ocr_clean_move_token(token: str) -> str:
     out = re.sub(r"^W(?=x[gfh]|[gfh][1-8])", "K", out)
     out = re.sub(r"^W(?=x[a-e]|[a-e][1-8])", "Q", out)
     out = re.sub(r"^@(?=[a-h]|x)", "K", out)
+    # Queen OCR Ye… as whole token (Yeal / Yea1 → Q + file + rank fix)
+    out = re.sub(r"^Ye(?=[a-h][1-8lI])", "Q", out, flags=re.I)
     # Knights — leftover patterns
     out = re.sub(r"^J'(?=k[1-8]|[a-h][1-8]|x[a-h])", "N", out)
     out = re.sub(r"^Nk([1-8])$", r"Nc\1", out)
@@ -275,8 +278,6 @@ def ocr_clean_chess(text: str) -> str:
     if not text:
         return ""
     out = text.replace("\u00a0", " ")
-    # Queen figurine often becomes U+FFFD before square/capture: "30.�d2" / "31.� xa5"
-    out = re.sub(r"\ufffd\s*(?=x?[a-h][1-8])", "Q", out)
     # Lost piece (FFFD) + OCR rank digit (3↔0/o): bootstrap f-file square.
     # Align matches same destination; Layer 5 fills piece when unique.
     def _fffd_rank_sq(m: re.Match[str]) -> str:
@@ -286,29 +287,38 @@ def ocr_clean_chess(text: str) -> str:
         return f"{m.group(1)}. f{rank}"
 
     out = re.sub(r"\b(\d+)\s*\ufffd\s*([0oOlIi])\b", _fffd_rank_sq, out)
-    # FFFD before f+OCR-rank → Q (lost queen figurine); rank fixed later
-    out = re.sub(r"\ufffd\s*(?=f[l1I]\b)", "Q", out)
-    out = re.sub(r"\ufffd(?=[a-h][l1I])", "Q", out)
-    out = out.replace("\ufffd", "")
-    # After FFFD strip: lone OCR-digit before figurine capture-dot (&.sq)
-    out = re.sub(
-        r"\b(\d+)\s+([0oO])\s+(?=&\.)",
-        lambda m: f"{m.group(1)}. f{'3' if m.group(2) in '0oO' else m.group(2)} ",
-        out,
-    )
     out = out.replace("\u2019", "'").replace("\u2018", "'").replace("\u02bc", "'")
     out = out.replace("\\", "")
+    # Leading OCR "I.d4" / "I...Nf6" (digit 1 as capital I)
+    out = re.sub(r"(?<![A-Za-z0-9])I\s*\.\s*\.\.(?=\s*[NBRQKa-h\ufffd])", "1...", out)
+    out = re.sub(r"(?<![A-Za-z0-9])I\s*\.(?=\s*[NBRQKa-h\ufffd])", "1.", out)
+    # Queen figurine salad: Ye… / vti' / '!W / Wl… (Quality Chess); rank l→1 later
+    out = re.sub(r"\bYe(?=[a-h][1-8lI])", "Q", out, flags=re.I)
+    out = re.sub(r"\bvti['\u2019]?\s*(?=[a-h1-8])", "Q", out, flags=re.I)
+    out = re.sub(r"\bWl(?=[a-h1-8])", "Q", out)
+    out = re.sub(r"'!W(?=[a-h])", "Q", out)
     # Global castling (often appears mid-prose without repair elsewhere)
     out = re.sub(r"0\s*-{1,3}\s*0\s*-{1,3}\s*0", "O-O-O", out)
     out = re.sub(r"0\s*-{1,3}\s*0", "O-O", out)
     out = re.sub(r"O\s*-{1,3}\s*O\s*-{1,3}\s*O", "O-O-O", out)
     out = re.sub(r"O\s*-{1,3}\s*O", "O-O", out)
+    # Glued castling + next move number: O-O6.Nf3 → O-O 6.Nf3
+    out = re.sub(r"\b(O-O-O|O-O)(?=\d+\.)", r"\1 ", out)
+    # Glued SAN + next move number: dxc47.Qc2 → dxc4 7.Qc2
+    out = re.sub(
+        r"\b((?:O-O-O|O-O|[NBRQK]?[a-h]?[1-8]?x?[a-h][1-8](?:=[NBRQ])?[+#?!]*))"
+        r"(?=\d{1,3}\.)",
+        r"\1 ",
+        out,
+        flags=re.I,
+    )
     # Undo false + already baked into prose (correc+, protec+)
     out = re.sub(r"\b([a-z]{2,}[a-egh])\+", r"\1t", out)
-    # Prose conditionals OCR'd as bishop: "Bf 27." / "g4.If"
+    # Prose conditionals OCR'd as bishop / slash: "Bf 27." / "I/ 22." / "g4.If"
     out = re.sub(r"([a-h][1-8])\.(?=If\b)", r"\1. ", out)
     out = re.sub(r"\bBf\s+(?=\d)", "If ", out)
     out = re.sub(r"\bBf(?=\d{2}\.)", "If ", out)
+    out = re.sub(r"\bI/(?=\s*(?:\d|\.\.\.|[A-Za-z]|$))", "If ", out)
     out = re.sub(r"\bIf(?=\d)", "If ", out)
     # Move-number OCR: "3 LNb4" / "3 Llilb4" → "31.Nb4", "23 .." → "23..."
     out = re.sub(r"\b(\d)[ \t]+[lI][ \t]*\.\s*", r"\g<1>1.", out)
@@ -320,6 +330,33 @@ def ocr_clean_chess(text: str) -> str:
     out = re.sub(r"\b2[sS](?=\s*\.)", "28", out)
     # Rule B: ellipsis normalize → White two-dot (chess_text_grammar)
     out = normalize_ellipsis_forms(out)
+    # FFFD after Black ellipsis → bare destination (align / Layer 5 fill piece).
+    # Remaining FFFD before square → Q (White queen figurine common case).
+    out = re.sub(r"(\.\.\.\s*)\ufffd\s*(?=x?[a-h][1-8])", r"\1", out)
+    out = re.sub(r"\ufffd\s*(?=x?[a-h][1-8])", "Q", out)
+    out = re.sub(r"\ufffd\s*(?=f[l1I]\b)", "Q", out)
+    out = re.sub(r"\ufffd(?=[a-h][l1I])", "Q", out)
+    out = out.replace("\ufffd", "")
+    # After FFFD strip: lone OCR-digit before figurine capture-dot (&.sq)
+    out = re.sub(
+        r"\b(\d+)\s+([0oO])\s+(?=&\.)",
+        lambda m: f"{m.group(1)}. f{'3' if m.group(2) in '0oO' else m.group(2)} ",
+        out,
+    )
+    # After …, lost bishop figurine as i/t/h + square (.id8 / tds / .ih6)
+    out = re.sub(
+        r"(\.\.\.\s*)\.?([iht])(?=[a-h][1-8sS]\b)",
+        r"\1B",
+        out,
+        flags=re.I,
+    )
+    # Bishop OCR rank letter s/S after that rewrite → 8 (.id8 / tds)
+    out = re.sub(r"(\.\.\.\s*B[a-h])[sS]\b", r"\g<1>8", out)
+    # Rook OCR: colon (+ optional junk letter) before square (:a7 / :ga7).
+    # Do not steal ``!:ib7`` / ``E:b3`` (handled as rook figurines below).
+    out = re.sub(r"(?<![A-Za-z0-9!E]):[a-z]?(?=[a-h][1-8])", "R", out, flags=re.I)
+    out = re.sub(r"(?<![!'])\bl:(?=k|[a-h])", "R", out, flags=re.I)
+    out = re.sub(r"\bRk(?=[a-h1-8lI])", "Rc", out)
     # Rook OCR "E:b3" / "E:5c7" — colon is excluded from move tokens, so normalize early
     out = re.sub(r"(?<![A-Za-z0-9])E:(?=[a-h1-8x])", "R", out)
     # Rook OCR section sign (Quality Chess)
@@ -640,12 +677,63 @@ def prose_is_usable(text: str, *, min_alpha: int = 40) -> bool:
     return False
 
 
+_DIAGRAM_SALAD_HEAD_RE = re.compile(
+    r"(?:"
+    r"\bnm\s+rn\b|"  # Quality Chess empty-board OCR row
+    r"[\"']{2,}|"  # """ / ''' runs from diagram glyphs
+    r",{3,}|"
+    r"\b[1-8]\s+[a-z]{1,3}\s+[a-z]{1,3}\s+[1-8]\.|"  # 8 nm rn 7.
+    r"[/\\]{2,}|"  # // -- glyph noise
+    r"[·∙⋅]{2,}"
+    r")",
+    re.I,
+)
+
+
+def _is_diagram_salad_head(head: str) -> bool:
+    """True when text before a prose opener is board-diagram OCR junk."""
+    h = (head or "").strip()
+    if len(h) < 8:
+        return False
+    if _DIAGRAM_SALAD_HEAD_RE.search(h):
+        return True
+    # Strip a leading SAN echo (Rxc5 …) then re-check density
+    h2 = re.sub(
+        r"^(?:\[Book:[^\]]*\]\s*)?(?:O-O-O|O-O|[NBRQK]?[a-h]?[1-8]?x?[a-h][1-8][+#?!]*)\s+",
+        "",
+        h,
+        flags=re.I,
+    ).strip()
+    probe = h2 or h
+    if _DIAGRAM_SALAD_HEAD_RE.search(probe):
+        return True
+    alpha = sum(1 for ch in probe if ch.isalpha())
+    if len(probe) >= 24 and alpha / max(len(probe), 1) < 0.38:
+        return True
+    punct = sum(1 for ch in probe if ch in ",.'\"`;:|/\\·∙⋅%-")
+    if len(probe) >= 20 and punct / max(len(probe), 1) >= 0.22:
+        return True
+    return False
+
+
+def strip_leading_diagram_salad(text: str) -> str:
+    """Cut Quality Chess diagram OCR that sits before coaching prose."""
+    out = (text or "").strip()
+    if not out:
+        return ""
+    match = _PROSE_START_RE.search(out)
+    if match and match.start() > 0 and _is_diagram_salad_head(out[: match.start()]):
+        return out[match.start() :].strip()
+    return out
+
+
 def strip_diagrams(text: str) -> str:
     out = _DIAGRAM_RE.sub(" ", text)
     out = _RANK_ONLY_RE.sub(" ", out)
     out = _PAGE_HEADER_RE.sub(" ", out)
     out = _GLYPH_SALAD_RE.sub(" ", out)
-    return normalize_prose_breaks(out)
+    out = normalize_prose_breaks(out)
+    return strip_leading_diagram_salad(out)
 
 
 def clean_book_note(text: str) -> str:
@@ -726,7 +814,8 @@ def extract_variation_snippets(prose: str) -> tuple[str, list[str]]:
 
     prose_wo = prose
     for match in re.finditer(
-        r"\b((?:Better was|Instead|The try|Not)\s+[^.]{8,180}\.)",
+        r"\b((?:Better was|Instead|The try|Not|"
+        r"A different continuation(?:[^.!?]{0,40})?)\s+[^.]{8,220}\.)",
         prose_wo,
         re.I,
     ):

@@ -1,0 +1,22 @@
+How should Black play?
+White's previous three wins were very convincing, and the reader may wonder how Black is supposed to play. I want to answer this question by first showing a short fragment from the game
+Bouaziz - Beliavsky, Szirak 19 87.
+
+After a Ruy Lopez opening, the game reached the position in the diagram, and now Black turned into the structure we are studying with:
+17 •.• cxd5 18.cxd5
+And now:
+18 ... �g6!
+This is a good move for two reasons. Black will improve his least-useful piece by playing .. .i.e7-d8-b6 while the knight on g6 is ready to jump to f4. Note how difficult it is for White to cover all the knight jumps when Black's knights are on f6 and g6; it seems like Black always has something useful to do.
+A different continuation, such as 18 ... bxa4 19.bxa4 Rab8 20.Qe2 a5 21.Ne3 Ng6 22.g3 Rec8 23.Bd2!, gives White a dominating position after Bd3 and Nc4. Once again Black lacks queenside targets.
+19.axb5 axb5 20 • .id2 .ie7 21.Yeal
+If 21.Bd3 Nf4!? Black has good counterplay after 22.Nxf4 exf4 23.Qd2 Qc3! with a dynamic balance.
+21.g3!? deserves attention too.
+21. .. .tds 22.Rc1 Qb8 23.i.d3
+Of course 23.:ga7? simply cooperates with Black, and after 23...Bb6 Black has serious kingside threats.
+23 ... i.b6
+It took five moves to bring this bishop from the useless f8-square to the powerful b6-square; it was worth it. This bishop covers the entry points a7 and c7, and exerts pressure against White's kingside.
+24.Rxc8 Rxc8 25.g3 Ng4 26.Be1 f5 27.exf5 Ne7 28.Nh4 Nxd5 29.Ng6 Ngf6 30.Qd1 Qb7 31.g4 Be8 32.Ng3 Nf4!+
+The rest of the game is irrelevant to our purposes.
+Final remarks
+1. It should be noted that, unlike the previous three examples, Black transferred into this pawn structure under good conditions.
+2. The conditions were good because Black's knights were well placed on f6 and g6.

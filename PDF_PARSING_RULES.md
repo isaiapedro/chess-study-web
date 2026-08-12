@@ -74,13 +74,32 @@ Primary cut is **structural** (`segment_score_lines`), not an 80-word keyword lo
 
 Annotation `?!` on a SAN is **not** a sentence break (does not open a new score line).
 
+### Rule E — Overview preamble always attached
+
+Text before the first scored move of a citation is overview / learning-objective prose.
+
+- Look back above the game header only for nearby overview cues (`Learning objective`, `How should…`, plan/prospects blurbs). If the cue sits *after* the name line (common Quality Chess layout), the window starts at the header.
+- Cleaned preamble attaches to `game.comment` (viewer `startBook`) when present.
+- Drop trailing opening-score salad that never opened a head (`I.d4 …`) from the preamble body.
+
+### Rule F — Mid-game start → previous ply
+
+When the first scored **open** has `fullmove > 1` (gate on the first open, not the last ply of the first score-line group):
+
+1. Split preamble into overview (optional) + **last prose paragraph** before that open.
+2. Emit a synthetic note on the **immediate previous mainline ply**.
+3. Remaining overview still goes to `game.comment` / `startBook`.
+4. Do not invent moves — only attach commentary to an existing previous ply.
+
+Fragment games that open mid-score (e.g. after a diagram) get the setup paragraph on the ply before the first book move.
+
 ---
 
 ## Layer 3 — OCR dictionary
 
 | Table | Examples |
 | --- | --- |
-| `PIECE_OCR_GLYPHS` | `'Wie`→`Qe`, `ltJ`/`lll`/`lil`/`ill`→`N`, `f?`→`Q`, `%'m`→`Qf8`, `E:`/`.§`/`§`→`R` |
+| `PIECE_OCR_GLYPHS` | `'Wie`→`Qe`, `ltJ`/`lll`/`lil`/`ill`→`N`, `f?`→`Q`, `%'m`→`Qf8`, `E:`/`.§`/`§`→`R`, `Ye`/`Yea`→`Q`/`Qa` |
 | `OCR_ALIASES` | `?f`→`?!`, `;i;`/`;!;`/`!;!;`/`+=`→`⩲` |
 | Lookahead leftovers | `W`→K/Q by file; lone `i`→`B`; `iB`→`B`; `lt>`/`'itl`/`'tt>`→`K`; `!'l:`/`El`/`E'`/`:9'`/`l!b`→`R`; `l0`/`tee`/`tex`→`N`/`Nx`; `4o.`→`40.`; `hfl`/`hi7`→`Bxf1`/`Bxf7`; SAN `t`→`+` (check); `#` = checkmate (dict); `;t`→`⩲`; R/`l`→rank1, N/`l`→rank7. |
 
@@ -89,6 +108,16 @@ Annotation `?!` on a SAN is **not** a sentence break (does not open a new score 
 **Queen salad `Wff`/`Yfif`/`Yfix`**: `Wfff7`/`Wffd7`/`Yfifl`→`Qf7`/`Qd7`; `Yfixflt`/`Yffflt`→`Qxf7+`; `= Wff`→`=Q`. Keep mid-variation `If N.` from opening a new score line; strip leading Informator `+-`/`-+` from note prose after `SAN+-`.
 
 **Lost bishop before `e8`**: after move marks, `! �es` / `! es` → `Be8`.
+
+**Lost figurine after Black ellipsis**: `18...�g6` → `18...g6` (bare destination; align / Layer 5 fill piece). Remaining FFFD before square → `Q`.
+
+**Queen `Ye…` salad**: `Ye`/`Yea` before file/rank → `Q`/`Qa` (rank `l`→`1` via existing queen back-rank rule).
+
+**Leading `I.d4`**: capital-I OCR for move 1 → `1.d4` / `1...`.
+
+**Sideline cue**: `A different continuation` / `such as …` keeps the following score run inside the parent note (same family as `For example` / `continuation is`).
+
+**Rook leading colon**: `:a7` / `l:c…` → rook + file.
 
 **Rook figurine `J` + junk**: `J�b2` / `JQb2` → `Rb2`.
 

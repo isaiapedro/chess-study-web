@@ -51,63 +51,72 @@
       --r-pill: 999px;
 
       --mono: ui-monospace, SFMono-Regular, Menlo, "JetBrains Mono", monospace;
-      /* desktop: board capped; mobile overrides via max-width */
-      --board-max: min(58dvh, 620px);
-      --eval-bar-w: 14px;
-      --measure: 66rem;
+
+      /* Exactly two text sizes in the whole app: header and body. */
+      --fs-head: clamp(1rem, 0.94rem + 0.34vw, 1.1875rem);
+      --fs-body: clamp(0.8125rem, 0.79rem + 0.16vw, 0.9375rem);
+      --eval-bar-w: clamp(10px, 1.6vmin, 16px);
+
+      /* Board size is measured at runtime (fitBoardToScreen) from the real
+         free space, so any screen — phone, tablet, desktop, split window —
+         keeps the board AND the book notation on screen together.
+         --board-fallback is what renders before/without JS. */
+      --board-fallback: clamp(160px, min(calc(100vw - 1rem), calc(100dvh - 380px)), 620px);
+      --board-size: var(--board-px, var(--board-fallback));
+      --dock-w: calc(var(--board-size) + var(--eval-bar-w) + 0.4rem);
     }
 
     * { box-sizing: border-box; }
-    html {
-      background: var(--bg);
-      width: 100%;
-      max-width: 100%;
-      overflow-x: clip;
-      font-size: 18px;
-    }
+    html { background: var(--bg); }
     html, body { margin: 0; height: 100%; }
     body {
       font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
-      background:
-        radial-gradient(120% 78% at 50% 0%, #101010 0%, #000000 60%) no-repeat;
+      background: radial-gradient(120% 78% at 50% 0%, #101010 0%, #000000 60%) no-repeat;
       color: var(--text);
       display: grid;
+      grid-template-columns: minmax(0, 1fr);
       grid-template-rows: auto minmax(0, 1fr);
       height: 100dvh;
       max-height: 100dvh;
-      width: 100%;
-      max-width: 100%;
       overflow: hidden;
-      overflow-x: clip;
       -webkit-font-smoothing: antialiased;
       text-rendering: optimizeLegibility;
     }
 
     /* ---------- chrome ---------- */
     .top {
-      display: flex; align-items: center; gap: 0.75rem;
-      padding: 0.7rem clamp(0.65rem, 2vw, 1.1rem);
+      display: flex; align-items: center; gap: 0.7rem;
+      padding: 0.5rem clamp(0.65rem, 2vw, 1.1rem);
+      padding-left: max(clamp(0.65rem, 2vw, 1.1rem), env(safe-area-inset-left));
+      padding-right: max(clamp(0.65rem, 2vw, 1.1rem), env(safe-area-inset-right));
+      padding-top: max(0.5rem, env(safe-area-inset-top));
       background: rgba(18, 18, 18, 0.56);
       backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
       border-bottom: 1px solid var(--border);
       position: sticky; top: 0; z-index: 20;
     }
     .top .mark {
-      width: 26px; height: 26px; flex: none;
+      width: 24px; height: 24px; flex: none;
       display: grid; place-items: center;
       border-radius: var(--r-xs);
-      background: var(--accent); color: #fff;
-      font-size: 0.9rem; line-height: 1;
+      background: var(--accent); color: #fff; font-size: var(--fs-body); line-height: 1;
     }
+    .top { min-width: 0; }
+    .top .titles { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; }
+    .top .titles > * { min-width: 0; max-width: 100%; }
     .top h1 {
-      margin: 0; flex: 1; min-width: 0;
-      font-size: 0.95rem; font-weight: 600; letter-spacing: -0.3px;
-      color: var(--text);
+      margin: 0;
+      font-size: var(--fs-head); font-weight: 600; letter-spacing: -0.3px; color: var(--text);
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .top .page-meta {
+      margin: 0;
+      font-size: var(--fs-body); line-height: 1.3; color: var(--text-muted);
       overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
     }
     .count {
       flex: none;
-      font-size: 0.6875rem; font-weight: 500; letter-spacing: 0.04em;
+      font-size: var(--fs-body); font-weight: 500; letter-spacing: 0.04em;
       font-variant-numeric: tabular-nums;
       color: var(--text-muted);
       background: var(--fill-alt); border: 1px solid var(--border);
@@ -116,63 +125,50 @@
 
     .shell {
       display: grid; grid-template-columns: minmax(0, 1fr);
-      min-height: 0; height: 100%; overflow: hidden;
-      width: 100%; max-width: 100%;
-      justify-items: center;
-      overflow-anchor: none;
+      min-width: 0; min-height: 0; height: 100%; overflow: hidden;
     }
     .stage {
-      display: grid; grid-template-rows: auto auto minmax(0, 1fr);
-      min-height: 0; overflow: hidden;
-      gap: 0.55rem;
-      padding: 0.6rem clamp(0.5rem, 2vw, 1.1rem) 0.5rem;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: auto minmax(0, 1fr);
+      min-width: 0; min-height: 0; overflow: hidden;
+      gap: 0.5rem;
+      padding: 0.45rem clamp(0.5rem, 2vw, 1.1rem) 0.5rem;
+      padding-left: max(clamp(0.5rem, 2vw, 1.1rem), env(safe-area-inset-left));
+      padding-right: max(clamp(0.5rem, 2vw, 1.1rem), env(safe-area-inset-right));
+      padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
       width: 100%; max-width: 100%;
-      justify-items: center;
-      box-sizing: border-box;
-      overflow-anchor: none;
     }
 
-    /* ---------- game meta ---------- */
-    .game-head { width: min(100%, var(--measure)); margin-inline: auto; justify-self: stretch; }
-    .game-head .page-meta {
-      margin: 0;
-      color: var(--text-muted);
-      font-size: 0.8125rem; line-height: 1.45;
-      overflow-wrap: anywhere; word-break: break-word;
-      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
-    }
-
-    /* ---------- fixed board dock ---------- */
+    /* ---------- board dock (never scrolls) ---------- */
     .board-dock {
-      width: min(100%, calc(var(--board-max) + var(--eval-bar-w) + 0.4rem));
-      max-width: 100%;
+      width: min(100%, var(--dock-w));
       margin-inline: auto;
-      justify-self: center;
-      display: flex; flex-direction: column; gap: 0.5rem;
-      min-height: 0; flex: none;
-      overflow: hidden;
-      box-sizing: border-box;
+      display: flex; flex-direction: column; gap: 0.45rem;
+      min-height: 0; min-width: 0;
     }
-    .eval-readout {
-      display: flex; flex-direction: column; align-items: stretch; justify-content: center;
-      gap: 0.2rem; margin: 0; min-width: 0;
-      flex: 1 1 auto;
-      font-variant-numeric: tabular-nums;
-      min-height: 3rem;
+    .board-row {
+      display: grid;
+      grid-template-columns: var(--eval-bar-w) minmax(0, 1fr);
+      grid-template-rows: auto 1fr;
+      align-items: stretch; gap: 0.4rem;
+      width: 100%; max-width: 100%; min-height: 0; overflow: hidden;
     }
-    .eval-top {
-      display: flex; align-items: center; justify-content: flex-start;
-      gap: 0.5rem; min-width: 0; width: 100%;
-      min-height: 1.2rem;
+    .board-chrome {
+      min-width: 0;
+      grid-row: 1; grid-column: 1 / -1;
+      display: flex; flex-direction: row; justify-content: stretch; align-items: stretch;
+      gap: 0.55rem; min-height: 0; margin: 0 0 0.3rem;
     }
-    .eval-score-row { display: inline-flex; align-items: center; gap: 0.4rem; min-width: 0; }
+    .eval-readout { display: flex; align-items: center; gap: 0.65rem; min-width: 0; margin: 0; flex: 1 1 auto; }
     .eval-score {
-      font-size: 1.05rem; font-weight: 700; letter-spacing: -0.4px; color: var(--text);
+      font-size: var(--fs-head); font-weight: 700; letter-spacing: -0.4px;
+      color: var(--text); font-variant-numeric: tabular-nums;
     }
     .eval-lines {
       display: flex; flex-direction: column; gap: 0.08rem;
       margin: 0; padding: 0; list-style: none;
-      font-family: var(--mono); font-size: 0.6875rem; line-height: 1.3;
+      font-family: var(--mono); font-size: var(--fs-body); line-height: 1.3;
       color: var(--text-soft); min-width: 0;
       height: calc(3 * 1.3em + 2 * 0.08rem);
       min-height: calc(3 * 1.3em + 2 * 0.08rem);
@@ -181,12 +177,9 @@
     .eval-lines.is-stale { opacity: 0.45; }
     .eval-lines li {
       display: grid; grid-template-columns: 1.1rem 2.6rem minmax(0, 1fr);
-      gap: 0.35rem; align-items: baseline; min-width: 0;
-      min-height: 1.3em;
+      gap: 0.35rem; align-items: baseline; min-width: 0; min-height: 1.3em;
     }
-    .eval-lines li.is-empty {
-      visibility: hidden;
-    }
+    .eval-lines li.is-empty { visibility: hidden; }
     .eval-lines .rank { color: var(--text-dim); }
     .eval-lines .score { color: var(--text); font-weight: 600; }
     .eval-lines .pv {
@@ -194,136 +187,74 @@
       color: var(--text-muted);
     }
     .eval-lines li:first-child .pv { color: var(--blue); }
-    #board .square-55d63 { position: relative; }
-    .book-sq-badge {
-      position: absolute;
-      top: 2%;
-      right: 2%;
-      width: max(1.1rem, 32%);
-      height: max(1.1rem, 32%);
-      max-width: 1.65rem;
-      max-height: 1.65rem;
-      border-radius: 50%;
-      background: transparent;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 7;
-      pointer-events: none;
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
-      overflow: hidden;
-    }
-    .book-sq-badge img {
-      width: 100%;
-      height: 100%;
-      display: block;
-      object-fit: cover;
-      border-radius: 50%;
-    }
-
-    .board-row {
-      display: grid;
-      grid-template-columns: var(--eval-bar-w) minmax(0, 1fr);
-      grid-template-rows: auto 1fr;
-      align-items: stretch; gap: 0.4rem;
-      width: 100%;
-      max-width: 100%;
-      margin-inline: auto;
-      min-height: 0;
-      overflow: hidden;
-      box-sizing: border-box;
-    }
-    .eval-bar {
-      position: relative;
-      grid-row: 2;
-      grid-column: 1;
-      width: 100%;
-      max-width: 100%;
-      align-self: stretch;
-      min-width: 0;
-      background: var(--fill-muted);
-      border: 1px solid var(--border);
-      border-radius: var(--r-pill);
-      overflow: hidden;
-      box-sizing: border-box;
-    }
-    .eval-white {
-      position: absolute; left: 0; right: 0; bottom: 0; height: 50%;
-      background: var(--cream);
-    }
-    .board-wrap {
-      position: relative;
-      grid-row: 2;
-      grid-column: 2;
-      width: 100%; max-width: 100%; aspect-ratio: 1 / 1; min-width: 0;
-      border-radius: var(--r-md); overflow: hidden;
-      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.55);
-      box-sizing: border-box;
-    }
-    #board {
-      width: 100% !important; height: 100% !important; margin: 0;
-      max-width: 100% !important;
-      touch-action: none; user-select: none; -webkit-user-select: none;
-    }
-    #board .board-b72b1 {
-      width: 100% !important; height: 100% !important; border: none;
-      max-width: 100% !important;
-    }
-    #board .white-1e1d7 { background-color: var(--board-light); color: var(--board-dark); }
-    #board .black-3c85d { background-color: var(--board-dark); color: var(--board-light); }
-    #board .notation-322f9 {
-      font-family: Inter, sans-serif; font-size: 0.625rem; font-weight: 500; opacity: 0.85;
-    }
-    #board .piece-417db { cursor: grab; }
-    #board .piece-417db:active { cursor: grabbing; }
-    .board-arrows {
-      position: absolute; inset: 0; width: 100%; height: 100%;
-      pointer-events: none; z-index: 8; overflow: hidden;
-    }
-    .board-chrome {
-      grid-row: 1;
-      grid-column: 1 / -1;
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-      gap: 0.55rem;
-      min-height: 3rem;
-      margin: 0 0 0.35rem;
-      padding: 0;
-      box-sizing: border-box;
-    }
     .ply-badge {
-      position: static;
       flex: 0 0 auto;
-      min-width: 3rem;
-      height: 3rem;
-      padding: 0 0.55rem;
-      border-radius: 999px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-sizing: border-box;
-      background: rgba(20, 18, 14, 0.88);
-      color: var(--cream);
-      font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
-      font-size: 1.125rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      line-height: 1;
+      min-width: 3rem; height: 3rem; padding: 0 0.55rem;
+      border-radius: var(--r-pill);
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(20, 18, 14, 0.88); color: var(--cream);
+      font-size: var(--fs-head); font-weight: 700; letter-spacing: -0.02em; line-height: 1;
       pointer-events: none;
       border: 1px solid rgba(237, 231, 211, 0.28);
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.45);
     }
     .ply-badge.is-black {
-      background: rgba(237, 231, 211, 0.95);
-      color: #1c1914;
+      background: rgba(237, 231, 211, 0.95); color: #1c1914;
       border-color: rgba(28, 25, 20, 0.2);
     }
-    .ply-badge.is-empty {
-      opacity: 0.55;
-      font-size: 1.2rem;
-      font-weight: 600;
+    .ply-badge.is-empty { opacity: 0.55; font-size: var(--fs-head); font-weight: 600; }
+
+    .eval-bar {
+      position: relative; grid-row: 2; grid-column: 1;
+      width: 100%; align-self: stretch; min-width: 0;
+      background: var(--fill-muted);
+      border: 1px solid var(--border); border-radius: var(--r-pill);
+      overflow: hidden;
+    }
+    .eval-white {
+      position: absolute; left: 0; right: 0; bottom: 0;
+      height: var(--eval-fill, 50%);
+      background: var(--cream);
+      transition: height 0.24s cubic-bezier(0.33, 1, 0.68, 1),
+                  width 0.24s cubic-bezier(0.33, 1, 0.68, 1);
+    }
+    .board-wrap {
+      position: relative; grid-row: 2; grid-column: 2;
+      width: 100%; max-width: 100%; aspect-ratio: 1 / 1; min-width: 0;
+      border-radius: var(--r-md); overflow: hidden;
+      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.55);
+    }
+    #board {
+      width: 100% !important; height: 100% !important; max-width: 100% !important; margin: 0;
+      touch-action: none; user-select: none; -webkit-user-select: none;
+    }
+    #board .board-b72b1 {
+      width: 100% !important; height: 100% !important; max-width: 100% !important; border: none;
+    }
+    #board .white-1e1d7 { background-color: var(--board-light); color: var(--board-dark); }
+    #board .black-3c85d { background-color: var(--board-dark); color: var(--board-light); }
+    #board .notation-322f9 {
+      font-family: Inter, sans-serif; font-size: var(--fs-body); font-weight: 500; opacity: 0.85;
+    }
+    #board .piece-417db { cursor: grab; }
+    #board .piece-417db:active { cursor: grabbing; }
+    #board img { }
+    #board .square-55d63 { position: relative; }
+    .board-arrows {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      pointer-events: none; z-index: 8; overflow: hidden;
+    }
+    .book-sq-badge {
+      position: absolute; top: 2%; right: 2%;
+      width: max(1.1rem, 32%); height: max(1.1rem, 32%);
+      max-width: 1.65rem; max-height: 1.65rem;
+      border-radius: 50%; background: transparent;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 7; pointer-events: none; overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
+    }
+    .book-sq-badge img {
+      width: 100%; height: 100%; display: block; object-fit: cover; border-radius: 50%;
     }
 
     /* selection + legal-move language (UI kit: sage select, red legal) */
@@ -342,14 +273,14 @@
     }
 
     /* ---------- controls ---------- */
+    button { font: inherit; }
     .controls.move-keys, .move-keys {
       display: grid; grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 0.4rem; width: 100%; flex: none;
+      gap: 0.35rem; width: 100%; flex: none;
     }
-    button { font: inherit; }
     .move-keys button {
       display: inline-flex; align-items: center; justify-content: center;
-      min-height: 2.75rem; padding: 0.35rem 0.2rem; line-height: 1;
+      min-height: 2.6rem; padding: 0.3rem 0.2rem; line-height: 1;
       width: 100%; min-width: 0; cursor: pointer;
       color: var(--text-soft);
       background: var(--fill-muted);
@@ -362,63 +293,121 @@
     .move-keys button.primary:hover { background: var(--accent-dim); }
     .move-keys button:disabled {
       background: var(--fill-muted); color: var(--text-disabled);
-      border-color: var(--border); cursor: default; opacity: 1;
+      border-color: var(--border); cursor: default;
     }
     .move-keys .ico { width: 1.2em; height: 1.2em; display: block; flex-shrink: 0; }
-    .move-keys button:focus-visible { outline: 2px solid var(--sage); outline-offset: 2px; }
-
-    /* ---------- scrollable reading column ---------- */
-    .book-scroll {
-      min-height: 0; overflow-y: auto; overflow-x: hidden;
-      -webkit-overflow-scrolling: touch; overscroll-behavior: contain;
-      overflow-anchor: none;
-      width: min(100%, var(--measure)); margin-inline: auto;
-      justify-self: stretch;
-      padding: 0.15rem 0.1rem 1.5rem;
-      display: flex; flex-direction: column; gap: 0.6rem;
-      scrollbar-width: thin; scrollbar-color: var(--fill-alt) transparent;
+    .move-keys button:focus-visible,
+    .chip:focus-visible, .toc-item:focus-visible, .disclose > summary:focus-visible {
+      outline: 2px solid var(--sage); outline-offset: 2px;
     }
-    .book-scroll::-webkit-scrollbar { width: 8px; }
-    .book-scroll::-webkit-scrollbar-thumb {
-      background: var(--fill-alt); border-radius: var(--r-pill);
+
+    /* ---------- study column ---------- */
+    .study {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: minmax(0, 1fr) auto auto;
+      gap: 0.4rem; min-height: 0; min-width: 0; overflow: hidden;
+      width: min(100%, 46rem); margin-inline: auto;
     }
     .panel {
       background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--r-md); padding: 0.85rem 0.9rem;
-      width: 100%; max-width: 100%;
+      border-radius: var(--r-md);
+      width: 100%; max-width: 100%; min-width: 0;
       overflow-wrap: anywhere; word-break: break-word;
     }
+    .notes-panel {
+      display: flex; flex-direction: column;
+      min-height: 7.25rem;  /* the book note never collapses away (matches NOTE_MIN_H) */
+      padding: 0.65rem 0.8rem 0.45rem;
+    }
+    .notes-head {
+      display: flex; align-items: center; gap: 0.4rem;
+      margin-bottom: 0.35rem; flex: none; flex-wrap: nowrap; min-width: 0;
+    }
+    .notes-head .eyebrow { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .eyebrow {
-      margin: 0 0 0.5rem;
-      font-size: 0.6875rem; font-weight: 500; letter-spacing: 0.08em;
+      margin: 0;
+      font-size: var(--fs-body); font-weight: 500; letter-spacing: 0.08em;
       text-transform: uppercase; color: var(--text-dim);
     }
+    .note-nav { margin-left: auto; display: inline-flex; gap: 0.28rem; flex: none; }
+    body.notes-expanded .zoom-chip { color: var(--text); background: var(--fill-alt); border-color: var(--rim); }
+    /* Eval lines + ply badge collapse like Move tree (summary arrow) */
+    .chrome-disclose {
+      flex: 1 1 auto; min-width: 0;
+      display: flex; flex-direction: column; gap: 0.2rem;
+    }
+    .chrome-disclose > summary {
+      list-style: none; cursor: pointer;
+      display: flex; align-items: center; gap: 0.45rem;
+      min-width: 0; padding: 0.05rem 0;
+      font-size: var(--fs-body); font-weight: 500; letter-spacing: 0.06em;
+      text-transform: uppercase; color: var(--text-dim);
+      transition: color 0.12s ease;
+    }
+    .chrome-disclose > summary::-webkit-details-marker { display: none; }
+    .chrome-disclose > summary:hover { color: var(--text-muted); }
+    .chrome-disclose > summary .eval-score {
+      text-transform: none; letter-spacing: -0.4px; color: var(--text);
+    }
+    .chrome-disclose > summary .chrome-sum-label { white-space: nowrap; }
+    .chrome-disclose > summary::after {
+      content: ""; margin-left: auto; flex: none;
+      width: 0.42rem; height: 0.42rem;
+      border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor;
+      transform: rotate(45deg) translate(-2px, -2px);
+      transition: transform 0.16s ease;
+    }
+    .chrome-disclose[open] > summary::after {
+      transform: rotate(-135deg) translate(-2px, -2px);
+    }
+    .chrome-disclose[open] > summary { color: var(--text-muted); }
+    .chrome-disclose-body {
+      display: flex; flex-direction: row; align-items: center;
+      justify-content: space-between; gap: 0.55rem; min-width: 0;
+    }
+    .chrome-disclose:not([open]) .chrome-disclose-body { display: none; }
+    /* uppercase labels read fine at body size once they are dim and tracked out */
+    .eyebrow, .disclose > summary { letter-spacing: 0.06em; }
+    .chip {
+      display: inline-flex; align-items: center; gap: 0.25rem;
+      padding: 0.24rem 0.55rem; cursor: pointer; white-space: nowrap;
+      font-size: var(--fs-body); font-weight: 500;
+      color: var(--text-muted);
+      background: var(--fill-muted); border: 1px solid var(--border);
+      border-radius: var(--r-pill);
+      transition: background 0.12s ease, color 0.12s ease;
+    }
+    /* the reading-space toggle only matters when the board is stacked above */
+    .note-nav .zoom-chip { display: none; }
+    .chip:hover { background: var(--fill-alt); color: var(--text); }
+    .chip:active { opacity: 0.55; }
     .move-label {
-      margin: 0 0 0.6rem;
-      font-size: 0.9375rem; font-weight: 600; letter-spacing: -0.1px; color: var(--text);
-      display: flex; align-items: center; flex-wrap: wrap; gap: 0.35rem;
+      margin: 0 0 0.45rem; flex: none;
+      font-size: var(--fs-head); font-weight: 600; letter-spacing: -0.1px; color: var(--text);
     }
-    .move-label .move-mark-icon {
-      width: 1.35rem; height: 1.35rem;
-      border-radius: 50%;
-      object-fit: cover;
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
-      flex: 0 0 auto;
+    .notes-body {
+      flex: 1 1 auto; min-height: 0;
+      overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain;
+      padding-bottom: 0.3rem;
+      scrollbar-width: thin; scrollbar-color: var(--fill-alt) transparent;
     }
-    .move-label .move-glyph { color: var(--accent); }
-    .empty { margin: 0; color: var(--text-dim); font-size: 0.8125rem; line-height: 1.5; }
+    .notes-body::-webkit-scrollbar, .disclose-body::-webkit-scrollbar { width: 7px; }
+    .notes-body::-webkit-scrollbar-thumb,
+    .disclose-body::-webkit-scrollbar-thumb { background: var(--fill-alt); border-radius: var(--r-pill); }
+    .empty { margin: 0; color: var(--text-dim); font-size: var(--fs-body); line-height: 1.5; }
 
     /* notes */
     .note {
-      margin: 0 0 0.55rem; padding: 0.7rem 0.8rem;
+      margin: 0 0 0.5rem; padding: 0.7rem 0.8rem;
       border-left: 3px solid var(--border); border-radius: var(--r-sm);
       background: var(--surface-raised);
-      font-size: 0.9375rem; line-height: 1.55; color: var(--text-soft);
+      font-size: var(--fs-head); line-height: 1.55; color: var(--text-soft);
     }
     .note:last-child { margin-bottom: 0; }
     .note.book {
       border-left-color: var(--cream); background: rgba(237, 231, 211, 0.06);
-      color: var(--text); font-size: 1rem; line-height: 1.6;
+      color: var(--text); font-size: var(--fs-head); line-height: 1.6;
     }
     .note .para { display: block; margin: 0 0 0.65em; }
     .note .para:last-child { margin-bottom: 0; }
@@ -434,13 +423,14 @@
     }
     .note .move-seq .san { color: var(--cream); }
     .note.engine {
-      border-left-color: var(--blue); background: rgba(0, 132, 210, 0.09); color: #d7e9f5;
+      border-left-color: var(--blue); background: rgba(0, 132, 210, 0.09);
+      color: #d7e9f5; font-size: var(--fs-body);
     }
     .note.vars { border-left-color: var(--accent); background: rgba(211, 37, 49, 0.07); }
     .note .tag { display: none; }
     .note.engine .tag, .note.vars .tag {
       display: block; margin-bottom: 0.3rem;
-      font-size: 0.625rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+      font-size: var(--fs-body); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
       background: transparent; padding: 0;
     }
     .note.engine .tag { color: var(--blue); }
@@ -451,26 +441,58 @@
       display: inline-block; width: 1.1em; height: 1.1em;
       vertical-align: -0.2em; margin: 0 0.04em 0 0.02em;
     }
-    .vars-list { margin: 0; padding-left: 1.1rem; font-family: var(--mono); font-size: 0.875rem; }
+    .vars-list { margin: 0; padding-left: 1.1rem; font-family: var(--mono); font-size: var(--fs-body); }
 
     button.play-line {
       display: block; width: 100%; text-align: left; cursor: pointer;
       margin: 0.3rem 0 0; padding: 0.45rem 0.6rem;
       background: var(--fill-muted); color: var(--text-soft);
       border: 1px solid var(--border); border-radius: var(--r-sm);
-      font-family: var(--mono); font-size: 0.8125rem;
+      font-family: var(--mono); font-size: var(--fs-body);
       transition: background 0.12s ease;
     }
     button.play-line:hover { background: var(--fill-alt); border-color: var(--rim); }
     button.play-line:active { opacity: 0.55; }
     button.play-line .kind {
-      color: var(--accent); font-size: 0.6875rem; font-weight: 600;
+      color: var(--accent); font-size: var(--fs-body); font-weight: 600;
       text-transform: uppercase; letter-spacing: 0.06em; margin-right: 0.45rem;
+    }
+
+    /* ---------- disclosures: move tree + games ---------- */
+    .disclose { overflow: hidden; flex: none; min-height: 0; display: flex; flex-direction: column; }
+    .disclose > summary {
+      list-style: none; cursor: pointer; flex: none;
+      display: flex; align-items: center; gap: 0.5rem;
+      padding: 0.48rem 0.8rem;
+      font-size: var(--fs-body); font-weight: 500; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--text-dim);
+      transition: color 0.12s ease;
+    }
+    .disclose > summary::-webkit-details-marker { display: none; }
+    .disclose > summary:hover { color: var(--text-muted); }
+    .disclose > summary::after {
+      content: ""; margin-left: auto;
+      width: 0.42rem; height: 0.42rem;
+      border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor;
+      transform: rotate(45deg) translate(-2px, -2px);
+      transition: transform 0.16s ease;
+    }
+    .disclose[open] > summary::after { transform: rotate(-135deg) translate(-2px, -2px); }
+    .disclose[open] > summary { color: var(--text-muted); border-bottom: 1px solid var(--border); }
+    .disclose .badge {
+      font-family: var(--mono); font-size: var(--fs-body); letter-spacing: 0;
+      color: var(--text-dim); text-transform: none;
+      background: var(--fill-muted); border-radius: var(--r-pill); padding: 0.1rem 0.45rem;
+    }
+    .disclose-body {
+      max-height: min(28dvh, 17rem); overflow: auto; overscroll-behavior: contain;
+      padding: 0.55rem 0.8rem 0.7rem;
+      scrollbar-width: thin; scrollbar-color: var(--fill-alt) transparent;
     }
 
     /* move tree */
     .moves {
-      font-family: var(--mono); font-size: 0.8125rem; line-height: 1.95;
+      font-family: var(--mono); font-size: var(--fs-body); line-height: 1.9;
       color: var(--text-soft); overflow-wrap: anywhere;
     }
     .moves button.move {
@@ -508,10 +530,10 @@
     .moves .explore-mark { color: var(--sage); font-size: 0.8em; font-weight: 700; padding: 0 0.05rem; }
 
     .move-legend {
-      display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem;
-      margin: 0.7rem 0 0; padding-top: 0.6rem;
+      display: flex; flex-wrap: wrap; align-items: center; gap: 0.7rem;
+      margin: 0.6rem 0 0; padding-top: 0.5rem;
       border-top: 1px solid var(--border);
-      color: var(--text-dim); font-size: 0.6875rem; letter-spacing: 0.01em;
+      color: var(--text-dim); font-size: var(--fs-body);
     }
     .move-legend .lg { display: inline-flex; align-items: center; gap: 0.35rem; }
     .move-legend .lg i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; }
@@ -524,13 +546,7 @@
     }
 
     /* game selection */
-    .toc {
-      max-height: min(38dvh, 20rem); overflow: auto;
-      display: flex; flex-direction: column; gap: 0.15rem;
-      scrollbar-width: thin; scrollbar-color: var(--fill-alt) transparent;
-    }
-    .toc::-webkit-scrollbar { width: 6px; }
-    .toc::-webkit-scrollbar-thumb { background: var(--fill-alt); border-radius: var(--r-pill); }
+    .toc { display: flex; flex-direction: column; gap: 0.15rem; }
     .toc-item {
       display: grid; grid-template-columns: 1.6rem minmax(0, 1fr) auto;
       align-items: center; gap: 0.5rem;
@@ -538,7 +554,7 @@
       padding: 0.42rem 0.5rem;
       background: transparent; color: var(--text-soft);
       border: 1px solid transparent; border-radius: var(--r-sm);
-      font-size: 0.8125rem;
+      font-size: var(--fs-body);
       transition: background 0.12s ease;
     }
     .toc-item:hover { background: var(--fill-muted); }
@@ -549,124 +565,136 @@
     .toc-item.missing { color: var(--text-dim); }
     .toc-item.missing .toc-n { color: var(--accent); }
     .toc-n {
-      font-family: var(--mono); font-size: 0.75rem; color: var(--text-dim);
+      font-family: var(--mono); font-size: var(--fs-body); color: var(--text-dim);
       font-variant-numeric: tabular-nums;
     }
     .toc-item.active .toc-n { color: var(--accent); }
     .toc-t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .toc-y { font-family: var(--mono); font-size: 0.6875rem; color: var(--text-dim); }
+    .toc-y { font-family: var(--mono); font-size: var(--fs-body); color: var(--text-dim); }
 
     .hint, .engine-status { display: none !important; }
 
-    /* ---------- responsive (mobile only; desktop unchanged above) ---------- */
-    @media (max-width: 720px) {
-      :root {
-        --board-max: min(46dvh, calc(100vw - 0.7rem));
-        --eval-bar-w: 12px;
-      }
-      html { font-size: 16px; }
-      .top {
-        padding: 0.45rem 0.55rem;
-        gap: 0.4rem;
-      }
-      .top .mark { width: 22px; height: 22px; font-size: 0.8rem; }
-      .top h1 { font-size: 0.8125rem; }
-      .count { font-size: 0.625rem; padding: 0.18rem 0.45rem; }
-      .shell { justify-items: stretch; }
+    /* ---------- side-by-side: wide desktop OR any landscape-ish viewport ----------
+       Landscape phones qualify too (600px wide is enough once it is wider than
+       it is tall), which is where a stacked layout hurts most. */
+    @media (min-width: 900px), (min-aspect-ratio: 1/1) and (min-width: 600px) {
       .stage {
-        width: 100%;
-        max-width: 100%;
-        gap: 0.28rem;
-        padding: 0.3rem 0.35rem 0.25rem;
-        justify-items: stretch;
+        grid-template-columns: minmax(0, var(--dock-w)) minmax(min(20rem, 42vw), 1fr);
+        grid-template-rows: minmax(0, 1fr);
+        column-gap: clamp(0.6rem, 1.6vw, 1.4rem);
+        align-items: start;
+        justify-content: center;
       }
-      .game-head {
-        width: 100%;
-        max-width: 100%;
-        margin-inline: 0;
-      }
-      .game-head .page-meta {
-        font-size: 0.75rem;
-        line-height: 1.3;
-        -webkit-line-clamp: 1;
-      }
-      .board-dock {
-        width: 100%;
-        max-width: 100%;
-        margin-inline: 0;
-        justify-self: stretch;
-        gap: 0.28rem;
-      }
+      .board-dock { grid-column: 1; width: 100%; align-self: start; }
+      .study { grid-column: 2; height: 100%; width: 100%; margin: 0; }
+      .disclose-body { max-height: min(34dvh, 22rem); }
+    }
+    @media (min-width: 1500px) {
+      .study { width: min(100%, 52rem); }
+    }
+
+    /* ---------- stacked (phone portrait): board owns the full width ----------
+       The eval bar lies down under the chrome so nothing steals width from the
+       board and nothing pushes it off centre. Exact inverse of the query above. */
+    @media (max-width: 899px) and (max-aspect-ratio: 99/100), (max-width: 599px) {
+      /* Dock spans the column; the board clamps itself to the dock and centres.
+         min(100%, …) means an over-large measured size can never overflow. */
+      .board-dock { width: 100%; max-width: 100%; margin-inline: 0; }
       .board-row {
-        width: 100%;
-        max-width: 100%;
-        gap: 0.28rem;
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: auto auto auto;
+        gap: 0.3rem;
+        justify-items: center;
       }
-      .board-chrome {
-        min-height: 2.4rem;
-        margin: 0 0 0.2rem;
-        gap: 0.4rem;
+      .board-chrome { grid-column: 1; grid-row: 1; width: 100%; margin-bottom: 0.15rem; }
+      .eval-bar {
+        grid-column: 1; grid-row: 2;
+        width: min(100%, var(--board-size)); margin-inline: auto;
+        height: clamp(8px, 1.3vh, 12px);
       }
-      .ply-badge {
-        min-width: 2.4rem;
-        height: 2.2rem;
-        padding: 0 0.4rem;
-        font-size: 0.95rem;
+      .eval-white {
+        left: 0; right: auto; top: 0; bottom: 0;
+        width: var(--eval-fill, 50%); height: 100%;
       }
-      .ply-badge.is-empty { font-size: 1rem; }
       .board-wrap {
-        border-radius: var(--r-sm);
-        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.5);
+        grid-column: 1; grid-row: 3;
+        width: min(100%, var(--board-size)); margin-inline: auto;
       }
-      .eval-readout {
-        gap: 0.08rem;
-        min-height: 2.4rem;
+      .move-keys { width: min(100%, var(--board-size)); margin-inline: auto; }
+      .note-nav .zoom-chip { display: inline-flex; }
+      /* board focus: keep only the note header strip (zoom + note nav) */
+      body:not(.notes-expanded) .notes-panel {
+        min-height: 0;
+        padding: 0.4rem 0.65rem;
       }
-      .eval-top { min-height: 1.05rem; }
-      .eval-score { font-size: 0.95rem; }
+      body:not(.notes-expanded) .notes-panel .move-label,
+      body:not(.notes-expanded) .notes-panel .notes-body {
+        display: none;
+      }
+      body:not(.notes-expanded) .notes-head { margin-bottom: 0; }
+      body.notes-expanded .notes-panel { min-height: 7.25rem; }
+    }
+
+    /* ---------- compact: phones and small tablets ---------- */
+    @media (max-width: 899px) {
+      .top { padding: 0.45rem 0.7rem; gap: 0.5rem; }
+      .top h1 { display: none; } /* book/chapter title — game meta stays */
+      .top .page-meta { font-size: var(--fs-body); }
+      .stage {
+        gap: 0.4rem; padding: 0.4rem 0.5rem 0.45rem;
+        padding-left: max(0.5rem, env(safe-area-inset-left));
+        padding-right: max(0.5rem, env(safe-area-inset-right));
+        padding-bottom: max(0.45rem, env(safe-area-inset-bottom));
+      }
+      .board-dock { gap: 0.4rem; }
+      .board-chrome { min-height: 2.5rem; margin-bottom: 0.25rem; }
+      .ply-badge { min-width: 2.5rem; height: 2.5rem; font-size: var(--fs-head); }
       .eval-lines {
-        font-size: 0.625rem;
-        line-height: 1.25;
-        height: calc(3 * 1.25em + 2 * 0.06rem);
-        min-height: calc(3 * 1.25em + 2 * 0.06rem);
-        gap: 0.06rem;
+        font-size: var(--fs-body); line-height: 1.25; gap: 0.06rem;
+        height: calc(3 * 1.25em + 2 * 0.06rem); min-height: calc(3 * 1.25em + 2 * 0.06rem);
       }
-      .eval-lines li {
-        grid-template-columns: 1rem 2.3rem minmax(0, 1fr);
-        gap: 0.25rem;
-        min-height: 1.25em;
-      }
-      .move-keys { gap: 0.28rem; width: 100%; }
-      .move-keys button { min-height: 2.35rem; border-radius: var(--r-md); }
+      .eval-lines li { grid-template-columns: 1rem 2.3rem minmax(0, 1fr); gap: 0.25rem; min-height: 1.25em; }
+      .move-keys { gap: 0.3rem; }
+      .move-keys button { min-height: 2.45rem; }
       .move-keys .ico { width: 1.1em; height: 1.1em; }
-      .book-scroll {
-        width: 100%;
-        max-width: 100%;
-        padding: 0.1rem 0 0.85rem;
-        gap: 0.45rem;
-      }
-      .panel { padding: 0.65rem 0.7rem; border-radius: var(--r-sm); }
-      .eyebrow { font-size: 0.625rem; margin-bottom: 0.35rem; }
-      .move-label { font-size: 0.875rem; }
-      .note.book { font-size: 0.9375rem; line-height: 1.5; }
-      .note { font-size: 0.875rem; line-height: 1.45; }
-      .moves { font-size: 0.78rem; line-height: 1.85; }
-      .move-legend { font-size: 0.625rem; gap: 0.55rem; }
-      .toc { max-height: min(28dvh, 12rem); }
-      .toc-item { font-size: 0.78rem; padding: 0.4rem 0.45rem; }
+      .notes-panel { padding: 0.55rem 0.7rem 0.4rem; }
+      .note { padding: 0.6rem 0.7rem; }
+      .disclose > summary { padding: 0.42rem 0.7rem; }
+      .disclose-body { padding: 0.5rem 0.7rem 0.6rem; max-height: min(26dvh, 14rem); }
     }
     @media (max-width: 420px) {
-      :root {
-        --board-max: min(44dvh, calc(100vw - 0.55rem));
-        --eval-bar-w: 10px;
-      }
-      .stage { padding: 0.25rem 0.28rem 0.2rem; gap: 0.22rem; }
-      .board-dock { gap: 0.22rem; }
+      .move-legend { gap: 0.5rem; font-size: var(--fs-body); }
+      .toc-item { font-size: var(--fs-body); padding: 0.38rem 0.42rem; }
+    }
+    /* short phones portrait: engine PV lines yield their height to the board */
+    @media (max-height: 720px) and (max-aspect-ratio: 99/100) {
+      .eval-lines { display: none; }
+      .board-chrome { min-height: 2.25rem; }
+      .ply-badge { min-width: 2.25rem; height: 2.25rem; font-size: var(--fs-head); }
+    }
+    /* short landscape (phones on their side) */
+    @media (orientation: landscape) and (max-height: 560px) {
+      .top { padding: 0.3rem 0.7rem; }
+      .top .page-meta { display: none; }
+      .board-chrome { min-height: 2.25rem; }
+      .ply-badge { min-width: 2.25rem; height: 2.25rem; font-size: var(--fs-head); }
       .move-keys button { min-height: 2.2rem; }
-      .ply-badge { height: 2rem; min-width: 2.2rem; font-size: 0.875rem; }
-      .eval-score { font-size: 1rem; }
-      .move-legend { gap: 0.4rem; font-size: 0.6rem; }
-      .toc-item { font-size: 0.75rem; padding: 0.35rem 0.4rem; }
+    }
+    /* touch devices: keep every control thumb-sized regardless of viewport */
+    @media (pointer: coarse) {
+      .move-keys button { min-height: 2.9rem; }
+      .chip { padding: 0.4rem 0.75rem; font-size: var(--fs-body); }
+      .disclose > summary { padding-top: 0.65rem; padding-bottom: 0.65rem; }
+      .toc-item { padding: 0.55rem 0.5rem; }
+      .moves button.move, .moves button.fork-move, .moves button.explore-move {
+        padding-top: 0.2rem; padding-bottom: 0.2rem;
+      }
+    }
+    /* very small phones */
+    @media (max-width: 360px) {
+      .top .mark { display: none; }
+      .move-keys { gap: 0.25rem; }
+      .note-nav .chip { padding: 0.3rem 0.5rem; }
     }
     @media (prefers-reduced-motion: reduce) {
       * { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
@@ -676,30 +704,33 @@
 <body>
   <header class="top">
     <span class="mark" aria-hidden="true">♟</span>
-    <h1>@@HEADING@@</h1>
+    <div class="titles">
+      <h1>@@HEADING@@</h1>
+      <p class="page-meta" id="gameMeta"></p>
+    </div>
     <span class="count" id="gameCount"></span>
   </header>
   <div class="shell">
     <main class="stage" id="stage">
-      <div class="game-head">
-        <p class="page-meta" id="gameMeta"></p>
-      </div>
       <div class="board-dock" id="boardDock">
         <div class="board-row" id="boardRow">
           <div class="board-chrome">
-            <div class="eval-readout">
-              <div class="eval-top">
-                <span class="eval-score-row">
-                  <span class="eval-score" id="evalScore">—</span>
-                </span>
+            <details class="chrome-disclose" id="chromeDisclose" open>
+              <summary title="Show or hide eval lines and move number">
+                <span class="eval-score" id="evalScore">—</span>
+                <span class="chrome-sum-label">lines</span>
+              </summary>
+              <div class="chrome-disclose-body">
+                <div class="eval-readout">
+                  <ol class="eval-lines" id="evalLines" aria-label="Top engine lines">
+                    <li class="is-empty"><span class="rank">1.</span><span class="score">—</span><span class="pv">—</span></li>
+                    <li class="is-empty"><span class="rank">2.</span><span class="score">—</span><span class="pv">—</span></li>
+                    <li class="is-empty"><span class="rank">3.</span><span class="score">—</span><span class="pv">—</span></li>
+                  </ol>
+                </div>
+                <div class="ply-badge is-empty" id="plyBadge" title="Current move">—</div>
               </div>
-              <ol class="eval-lines" id="evalLines" aria-label="Top engine lines">
-                <li class="is-empty"><span class="rank">1.</span><span class="score">—</span><span class="pv">—</span></li>
-                <li class="is-empty"><span class="rank">2.</span><span class="score">—</span><span class="pv">—</span></li>
-                <li class="is-empty"><span class="rank">3.</span><span class="score">—</span><span class="pv">—</span></li>
-              </ol>
-            </div>
-            <div class="ply-badge is-empty" id="plyBadge" title="Current move">—</div>
+            </details>
           </div>
           <div class="eval-bar" title="White-POV eval"><div class="eval-white" id="evalWhite"></div></div>
           <div class="board-wrap" id="boardWrap">
@@ -712,33 +743,50 @@
           <button type="button" id="btnPrev" title="Previous (←)" aria-label="Previous move"><svg class="ico" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true" focusable="false"><path fill="currentColor" d="M15.5 5.5 8 12l7.5 6.5 1.6-1.85L11.7 12l5.4-4.65L15.5 5.5z"/></svg></button>
           <button type="button" id="btnNext" class="primary" title="Next (→)" aria-label="Next move"><svg class="ico" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8.5 5.5 6.9 7.35 12.3 12 6.9 16.65 8.5 18.5 16 12 8.5 5.5z"/></svg></button>
           <button type="button" id="btnLast" title="End (End)" aria-label="Last move"><svg class="ico" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true" focusable="false"><path fill="currentColor" d="M5.6 5.5 13.1 12l-7.5 6.5V5.5zM14.2 5.5h2.2v13h-2.2z"/></svg></button>
-          <button type="button" id="btnFlip" title="Flip board" aria-label="Flip board"><svg class="ico" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 4.5 8.5 8h2.4v3.1h2.2V8h2.4L12 4.5zm0 15L15.5 16h-2.4v-3.1h-2.2V16H8.5L12 19.5z"/></svg></button>
+          <button type="button" id="btnFlip" title="Flip board (F)" aria-label="Flip board"><svg class="ico" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 4.5 8.5 8h2.4v3.1h2.2V8h2.4L12 4.5zm0 15L15.5 16h-2.4v-3.1h-2.2V16H8.5L12 19.5z"/></svg></button>
         </div>
       </div>
-      <div class="book-scroll" id="bookScroll">
-        <section class="panel" aria-label="Annotation">
-          <p class="eyebrow">Annotation</p>
+
+      <div class="study">
+        <section class="panel notes-panel" aria-label="Book annotation">
+          <div class="notes-head">
+            <p class="eyebrow">Book note</p>
+            <span class="note-nav">
+              <button type="button" class="chip zoom-chip" id="btnNoteZoom" aria-pressed="false"
+                title="Trade board size for reading space">more text</button>
+              <button type="button" class="chip" id="btnNotePrev" title="Previous annotated move (Shift+N)">‹ note</button>
+              <button type="button" class="chip" id="btnNoteNext" title="Next annotated move (N)">note ›</button>
+            </span>
+          </div>
           <p class="move-label" id="moveLabel"></p>
-          <div id="notes"></div>
-        </section>
-        <section class="panel" aria-label="Move tree">
-          <p class="eyebrow">Move tree</p>
-          <div class="moves" id="moveList"></div>
-          <p class="move-legend">
-            <span class="lg book"><i></i> this book</span>
-            <!-- TEMP: engine / PGN variation books hidden — book notes + session user lines only
-            <span class="lg engine"><i></i> engine / variants</span>
-            -->
-            <span class="lg explore"><i></i> your line</span>
-            <span class="lg arrow"><i></i> arrows = next options</span>
-          </p>
-        </section>
-        <section class="panel" aria-label="Games in chapter">
-          <p class="eyebrow">Games in chapter</p>
-          <div class="toc" id="toc">
-            @@TOC@@
+          <div class="notes-body" id="bookScroll">
+            <div id="notes"></div>
           </div>
         </section>
+
+        <details class="panel disclose" id="treeDisclose" open>
+          <summary>Move tree <span class="badge" id="treeBadge"></span></summary>
+          <div class="disclose-body" id="treeBody">
+            <div class="moves" id="moveList"></div>
+            <p class="move-legend">
+              <span class="lg book"><i></i> this book</span>
+              <!-- TEMP: engine / PGN variation books hidden — book notes + session user lines only
+              <span class="lg engine"><i></i> engine / variants</span>
+              -->
+              <span class="lg explore"><i></i> your line</span>
+              <span class="lg arrow"><i></i> arrows = next options</span>
+            </p>
+          </div>
+        </details>
+
+        <details class="panel disclose" id="gamesDisclose">
+          <summary>Games in chapter <span class="badge" id="gamesBadge"></span></summary>
+          <div class="disclose-body">
+            <div class="toc" id="toc">
+              @@TOC@@
+            </div>
+          </div>
+        </details>
       </div>
     </main>
   </div>
@@ -860,7 +908,8 @@
       dock.style.marginRight = "";
     }
     if (wrap && boardEl) {
-      const size = Math.max(1, Math.floor(wrap.getBoundingClientRect().width));
+      const capW = dock ? dock.clientWidth : Infinity;
+      const size = Math.max(1, Math.floor(Math.min(wrap.getBoundingClientRect().width, capW)));
       boardEl.style.width = size + "px";
       boardEl.style.height = size + "px";
       boardEl.style.maxWidth = "100%";
@@ -876,15 +925,128 @@
     }
     queueArrows();
   }
-  function fitBoardToScreen() { resizeBoard(); }
-  window.addEventListener("resize", resizeBoard);
-  if (window.visualViewport) window.visualViewport.addEventListener("resize", resizeBoard);
-  setTimeout(resizeBoard, 40);
-  setTimeout(resizeBoard, 250);
+  // ---- responsive fit -------------------------------------------------
+  // Measure the actual free space and hand the board a pixel size, so every
+  // viewport (phone portrait, phone landscape, tablet, desktop, resized
+  // window, keyboard open) keeps the board AND the book note on screen.
+  const TWO_PANE_Q = "(min-width: 900px), (min-aspect-ratio: 1/1) and (min-width: 600px)";
+  const STUDY_MIN_W = 340;  // px reserved for the reading column (> its CSS min, so no overflow)
+  const NOTE_MIN_H = 118;   // px of book note body when reading (notes-expanded)
+  let lastFitSize = 0;
+  let notesExpanded = false;
+  function px(v) { const n = parseFloat(v); return isFinite(n) ? n : 0; }
+  function isTwoPane() { return window.matchMedia(TWO_PANE_Q).matches; }
+  function fitBoardToScreen() {
+    const stage = document.getElementById("stage");
+    const dock = document.getElementById("boardDock");
+    if (!stage || !dock) { resizeBoard(); return; }
+    const cs = getComputedStyle(stage);
+    const availW = stage.clientWidth - px(cs.paddingLeft) - px(cs.paddingRight);
+    const availH = stage.clientHeight - px(cs.paddingTop) - px(cs.paddingBottom);
+    if (availW <= 0 || availH <= 0) { resizeBoard(); return; }
+
+    const dockGap = px(getComputedStyle(dock).rowGap) || 7;
+    const chrome = stage.querySelector(".board-chrome");
+    const keys = stage.querySelector(".move-keys");
+    const chromeH = chrome ? chrome.getBoundingClientRect().height + px(getComputedStyle(chrome).marginBottom) : 48;
+    const keysH = keys ? keys.getBoundingClientRect().height : 44;
+    const barW = px(getComputedStyle(document.documentElement).getPropertyValue("--eval-bar-w")) || 14;
+
+    let boardH = availH - chromeH - keysH - dockGap;
+    let boardW;
+    if (isTwoPane()) {
+      const colGap = px(cs.columnGap) || 12;
+      boardW = availW - barW - 6 - colGap - Math.min(STUDY_MIN_W, availW * 0.42);
+    } else {
+      // Stacked: board focus keeps only the note header strip; reading mode
+      // reserves space for the annotation body (+ disclosures).
+      const study = stage.querySelector(".study");
+      const notesPanel = stage.querySelector(".notes-panel");
+      let noteWant = 0;
+      if (notesPanel) {
+        const csN = getComputedStyle(notesPanel);
+        const headEl = notesPanel.querySelector(".notes-head");
+        const labelEl = document.getElementById("moveLabel");
+        let panelChrome = px(csN.paddingTop) + px(csN.paddingBottom) + 2;
+        if (headEl) panelChrome += headEl.getBoundingClientRect().height + (notesExpanded ? 6 : 0);
+        if (notesExpanded) {
+          if (labelEl && getComputedStyle(labelEl).display !== "none") {
+            panelChrome += labelEl.getBoundingClientRect().height + px(getComputedStyle(labelEl).marginBottom);
+          }
+          noteWant = panelChrome + Math.max(NOTE_MIN_H * 0.45, elNotes ? elNotes.scrollHeight : 0);
+        } else {
+          noteWant = panelChrome; // header strip only
+        }
+      }
+      let chromeReserve = 0;   // disclosure headers (+ open bodies) — always kept
+      if (study) {
+        const rowGap = px(getComputedStyle(study).rowGap) || 6;
+        study.querySelectorAll(".disclose").forEach(function (d) {
+          const sum = d.querySelector("summary");
+          const body = d.querySelector(".disclose-body");
+          chromeReserve += (sum ? sum.getBoundingClientRect().height : 30) + rowGap;
+          if (d.open && body) {
+            const cap = px(getComputedStyle(body).maxHeight) || 0;
+            chromeReserve += cap ? Math.min(body.scrollHeight, cap) : body.getBoundingClientRect().height;
+          }
+        });
+        chromeReserve += rowGap;
+      } else {
+        chromeReserve = 90;
+      }
+      const shortScreen = availH < 620;
+      const studyCap = availH * (notesExpanded ? 0.62 : (shortScreen ? 0.34 : 0.38));
+      const studyFloor = (notesExpanded ? NOTE_MIN_H : 0) + chromeReserve + (notesExpanded ? 0 : noteWant);
+      let reserve = Math.min(Math.max(noteWant + chromeReserve, studyFloor), studyCap);
+      if (notesExpanded) reserve = studyCap;
+      const bar = stage.querySelector(".eval-bar");
+      const row = stage.querySelector(".board-row");
+      const rowGap = row ? (px(getComputedStyle(row).rowGap) || 5) : 5;
+      const barRowH = (bar ? bar.getBoundingClientRect().height : 10) + rowGap * 2;
+      boardH = availH - chromeH - keysH - dockGap - barRowH - reserve;
+      boardW = availW;
+    }
+    const size = Math.max(140, Math.floor(Math.min(boardW, boardH)));
+    if (size === lastFitSize) { resizeBoard(); return; }  // loop guard for observers
+    lastFitSize = size;
+    document.documentElement.style.setProperty("--board-px", size + "px");
+    resizeBoard();
+  }
+  let fitTimer = 0;
+  function queueFit() {
+    if (fitTimer) cancelAnimationFrame(fitTimer);
+    fitTimer = requestAnimationFrame(function () { fitTimer = 0; fitBoardToScreen(); });
+  }
+  window.addEventListener("resize", queueFit);
+  window.addEventListener("orientationchange", function () { setTimeout(fitBoardToScreen, 120); });
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener("resize", queueFit);
+    window.visualViewport.addEventListener("scroll", queueFit);
+  }
+  if (window.matchMedia(TWO_PANE_Q).addEventListener) {
+    window.matchMedia(TWO_PANE_Q).addEventListener("change", queueFit);
+  }
+  // The eval chrome grows once engine lines arrive and fonts swap in; refit so
+  // a stale (too tall) board never gets clipped at the bottom.
+  if (window.ResizeObserver) {
+    const ro = new ResizeObserver(queueFit);
+    [".board-chrome", ".move-keys", ".study"].forEach(function (sel) {
+      const el = document.querySelector(sel);
+      if (el) ro.observe(el);
+    });
+  }
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(queueFit).catch(function () {});
+  setTimeout(fitBoardToScreen, 40);
+  setTimeout(fitBoardToScreen, 250);
 
   const elScore = document.getElementById("evalScore");
   const elLines = document.getElementById("evalLines");
   const elWhite = document.getElementById("evalWhite");
+  // Fill is a custom property so the bar can render vertical (wide layouts)
+  // or horizontal (mobile, board full width) without the JS caring which.
+  function setEvalFill(pct) {
+    if (elWhite) elWhite.style.setProperty("--eval-fill", pct);
+  }
   const elMove = document.getElementById("moveLabel");
   const elNotes = document.getElementById("notes");
   const elList = document.getElementById("moveList");
@@ -895,6 +1057,11 @@
   const elArrows = document.getElementById("boardArrows");
   const elPlyBadge = document.getElementById("plyBadge");
   const elGameCount = document.getElementById("gameCount");
+  const elTreeBadge = document.getElementById("treeBadge");
+  const elGamesBadge = document.getElementById("gamesBadge");
+  const elTreeDisclose = document.getElementById("treeDisclose");
+  const elGamesDisclose = document.getElementById("gamesDisclose");
+  const elTreeBody = document.getElementById("treeBody");
   const elBoardRow = document.getElementById("boardRow");
   let arrowTimer = 0;
   const BOOK_BADGE_IMG = '<img src="textbook-chess.gif" alt="" width="32" height="32" decoding="async">';
@@ -1310,6 +1477,7 @@
     out = out.replace(/([a-h][1-8])\.(?=If\b)/g, "$1. ");
     out = out.replace(/\bBf\s+(?=\d)/g, "If ");
     out = out.replace(/\bBf(?=\d{2}\.)/g, "If ");
+    out = out.replace(/\bI\/(?=\s*(?:\d|\.\.\.|[A-Za-z]|$))/g, "If ");
     out = out.replace(/\bIf(?=\d)/g, "If ");
     out = out.replace(/\b2[sS](?=\s*\.)/g, "28");
     out = out.replace(/[•·∙⋅]{2,}/g, "...");
@@ -1490,8 +1658,29 @@
     if (/^[NBRQK]/.test(san)) return pieceFig(san[0]) + '<span class="san">' + escapeHtml(san.slice(1)) + "</span>";
     return '<span class="san">' + escapeHtml(san) + "</span>";
   }
+  function stripLeadingDiagramSalad(text) {
+    let out = String(text || "").trim();
+    if (!out) return "";
+    const proseRe = /(?:The opening stage|White has |Black has |Threatening |Better was |Precision is|This game|This example|We have reached|The best |Learning objective|In Black's favour|In White's favour|Not only|A better |An alternative|Instead |A simple |An interesting |Something to note|There is nothing|Getting ready|Now the |Followed by|Black is |White is |Black cannot|White can |His original|In his analysis|After analyzing|The reader |Ignoring the|Creating a|Preparing |This prophylactic|Again,? White|And as I said|Black must |It was preferable|Once again|The battle is|The only move|We are close|The most accurate|Aiming for|Covering the |And as usually|And we have|A better defence|Black missed|Weak is |Making things|This is the key|This is an |This is a |The (?:knight|bishop|rook|queen|king|pawn|piece) |But now|Suicidal is |If |When |While |Although |Though |Should |[!?]+\s*(?:A |The |This |White |Black |It |There ))/i;
+    const m = proseRe.exec(out);
+    if (!m || m.index <= 0) return out;
+    const head = out.slice(0, m.index);
+    const saladRe = /\bnm\s+rn\b|[\"']{2,}|,{3,}|\b[1-8]\s+[a-z]{1,3}\s+[a-z]{1,3}\s+[1-8]\.|[\/\\]{2,}|[·∙⋅]{2,}/i;
+    let probe = head.replace(/^(?:\[Book:[^\]]*\]\s*)?(?:O-O-O|O-O|[NBRQK]?[a-h]?[1-8]?x?[a-h][1-8][+#?!]*)\s+/i, "").trim() || head.trim();
+    if (probe.length < 8) return out;
+    let bad = saladRe.test(probe);
+    if (!bad && probe.length >= 24) {
+      const alpha = (probe.match(/[A-Za-z]/g) || []).length;
+      bad = alpha / probe.length < 0.38;
+    }
+    if (!bad && probe.length >= 20) {
+      const punct = (probe.match(/[,.'"`;:|\/\\·∙⋅%\-]/g) || []).length;
+      bad = punct / probe.length >= 0.22;
+    }
+    return bad ? out.slice(m.index).trim() : out;
+  }
   function formatNoteHtml(raw) {
-    let text = ocrCleanClient(stripTag(raw));
+    let text = stripLeadingDiagramSalad(ocrCleanClient(stripTag(raw)));
     if (!text) return "";
     text = text.replace(/\r\n?/g, "\n").replace(/[ \t]+\n/g, "\n").replace(/\n[ \t]+/g, "\n");
     text = text.replace(/\b(Final\s+remarks)\s+(?=\d+\.\s)/gi, "$1\n\n");
@@ -1890,7 +2079,15 @@
     if (elGameCount) elGameCount.textContent = (gIdx + 1) + " / " + GAMES.length;
     document.querySelectorAll(".toc-item").forEach((b) => b.classList.toggle("active", Number(b.dataset.g) === gIdx));
     const tocActive = document.querySelector('.toc-item[data-g="' + gIdx + '"]');
-    if (tocActive) tocActive.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    if (tocActive && elGamesDisclose && elGamesDisclose.open) {
+      tocActive.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+    if (elGamesBadge) elGamesBadge.textContent = (gIdx + 1) + "/" + GAMES.length;
+    if (elTreeBadge) {
+      const total = plies().length;
+      const noted = plies().filter((p) => p && p.book).length;
+      elTreeBadge.textContent = miss ? "—" : (Math.ceil(total / 2) + " moves · " + noted + " noted");
+    }
     board.position(fenNow(), false);
     try { board.resize(); } catch (e) {}
     fitBoardToScreen();
@@ -1904,7 +2101,7 @@
           + '<li class="is-empty"><span class="rank">2.</span><span class="score">—</span><span class="pv">—</span></li>'
           + '<li class="is-empty"><span class="rank">3.</span><span class="score">—</span><span class="pv">—</span></li>';
       }
-      elWhite.style.height = "50%";
+      setEvalFill("50%");
       clearBookSquareBadge();
 
     } else {
@@ -1918,6 +2115,7 @@
     write();
     if (elBookScroll) elBookScroll.scrollTop = keep;
     lastNotesKey = key || "";
+    queueFit();  // a longer note earns more of the screen when stacked
   }
   function sideLineBookPly() {
     if (fork) return fork.ply;
@@ -2153,6 +2351,19 @@
       board.position(fenNow(), false);
       renderNotes(); renderMoveList(); setButtons(); updateBookHint(); requestEval();
     }));
+    keepActiveMoveVisible();
+  }
+
+  // the move tree scrolls inside its own disclosure — keep the current move in view
+  function keepActiveMoveVisible() {
+    if (!elTreeBody || !elTreeDisclose || !elTreeDisclose.open) return;
+    const active = elList.querySelector(".move.active, .fork-move.active, .explore-move.active");
+    if (!active) return;
+    const box = elTreeBody.getBoundingClientRect();
+    const el = active.getBoundingClientRect();
+    if (el.top < box.top + 4 || el.bottom > box.bottom - 4) {
+      elTreeBody.scrollTop += (el.top - box.top) - box.height / 2 + el.height / 2;
+    }
   }
 
   function setButtons() {
@@ -2248,10 +2459,10 @@
   function showEval(info) {
     if (info.mate != null) {
       elScore.textContent = formatScore(null, info.mate);
-      elWhite.style.height = info.mate > 0 ? "96%" : "4%";
+      setEvalFill(info.mate > 0 ? "96%" : "4%");
     } else if (info.cp != null) {
       elScore.textContent = formatScore(info.cp, null);
-      elWhite.style.height = cpToBar(info.cp) + "%";
+      setEvalFill(cpToBar(info.cp) + "%");
     } else {
       elScore.textContent = "…";
     }
@@ -2471,6 +2682,34 @@
   document.getElementById("btnNext").onclick = function () { stepNav(1); };
   document.getElementById("btnLast").onclick = function () { goLast(); this.blur(); };
   document.getElementById("btnFlip").onclick = function () { flipBoard(); this.blur(); };
+  const elNoteZoom = document.getElementById("btnNoteZoom");
+  if (elNoteZoom) {
+    elNoteZoom.onclick = function () {
+      notesExpanded = !notesExpanded;
+      document.body.classList.toggle("notes-expanded", notesExpanded);
+      this.setAttribute("aria-pressed", notesExpanded ? "true" : "false");
+      this.textContent = notesExpanded ? "more board" : "more text";
+      lastFitSize = 0;
+      fitBoardToScreen();
+      this.blur();
+    };
+  }
+  document.getElementById("btnNotePrev").onclick = function () { jumpNote(-1); this.blur(); };
+  document.getElementById("btnNoteNext").onclick = function () { jumpNote(1); this.blur(); };
+
+  const elChromeDisclose = document.getElementById("chromeDisclose");
+  // narrow screens open with the tree collapsed so the book note owns the space
+  if (elTreeDisclose && window.matchMedia("(max-width: 799px)").matches) {
+    elTreeDisclose.open = false;
+  }
+  [elTreeDisclose, elGamesDisclose, elChromeDisclose].forEach((d) => {
+    if (!d) return;
+    d.addEventListener("toggle", () => {
+      lastFitSize = 0;
+      queueFit();
+      if (d === elTreeDisclose && d.open) keepActiveMoveVisible();
+    });
+  });
 
   let wheelAcc = 0;
   let wheelLock = 0;
@@ -2508,7 +2747,14 @@
     else if (e.key === "f" || e.key === "F") { flipBoard(); }
     else if (e.key === "PageDown" || e.key === "]") { e.preventDefault(); setGame(gIdx + 1); }
     else if (e.key === "PageUp" || e.key === "[") { e.preventDefault(); setGame(gIdx - 1); }
-    else if (e.key === "n" || e.key === "N") { jumpNote(1); }
+    else if (e.key === "n") { jumpNote(1); }
+    else if (e.key === "N") { jumpNote(-1); }
+    else if (e.key === "t" || e.key === "T") {
+      if (elTreeDisclose) elTreeDisclose.open = !elTreeDisclose.open;
+    }
+    else if (e.key === "g" || e.key === "G") {
+      if (elGamesDisclose) elGamesDisclose.open = !elGamesDisclose.open;
+    }
   });
 
   setGame(0);
