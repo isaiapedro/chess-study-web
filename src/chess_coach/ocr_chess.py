@@ -330,13 +330,21 @@ def ocr_clean_chess(text: str) -> str:
     out = re.sub(r"\b2[sS](?=\s*\.)", "28", out)
     # Rule B: ellipsis normalize → White two-dot (chess_text_grammar)
     out = normalize_ellipsis_forms(out)
-    # FFFD after Black ellipsis → bare destination (align / Layer 5 fill piece).
+    # Knight salad: 6.�gf.3 / 6.gf.3 → Nf3 (Quality Chess N figurine + glued f3)
+    out = re.sub(r"\ufffd\s*gf\.?\s*([1-8])\b", r"Nf\1", out, flags=re.I)
+    out = re.sub(r"\b(\d+)\.\s*gf\.?\s*([1-8])\b", r"\1. Nf\2", out, flags=re.I)
+    # Numbered Black ellipsis + FFFD → bare dest (Layer 5 + capture-hint fills Q/N/B).
+    out = re.sub(r"(\d+\s*\.\.\.\s*)\ufffd\s*(?=x?[a-h][1-8])", r"\1", out)
+    # Plan ellipsis (with… �d7) → bishop; numbered case already handled above.
+    out = re.sub(r"(\.\.\.\s*)\ufffd\s*(?=x?[a-h][1-8])", r"\1B", out)
     # Remaining FFFD before square → Q (White queen figurine common case).
-    out = re.sub(r"(\.\.\.\s*)\ufffd\s*(?=x?[a-h][1-8])", r"\1", out)
     out = re.sub(r"\ufffd\s*(?=x?[a-h][1-8])", "Q", out)
     out = re.sub(r"\ufffd\s*(?=f[l1I]\b)", "Q", out)
     out = re.sub(r"\ufffd(?=[a-h][l1I])", "Q", out)
     out = out.replace("\ufffd", "")
+    # Spaced tens digit after FFFD→piece: "1 O.Qxd5" / "l 1.Bxd2" → 10. / 11.
+    out = re.sub(r"\b(\d)\s+[O0o]\s*\.(?=\s*[NBRQKa-hx])", r"\g<1>0.", out)
+    out = re.sub(r"\bl\s+([1-9])\s*\.(?=\s*[NBRQKa-hx])", r"1\1.", out)
     # After FFFD strip: lone OCR-digit before figurine capture-dot (&.sq)
     out = re.sub(
         r"\b(\d+)\s+([0oO])\s+(?=&\.)",

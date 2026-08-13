@@ -115,6 +115,16 @@ Prefer Ollama `nomic-embed-text`. If unavailable, use a deterministic hashing em
 - `PIECE_OCR_GLYPHS` maps Quality Chess figurines (`'Wie`→`Qe`, `ltJ`→`N`, `%'m`→`Qf8`, …). Mid-prose pass rewrites `"a3-a4, 'Wie2, ltJc4"` → SAN; viewer figurizes bare SAN with piece icons.
 - Non-dictionary PDF rules (move-number surgery, mainline detection, page strip, lookahead piece OCR, …) catalogued in `PDF_PARSING_RULES.md`.
 
+## 2026-08-12 — Book notes: curated + RAG pivot (no 90/95 PDF SLA)
+
+- Auto PDF→ply book sync cannot hit ~90% text / ~95% move accuracy for Family 4 at scale (figurine fonts, segment/align drops, thin fixtures).
+- **Production book voice:** curated `*.book_notes.yaml` sidecars next to `*_bookwalk.pgn`; tags `[Book:curated|…]`.
+- **PDF extract:** draft-only (`chess-coach draft-book-notes`, optional `--font-glyphs` via PyMuPDF). Tags `[Book:draft|…]`. Never treat live extract as curated.
+- **Viewer honesty:** badge “Book note (curated|draft)” vs “Book ideas (RAG)” when no ply book note but Engine/RAG text exists.
+- **Metrics:** `chess-coach book-note-metrics` (fixture recall + Family-4 `[Book:]` density) — wall numbers, not a fake SLA.
+- Flagship Family 4 games (McShane / Wojtaszek / Bouaziz) frozen via curated sidecars; other games rely on masters PGN + engine/RAG until curated.
+- EPUB/HTML can clean glyphs; still does not solve move↔comment sync. Annotated PGN/CBV remains gold when available.
+
 ## 2026-08-10 — Chapter viewer: book + session user lines only
 
 - TEMP (`SHOW_ENGINE_VAR_BOOKS = false` in `chapter_book.template.html`): hide Engine/RAG notes, PGN book/engine forks, and the “engine / variants” legend.

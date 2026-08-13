@@ -240,6 +240,70 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Only rebuild chapter HTML/UI + Stockfish assets (keep existing notes)",
     )
 
+    metrics = sub.add_parser(
+        "book-note-metrics",
+        help="Fixture recall/precision + Family-4 [Book:] density report",
+    )
+    metrics.add_argument(
+        "--out",
+        type=Path,
+        default=Path("data/viewer_out/book_note_metrics.md"),
+        help="Markdown report path",
+    )
+
+    export_notes = sub.add_parser(
+        "export-book-notes",
+        help="Export [Book:] layers from a bookwalk PGN to *.book_notes.yaml (curated by default)",
+    )
+    export_notes.add_argument("pgn", type=Path, help="*_bookwalk.pgn path")
+    export_notes.add_argument(
+        "--out",
+        type=Path,
+        default=None,
+        help="Sidecar path (default: beside PGN)",
+    )
+    export_notes.add_argument(
+        "--source",
+        choices=["curated", "draft"],
+        default="curated",
+        help="Sidecar source tag",
+    )
+
+    reapply_book = sub.add_parser(
+        "reapply-book-notes",
+        help="Reapply book layer from curated sidecar (preferred) or citation draft",
+    )
+    reapply_book.add_argument("pgn", type=Path, help="*_bookwalk.pgn path")
+    reapply_book.add_argument(
+        "--kind",
+        choices=["curated", "draft"],
+        default="curated",
+        help="Tag when no sidecar merge (default curated if sidecar present)",
+    )
+    reapply_book.add_argument(
+        "--html",
+        action="store_true",
+        help="Also rebuild matching bookwalk HTML",
+    )
+
+    draft_notes = sub.add_parser(
+        "draft-book-notes",
+        help="Draft *.book_notes.yaml from PDF extract (review before reapply; not production)",
+    )
+    draft_notes.add_argument("book", type=Path, help="PDF / text book path")
+    draft_notes.add_argument("--chapter", type=str, required=True, help="Section title/number")
+    draft_notes.add_argument(
+        "--out-dir",
+        type=Path,
+        default=Path("data/annotated/bookwalk/drafts"),
+        help="Directory for draft sidecars",
+    )
+    draft_notes.add_argument(
+        "--font-glyphs",
+        action="store_true",
+        help="Prefer PyMuPDF font-glyph extract when available",
+    )
+
     ontology = sub.add_parser("ontology", help="List/detect pattern ontology nodes")
     ontology.add_argument(
         "--fen",
@@ -743,6 +807,100 @@ def cmd_ontology(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_export_book_notes(args: argparse.Namespace) -> int:
+    import chess.pgn
+
+    from chess_coach.book_notes_sidecar import (
+        export_sidecar_from_game,
+        save_sidecar,
+        sidecar_path_for_pgn,
+    )
+
+    pgn = _resolve_existing(args.pgn) or Path(args.pgn)
+    if not pgn.is_file():
+        print(f"missing pgn: {pgn}", file=sys.stderr)
+        return 1
+    game = chess.pgn.read_game(pgn.open(encoding="utf-8"))
+    if game is None:
+        print("empty pgn", file=sys.stderr)
+        return 1
+    data = export_sidecar_from_game(game, source=args.source)
+    out = Path(args.out) if args.out else sidecar_path_for_pgn(pgn)
+    save_sidecar(out, data)
+    print(f"wrote {out} ({len(data.notes)} notes, source={data.source})")
+    return 0
+
+
+def cmd_reapply_book_notes(args: argparse.Namespace) -> int:
+    import chess.pgn
+
+    from chess_coach.book_notes_sidecar import citation_from_sidecar, load_sidecar, resolve_sidecar
+    from chess_coach.book_walkthrough import reapply_book_layer
+    from chess_coach.chapter import GameCitation
+
+    pgn = _resolve_existing(args.pgn) or Path(args.pgn)
+    if not pgn.is_file():
+        print(f"missing pgn: {pgn}", file=sys.stderr)
+        return 1
+    game = chess.pgn.read_game(pgn.open(encoding="utf-8"))
+    if game is None:
+        print("empty pgn", file=sys.stderr)
+        return 1
+    side = resolve_sidecar(pgn)
+    if side is not None:
+        loaded = load_sidecar(side)
+        citation = citation_from_sidecar(loaded)
+        kind = "curated" if loaded.is_curated else "draft"
+    else:
+        citation = GameCitation(
+            white=game.headers.get("White", ""),
+            black=game.headers.get("Black", ""),
+            year=0,
+            source_book=game.headers.get("Annotator", "Book"),
+            chapter=game.headers.get("BookChapter", ""),
+        )
+        kind = args.kind
+        print("no sidecar — nothing to reapply from PDF here; export or draft first", file=sys.stderr)
+        return 1
+    game2, n = reapply_book_layer(game, citation, book_kind=kind, pgn_path=pgn)
+    with pgn.open("w", encoding="utf-8") as handle:
+        game2.accept(chess.pgn.FileExporter(handle))
+    print(f"reapplied {n} book chunks → {pgn}")
+    if args.html:
+        html = pgn.with_name(pgn.stem + ".html")
+        viewer_root = Path("data/viewer_out/bookwalk")
+        out_html = viewer_root / html.name
+        write_viewer(pgn, out_html)
+        print(f"viewer {out_html}")
+    return 0
+
+
+def cmd_draft_book_notes(args: argparse.Namespace) -> int:
+    from chess_coach.draft_book_notes import draft_chapter_book_notes
+
+    book = _resolve_existing(args.book) or Path(args.book)
+    if not book.exists():
+        print(f"missing book: {book}", file=sys.stderr)
+        return 1
+    written = draft_chapter_book_notes(
+        book,
+        chapter=args.chapter,
+        out_dir=Path(args.out_dir),
+        use_font_glyphs=bool(args.font_glyphs),
+    )
+    for path in written:
+        print(f"draft {path}")
+    return 0 if written else 1
+
+
+def cmd_book_note_metrics(args: argparse.Namespace) -> int:
+    from chess_coach.book_note_metrics import run_report
+
+    path = run_report(Path(args.out))
+    print(path.read_text(encoding="utf-8"))
+    return 0
+
+
 def cmd_refresh_notes(args: argparse.Namespace) -> int:
     config = load_config(args.config)
     pgn_dir = args.pgn_dir if args.pgn_dir.is_absolute() else resolve_path(args.pgn_dir)
@@ -884,6 +1042,14 @@ def main(argv: list[str] | None = None) -> int:
         return cmd_visualize(args)
     if args.command == "refresh-notes":
         return cmd_refresh_notes(args)
+    if args.command == "book-note-metrics":
+        return cmd_book_note_metrics(args)
+    if args.command == "export-book-notes":
+        return cmd_export_book_notes(args)
+    if args.command == "reapply-book-notes":
+        return cmd_reapply_book_notes(args)
+    if args.command == "draft-book-notes":
+        return cmd_draft_book_notes(args)
     if args.command == "ontology":
         return cmd_ontology(args)
     if args.command == "study-push":

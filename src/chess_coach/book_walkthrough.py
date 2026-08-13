@@ -193,6 +193,12 @@ def _secondary_for_moment(
     return _sanitize(text)
 
 
+def _book_prefix(source_book: str, *, kind: str = "draft") -> str:
+    from chess_coach.book_notes_sidecar import book_tag_prefix
+
+    return book_tag_prefix(source_book, kind=kind)
+
+
 def apply_dual_annotations(
     game: chess.pgn.Game,
     citation: GameCitation,
@@ -202,6 +208,8 @@ def apply_dual_annotations(
     use_llm: bool = True,
     depth: int | None = None,
     threshold: int | None = None,
+    book_kind: str = "draft",
+    pgn_path: Path | None = None,
 ) -> tuple[chess.pgn.Game, int, int]:
     depth = depth or int(config.get("analyze_depth", 12))
     threshold = threshold or int(config.get("critical_cp_threshold", 120))
@@ -210,6 +218,17 @@ def apply_dual_annotations(
     sample_every = int(ann.get("sample_every_ply", 4))
     min_delta = int(ann.get("min_delta_for_note", 35))
 
+    # Prefer curated/draft sidecar over live PDF citation notes.
+    if pgn_path is not None:
+        from chess_coach.book_notes_sidecar import merge_citation_with_sidecar, resolve_sidecar, load_sidecar
+
+        side_path = resolve_sidecar(pgn_path)
+        if side_path is not None:
+            citation, book_kind = merge_citation_with_sidecar(citation, load_sidecar(side_path))
+    # Production policy: PDF extract alone is draft-only (never pretend curated).
+    if book_kind == "extract":
+        book_kind = "draft"
+
     aligned = align_notes_to_game(game, citation.notes, context=citation.context)
     book_marks = collect_mainline_book_marks(
         game, citation.notes, context=citation.context
@@ -217,7 +236,7 @@ def apply_dual_annotations(
     book_by_ply: dict[int, str] = {}
     variations_by_ply: dict[int, list[str]] = {}
     for note in aligned:
-        prefix = f"[Book:{citation.source_book}] "
+        prefix = _book_prefix(citation.source_book, kind=book_kind)
         chunk = _sanitize(note.text)
         if not chunk:
             continue
@@ -236,7 +255,7 @@ def apply_dual_annotations(
 
     log(
         "Annotate start: depth=%d threshold=%scp raw_notes=%d aligned=%d rag=%s llm=%s "
-        "opening_plies=%d sample_every=%d",
+        "opening_plies=%d sample_every=%d book_kind=%s",
         depth,
         threshold,
         len(citation.notes),
@@ -245,6 +264,7 @@ def apply_dual_annotations(
         use_llm,
         opening_plies,
         sample_every,
+        book_kind,
     )
     for note in aligned[:8]:
         log(
@@ -301,7 +321,7 @@ def apply_dual_annotations(
     comment_plies = set(secondary_by_ply) | set(book_by_ply) | {m.ply for m in critical}
     preamble = (citation.preamble or "").strip()
     if preamble:
-        game.comment = f"[Book:{citation.source_book}] {preamble}"
+        game.comment = _book_prefix(citation.source_book, kind=book_kind) + preamble
         book_applied += 1
     while node.variations:
         next_node = node.variation(0)
@@ -343,11 +363,12 @@ def apply_dual_annotations(
     game.headers["BookChapter"] = citation.chapter
     mark_n = apply_book_mark_nags(game, book_marks)
     log(
-        "Annotate done: book_notes=%d critical=%d forks=%d marks=%d",
+        "Annotate done: book_notes=%d critical=%d forks=%d marks=%d kind=%s",
         book_applied,
         len(critical),
         fork_count,
         mark_n,
+        book_kind,
     )
     return game, book_applied, len(critical)
 
@@ -369,10 +390,22 @@ def _strip_book_layer(comment: str) -> str:
 def reapply_book_layer(
     game: chess.pgn.Game,
     citation: GameCitation,
+    *,
+    book_kind: str = "draft",
+    pgn_path: Path | None = None,
 ) -> tuple[chess.pgn.Game, int]:
     """
-    Replace [Book:…] comments from fresh citation notes; keep [Engine/RAG] intact.
+    Replace [Book:…] comments from citation or curated sidecar; keep [Engine/RAG].
     """
+    if pgn_path is not None:
+        from chess_coach.book_notes_sidecar import load_sidecar, merge_citation_with_sidecar, resolve_sidecar
+
+        side_path = resolve_sidecar(pgn_path)
+        if side_path is not None:
+            citation, book_kind = merge_citation_with_sidecar(citation, load_sidecar(side_path))
+    if book_kind == "extract":
+        book_kind = "draft"
+
     aligned = align_notes_to_game(game, citation.notes, context=citation.context)
     book_marks = collect_mainline_book_marks(
         game, citation.notes, context=citation.context
@@ -383,7 +416,7 @@ def reapply_book_layer(
         chunk = _sanitize(note.text)
         if not chunk:
             continue
-        prefix = f"[Book:{citation.source_book}] "
+        prefix = _book_prefix(citation.source_book, kind=book_kind)
         book_by_ply[note.ply] = prefix + chunk
         if note.variations:
             variations_by_ply[note.ply] = note.variations
@@ -401,7 +434,7 @@ def reapply_book_layer(
     preamble = (citation.preamble or "").strip()
     rest_start = _strip_book_layer(game.comment or "")
     if preamble:
-        game.comment = f"[Book:{citation.source_book}] {preamble}"
+        game.comment = _book_prefix(citation.source_book, kind=book_kind) + preamble
         if rest_start:
             game.comment += " | " + rest_start
     else:
@@ -437,12 +470,13 @@ def reapply_book_layer(
         applied += 1
     mark_n = apply_book_mark_nags(game, book_marks)
     log(
-        "Reapplied book notes: %d (raw=%d forks=%d preamble=%s marks=%d)",
+        "Reapplied book notes: %d (raw=%d forks=%d preamble=%s marks=%d kind=%s)",
         applied,
         len(citation.notes),
         forks,
         bool(preamble),
         mark_n,
+        book_kind,
     )
     return game, applied
 
@@ -769,6 +803,8 @@ def walkthrough_citation(
         )
 
     try:
+        stem = f"{citation.white}_vs_{citation.black}_{citation.year}".replace(" ", "_")
+        pgn_path = out_dir / f"{stem}_bookwalk.pgn"
         annotated, book_n, crit_n = apply_dual_annotations(
             game,
             citation,
@@ -777,6 +813,7 @@ def walkthrough_citation(
             use_llm=use_llm,
             depth=depth,
             threshold=threshold,
+            pgn_path=pgn_path,
         )
     except Exception as exc:
         log("Annotate failed: %s", exc)
@@ -790,8 +827,6 @@ def walkthrough_citation(
     annotated.headers["Source"] = source
     out_dir.mkdir(parents=True, exist_ok=True)
     viewer_dir.mkdir(parents=True, exist_ok=True)
-    stem = f"{citation.white}_vs_{citation.black}_{citation.year}".replace(" ", "_")
-    pgn_path = out_dir / f"{stem}_bookwalk.pgn"
     html_path = viewer_dir / f"{stem}_bookwalk.html"
     log("Writing PGN + HTML viewer...")
     export_annotated_pgn(annotated, pgn_path)

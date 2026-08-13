@@ -25,6 +25,8 @@ PDF text
 
 **Policy:** Glyph dict is **bootstrap for segmentation** (move heads / score cuts), not piece-identity fidelity in comment bodies. Piece mistakes in prose (`Rc2` vs `Nc2`, `Bxa5` vs `Qxa5`) are fixed by Layer 5 via board + variation lookahead. Structural bug → grammar rule + fixture. Do not grow per-token glyph rows for comment body fidelity.
 
+**Production pivot (2026-08-12):** Auto PDF→ply notes are **draft-only**. Curated `*.book_notes.yaml` + `[Book:curated|…]` are the production book voice; see `DECISIONS.md`. Metrics: `chess-coach book-note-metrics`.
+
 ---
 
 ## Layer 1 — Universal token grammar
@@ -109,9 +111,34 @@ Fragment games that open mid-score (e.g. after a diagram) get the setup paragrap
 
 **Lost bishop before `e8`**: after move marks, `! �es` / `! es` → `Be8`.
 
-**Lost figurine after Black ellipsis**: `18...�g6` → `18...g6` (bare destination; align / Layer 5 fill piece). Remaining FFFD before square → `Q`.
+**Lost figurine after Black ellipsis:**
+- Numbered `8...�d5` → bare `8...d5` (Layer 5 + later `Qxd5` capture-hint → `Qd5`).
+- Plan ellipsis `with... �d7` → `...Bd7` (bishop development).
+- Remaining FFFD before square → `Q`.
 
-**Queen `Ye…` salad**: `Ye`/`Yea` before file/rank → `Q`/`Qa` (rank `l`→`1` via existing queen back-rank rule).
+**Knight salad `�gf.3` / `gf.3`:** → `Nf3` (glued knight figurine + f-file).
+
+**Spaced tens digit:** `1 O.Qxd5` / `l 1.Bxd2` → `10.` / `11.` (after FFFD→piece).
+
+**Better was sidelines:** `Better was …` is a variation cue / tail — do not open a new mainline note on its inner score.
+
+**Disambiguated rook:** `Rac8` must not expand to `Qxc8` (same-piece only when file/rank disambiguation is present).
+
+**Bare-fill capture hint:** when `d5` ties `Qd5`/`Nd5`, prefer the piece that later captures that square (`Qxd5`).
+
+**Retarget:** `_retarget_through_leading_score` accepts the last bare reply even when following prose is not a known coaching opener (`This opening imprecision…`).
+
+### Best-practice hooks
+
+| Practice | Module |
+| --- | --- |
+| Paren / mainline stack (`board.copy()` on `(`/`)`) | [`note_legalize.py`](src/chess_coach/note_legalize.py) — already forks sidelines |
+| Chess-font glyph map via `get_text("dict")` | [`pdf_font_glyphs.py`](src/chess_coach/pdf_font_glyphs.py) |
+| Diagram FEN cross-check | [`diagram_fen.py`](src/chess_coach/diagram_fen.py) (reader pluggable; e.g. ChessCog) |
+
+**Lost figurine after Black ellipsis (legacy one-liner):** `18...�g6` → `18...g6` (bare destination; align / Layer 5 fill piece). Remaining FFFD before square → `Q`.
+
+**Queen `Ye…` salad:** `Ye`/`Yea` before file/rank → `Q`/`Qa` (rank `l`→`1` via existing queen back-rank rule).
 
 **Leading `I.d4`**: capital-I OCR for move 1 → `1.d4` / `1...`.
 

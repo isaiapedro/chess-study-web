@@ -19,8 +19,8 @@ expect:
     san_contains: Bb6
     text_prefix: "It took five moves"
   - fullmove: 32
-    side: white
-    san_contains: Ng3
+    side: black
+    san_contains: Nf4
     text_prefix: "Final remarks"
 source: Chess Structures Ch.14 Bouaziz-Beliavsky
 preamble_contains: "How should Black play"

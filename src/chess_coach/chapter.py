@@ -749,21 +749,22 @@ def _retarget_through_leading_score(note: BookMoveNote) -> BookMoveNote:
         m = bare_san.match(text, pos)
         if not m:
             break
-        after = text[m.end() :]
-        probe = strip_diagrams(after).lstrip()
-        next_move = bool(
-            _PROSE_START_RE.match(probe)
-            or MOVE_LABEL_RE.match(probe)
-            or bare_san.match(probe)
-        )
-        if not next_move:
-            break
+        # Accept bare reply (incl. last score move before unrecognized prose).
         _accept_white_to_black()
         san = m.group("move")
         pos = m.end()
         moved = True
-        if _PROSE_START_RE.match(strip_diagrams(text[pos:]).lstrip()):
+        probe = strip_diagrams(text[pos:]).lstrip()
+        if not probe or _PROSE_START_RE.match(probe):
             break
+        if (
+            MOVE_LABEL_RE.match(probe)
+            or (probe.startswith(".") and len(probe) > 1 and probe[1].isalpha())
+            or bare_san.match(probe)
+        ):
+            continue
+        # Non-move text (e.g. "This opening imprecision…") ends the score walk.
+        break
 
     if not moved:
         return note

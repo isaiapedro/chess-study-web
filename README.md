@@ -52,8 +52,17 @@ Details: `data/masters/README.md`.
 
 Primary flow: read a **book section**, detect cited professional games, fetch from **local masters** (Chessgames fallback), walk with:
 
-1. **Primary** — that book’s own move notes  
-2. **Secondary** — Stockfish eval/PV + other RAG book excerpts  
+1. **Primary** — curated `*.book_notes.yaml` when present (`[Book:curated|…]`); otherwise draft PDF extract (`[Book:draft|…]`)  
+2. **Secondary** — Stockfish eval/PV + other RAG book excerpts (viewer: “Book ideas (RAG)” when no ply book note)
+
+PDF auto-sync is **not** a 90/95 accuracy SLA — see `DECISIONS.md`. Prefer curated sidecars for flagship games.
+
+```bash
+chess-coach book-note-metrics --out data/viewer_out/book_note_metrics.md
+chess-coach export-book-notes data/annotated/bookwalk/Foo_bookwalk.pgn   # freeze curated YAML
+chess-coach reapply-book-notes data/annotated/bookwalk/Foo_bookwalk.pgn --html
+chess-coach draft-book-notes "data/books/Chess Structures….pdf" --chapter "Family 4" --font-glyphs
+```
 
 ### Sections differ per book
 

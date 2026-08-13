@@ -122,6 +122,14 @@
       background: var(--fill-alt); border: 1px solid var(--border);
       border-radius: var(--r-pill); padding: 0.22rem 0.6rem;
     }
+    .top-actions {
+      flex: none; display: inline-flex; align-items: center; gap: 0.35rem;
+    }
+    .top-actions .chip {
+      padding: 0.28rem 0.65rem; min-height: 2rem;
+    }
+    .top-actions .chip.is-busy { opacity: 0.55; pointer-events: none; }
+    .top-actions .chip.is-ok { color: var(--sage); border-color: var(--sage); }
 
     .shell {
       display: grid; grid-template-columns: minmax(0, 1fr);
@@ -305,19 +313,28 @@
     .study {
       display: grid;
       grid-template-columns: minmax(0, 1fr);
+      /* notes flex-fill remaining column; tree + games stay content-sized below */
       grid-template-rows: minmax(0, 1fr) auto auto;
       gap: 0.4rem; min-height: 0; min-width: 0; overflow: hidden;
       width: min(100%, 46rem); margin-inline: auto;
+      align-items: stretch;
+      justify-items: stretch;
     }
     .panel {
       background: var(--surface); border: 1px solid var(--border);
       border-radius: var(--r-md);
       width: 100%; max-width: 100%; min-width: 0;
       overflow-wrap: anywhere; word-break: break-word;
+      box-sizing: border-box;
     }
     .notes-panel {
       display: flex; flex-direction: column;
-      min-height: 7.25rem;  /* the book note never collapses away (matches NOTE_MIN_H) */
+      /* Fill space above move tree; toggle only shows/hides text (no resize). */
+      min-height: 0;
+      height: 100%;
+      max-height: none;
+      overflow: hidden;
+      align-self: stretch;
       padding: 0.65rem 0.8rem 0.45rem;
     }
     .notes-head {
@@ -428,6 +445,17 @@
     }
     .note.vars { border-left-color: var(--accent); background: rgba(211, 37, 49, 0.07); }
     .note .tag { display: none; }
+    .note.book .tag, .note.engine .tag, .note.vars .tag, .note.ideas .tag {
+      display: block; margin-bottom: 0.3rem;
+      font-size: var(--fs-body); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+      background: transparent; padding: 0;
+    }
+    .note.book .tag { color: var(--cream); }
+    .note.ideas {
+      border-left-color: var(--blue); background: rgba(0, 132, 210, 0.09);
+      color: #d7e9f5; font-size: var(--fs-body);
+    }
+    .note.ideas .tag { color: var(--blue); }
     .note.engine .tag, .note.vars .tag {
       display: block; margin-bottom: 0.3rem;
       font-size: var(--fs-body); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
@@ -582,11 +610,11 @@
         grid-template-columns: minmax(0, var(--dock-w)) minmax(min(20rem, 42vw), 1fr);
         grid-template-rows: minmax(0, 1fr);
         column-gap: clamp(0.6rem, 1.6vw, 1.4rem);
-        align-items: start;
+        align-items: stretch;
         justify-content: center;
       }
       .board-dock { grid-column: 1; width: 100%; align-self: start; }
-      .study { grid-column: 2; height: 100%; width: 100%; margin: 0; }
+      .study { grid-column: 2; height: 100%; min-height: 0; width: 100%; margin: 0; }
       .disclose-body { max-height: min(34dvh, 22rem); }
     }
     @media (min-width: 1500px) {
@@ -621,18 +649,20 @@
         width: min(100%, var(--board-size)); margin-inline: auto;
       }
       .move-keys { width: min(100%, var(--board-size)); margin-inline: auto; }
-      .note-nav .zoom-chip { display: inline-flex; }
-      /* board focus: keep only the note header strip (zoom + note nav) */
-      body:not(.notes-expanded) .notes-panel {
+      .study {
+        width: 100%;
+        max-width: min(100%, var(--board-size));
+        margin-inline: auto;
         min-height: 0;
-        padding: 0.4rem 0.65rem;
+        height: 100%;
       }
+      .note-nav .zoom-chip { display: inline-flex; }
+      /* Toggle only reveals/hides note text; panel keeps flex height. */
       body:not(.notes-expanded) .notes-panel .move-label,
       body:not(.notes-expanded) .notes-panel .notes-body {
-        display: none;
+        visibility: hidden;
+        pointer-events: none;
       }
-      body:not(.notes-expanded) .notes-head { margin-bottom: 0; }
-      body.notes-expanded .notes-panel { min-height: 7.25rem; }
     }
 
     /* ---------- compact: phones and small tablets ---------- */
@@ -701,14 +731,18 @@
     }
   </style>
 </head>
-<body>
+<body class="notes-expanded">
   <header class="top">
     <span class="mark" aria-hidden="true">♟</span>
     <div class="titles">
       <h1>@@HEADING@@</h1>
       <p class="page-meta" id="gameMeta"></p>
     </div>
-    <span class="count" id="gameCount"></span>
+    <div class="top-actions">
+      <button type="button" class="chip" id="btnLichessStudy"
+        title="Push this game (PGN + comments + variations) to a Lichess study via local server">Lichess</button>
+      <span class="count" id="gameCount"></span>
+    </div>
   </header>
   <div class="shell">
     <main class="stage" id="stage">
@@ -750,10 +784,10 @@
       <div class="study">
         <section class="panel notes-panel" aria-label="Book annotation">
           <div class="notes-head">
-            <p class="eyebrow">Book note</p>
+            <p class="eyebrow" id="notesEyebrow">Book note</p>
             <span class="note-nav">
-              <button type="button" class="chip zoom-chip" id="btnNoteZoom" aria-pressed="false"
-                title="Trade board size for reading space">more text</button>
+              <button type="button" class="chip zoom-chip" id="btnNoteZoom" aria-pressed="true"
+                title="Show or hide book note text (panel size unchanged)">more board</button>
               <button type="button" class="chip" id="btnNotePrev" title="Previous annotated move (Shift+N)">‹ note</button>
               <button type="button" class="chip" id="btnNoteNext" title="Next annotated move (N)">note ›</button>
             </span>
@@ -931,9 +965,9 @@
   // window, keyboard open) keeps the board AND the book note on screen.
   const TWO_PANE_Q = "(min-width: 900px), (min-aspect-ratio: 1/1) and (min-width: 600px)";
   const STUDY_MIN_W = 340;  // px reserved for the reading column (> its CSS min, so no overflow)
-  const NOTE_MIN_H = 118;   // px of book note body when reading (notes-expanded)
+  const NOTE_MIN_H = 118;   // minimum book-note height when sizing board (text scrolls inside)
   let lastFitSize = 0;
-  let notesExpanded = false;
+  let notesExpanded = true;  // text visible by default; toggle hides without resizing
   function px(v) { const n = parseFloat(v); return isFinite(n) ? n : 0; }
   function isTwoPane() { return window.matchMedia(TWO_PANE_Q).matches; }
   function fitBoardToScreen() {
@@ -958,27 +992,9 @@
       const colGap = px(cs.columnGap) || 12;
       boardW = availW - barW - 6 - colGap - Math.min(STUDY_MIN_W, availW * 0.42);
     } else {
-      // Stacked: board focus keeps only the note header strip; reading mode
-      // reserves space for the annotation body (+ disclosures).
+      // Stacked: reserve room for study column; notes flex-fill above tree inside it.
       const study = stage.querySelector(".study");
-      const notesPanel = stage.querySelector(".notes-panel");
-      let noteWant = 0;
-      if (notesPanel) {
-        const csN = getComputedStyle(notesPanel);
-        const headEl = notesPanel.querySelector(".notes-head");
-        const labelEl = document.getElementById("moveLabel");
-        let panelChrome = px(csN.paddingTop) + px(csN.paddingBottom) + 2;
-        if (headEl) panelChrome += headEl.getBoundingClientRect().height + (notesExpanded ? 6 : 0);
-        if (notesExpanded) {
-          if (labelEl && getComputedStyle(labelEl).display !== "none") {
-            panelChrome += labelEl.getBoundingClientRect().height + px(getComputedStyle(labelEl).marginBottom);
-          }
-          noteWant = panelChrome + Math.max(NOTE_MIN_H * 0.45, elNotes ? elNotes.scrollHeight : 0);
-        } else {
-          noteWant = panelChrome; // header strip only
-        }
-      }
-      let chromeReserve = 0;   // disclosure headers (+ open bodies) — always kept
+      let chromeReserve = 0;
       if (study) {
         const rowGap = px(getComputedStyle(study).rowGap) || 6;
         study.querySelectorAll(".disclose").forEach(function (d) {
@@ -995,10 +1011,9 @@
         chromeReserve = 90;
       }
       const shortScreen = availH < 620;
-      const studyCap = availH * (notesExpanded ? 0.62 : (shortScreen ? 0.34 : 0.38));
-      const studyFloor = (notesExpanded ? NOTE_MIN_H : 0) + chromeReserve + (notesExpanded ? 0 : noteWant);
-      let reserve = Math.min(Math.max(noteWant + chromeReserve, studyFloor), studyCap);
-      if (notesExpanded) reserve = studyCap;
+      const studyCap = availH * (shortScreen ? 0.34 : 0.38);
+      const studyFloor = NOTE_MIN_H + chromeReserve;
+      const reserve = Math.min(Math.max(studyFloor, NOTE_MIN_H + chromeReserve), studyCap);
       const bar = stage.querySelector(".eval-bar");
       const row = stage.querySelector(".board-row");
       const rowGap = row ? (px(getComputedStyle(row).rowGap) || 5) : 5;
@@ -1051,6 +1066,19 @@
   const elNotes = document.getElementById("notes");
   const elList = document.getElementById("moveList");
   const elBookScroll = document.getElementById("bookScroll");
+  const elNotesEyebrow = document.getElementById("notesEyebrow");
+  function bookKindLabel(kind) {
+    if (kind === "curated") return "Book note (curated)";
+    if (kind === "draft") return "Book note (draft)";
+    if (kind === "legacy") return "Book note";
+    return "Book note";
+  }
+  function setNotesEyebrow(kind, hasBook, hasIdeas) {
+    if (!elNotesEyebrow) return;
+    if (hasBook) elNotesEyebrow.textContent = bookKindLabel(kind);
+    else if (hasIdeas) elNotesEyebrow.textContent = "Book ideas (RAG)";
+    else elNotesEyebrow.textContent = "Book note";
+  }
   const elGameMeta = document.getElementById("gameMeta");
   const elBoard = document.getElementById("board");
   const elBoardWrap = document.getElementById("boardWrap");
@@ -2194,10 +2222,14 @@
     if (!p) {
       elMove.textContent = "Start position · " + game().matchup;
       let html = "";
+      const startKind = game().startBookKind || "legacy";
       if (game().startBook) {
-        html += '<div class="note book">' + formatNoteHtml(game().startBook) + "</div>";
+        html += '<div class="note book"><span class="tag">' + escapeHtml(bookKindLabel(startKind))
+          + "</span>" + formatNoteHtml(game().startBook) + "</div>";
+        setNotesEyebrow(startKind, true, false);
       } else {
         html = '<p class="empty">Drag a piece or tap square → square. Deviating starts your own line (kept for this session).</p>';
+        setNotesEyebrow("none", false, false);
       }
       withNotesKey("start", function () { elNotes.innerHTML = html; });
       return;
@@ -2205,10 +2237,20 @@
     const dots = p.side === "white" ? "." : "...";
     elMove.innerHTML = p.fullmove + dots + " " + escapeHtml(p.san) + markHeadlineHtml(p.glyphs);
     let html = "";
-    if (p.book) html += '<div class="note book">' + formatNoteHtml(p.book) + "</div>";
-    // TEMP: engine/RAG notes + PGN playable forks hidden
+    const kind = p.bookKind || "legacy";
+    if (p.book) {
+      html += '<div class="note book"><span class="tag">' + escapeHtml(bookKindLabel(kind))
+        + "</span>" + formatNoteHtml(p.book) + "</div>";
+    }
+    // When no ply book note, surface Engine/RAG as honest "Book ideas" (not printed transcript).
+    if (!p.book && p.engine) {
+      html += '<div class="note ideas"><span class="tag">Book ideas (RAG)</span>'
+        + formatNoteHtml(p.engine) + "</div>";
+    }
     if (SHOW_ENGINE_VAR_BOOKS) {
-      if (p.engine) html += '<div class="note engine"><span class="tag">Engine / RAG</span>' + formatNoteHtml(p.engine) + "</div>";
+      if (p.book && p.engine) {
+        html += '<div class="note engine"><span class="tag">Engine / RAG</span>' + formatNoteHtml(p.engine) + "</div>";
+      }
       const forks = p.forks || [];
       if (forks.length) {
         html += '<div class="note vars"><span class="tag">Playable forks</span>';
@@ -2220,7 +2262,10 @@
         html += "</div>";
       }
     }
-    if (!html) html = '<p class="empty">No book note on this move.</p>';
+    if (!html) {
+      html = '<p class="empty">No curated book note on this move. Engine/RAG ideas appear when available.</p>';
+    }
+    setNotesEyebrow(kind, !!p.book, !p.book && !!p.engine);
     withNotesKey(p.book ? ("book:" + idx) : ("main:" + idx), function () { elNotes.innerHTML = html; });
     if (SHOW_ENGINE_VAR_BOOKS) {
       elNotes.querySelectorAll("button.play-line[data-fi]").forEach((btn) => {
@@ -2684,18 +2729,103 @@
   document.getElementById("btnFlip").onclick = function () { flipBoard(); this.blur(); };
   const elNoteZoom = document.getElementById("btnNoteZoom");
   if (elNoteZoom) {
+    document.body.classList.toggle("notes-expanded", notesExpanded);
     elNoteZoom.onclick = function () {
       notesExpanded = !notesExpanded;
       document.body.classList.toggle("notes-expanded", notesExpanded);
       this.setAttribute("aria-pressed", notesExpanded ? "true" : "false");
       this.textContent = notesExpanded ? "more board" : "more text";
-      lastFitSize = 0;
-      fitBoardToScreen();
       this.blur();
     };
   }
   document.getElementById("btnNotePrev").onclick = function () { jumpNote(-1); this.blur(); };
   document.getElementById("btnNoteNext").onclick = function () { jumpNote(1); this.blur(); };
+
+  const STUDY_ID_KEY = "chess-coach.lichessStudyId";
+  const elLichess = document.getElementById("btnLichessStudy");
+  function chapterHint() {
+    const g = game();
+    return (g.matchup || g.subtitle || g.sourcePgn || ("Game " + (gIdx + 1))).trim();
+  }
+  function currentPgnText() {
+    const g = game();
+    return ((g && g.pgn) || "").trim();
+  }
+  function downloadPgnFallback(pgn, reason) {
+    const name = (game().sourcePgn || ("game-" + (gIdx + 1) + ".pgn")).replace(/[^\w.\-]+/g, "_");
+    const blob = new Blob([pgn.endsWith("\n") ? pgn : pgn + "\n"], { type: "application/x-chess-pgn" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = name.endsWith(".pgn") ? name : name + ".pgn";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1500);
+    const msg = (reason || "API unavailable") + ". PGN downloaded — import in Lichess Study, or run: chess-coach study-push <file>";
+    if (elLichess) {
+      elLichess.title = msg;
+      window.alert(msg);
+    }
+  }
+  async function pushToLichessStudy() {
+    if (!elLichess || isMissing()) return;
+    const pgn = currentPgnText();
+    if (!pgn || pgn.indexOf("[") < 0) {
+      window.alert("No annotated PGN embedded for this game. Rebuild chapter book from *_bookwalk.pgn.");
+      return;
+    }
+    elLichess.classList.add("is-busy");
+    elLichess.classList.remove("is-ok");
+    elLichess.textContent = "…";
+    const body = {
+      pgn: pgn,
+      name: chapterHint(),
+      visibility: "unlisted",
+      orientation: orientation,
+    };
+    try {
+      const saved = localStorage.getItem(STUDY_ID_KEY);
+      if (saved) body.studyId = saved;
+    } catch (e) {}
+    try {
+      const res = await fetch("/api/lichess-study", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      let data = null;
+      try { data = await res.json(); } catch (e) { data = null; }
+      if (!res.ok || !data || !data.ok) {
+        const err = (data && data.error) || ("HTTP " + res.status);
+        if (res.status === 404 || res.status === 405) {
+          downloadPgnFallback(pgn, "Serve with scripts/serve_bookwalk.py for one-click push");
+        } else {
+          window.alert("Lichess push failed: " + err);
+        }
+        return;
+      }
+      if (data.studyId) {
+        try { localStorage.setItem(STUDY_ID_KEY, data.studyId); } catch (e) {}
+      }
+      elLichess.classList.add("is-ok");
+      elLichess.textContent = "Opened";
+      elLichess.title = data.url || "Lichess study";
+      if (data.url) window.open(data.url, "_blank", "noopener");
+    } catch (err) {
+      downloadPgnFallback(pgn, "Could not reach /api/lichess-study");
+    } finally {
+      elLichess.classList.remove("is-busy");
+      setTimeout(() => {
+        if (!elLichess) return;
+        elLichess.textContent = "Lichess";
+        elLichess.classList.remove("is-ok");
+      }, 2500);
+      elLichess.blur();
+    }
+  }
+  if (elLichess) {
+    elLichess.onclick = function () { pushToLichessStudy(); };
+  }
 
   const elChromeDisclose = document.getElementById("chromeDisclose");
   // narrow screens open with the tree collapsed so the book note owns the space

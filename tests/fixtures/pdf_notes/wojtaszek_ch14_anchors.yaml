@@ -1,12 +1,16 @@
 expect:
+- fullmove: 8
+  side: black
+  san_contains: Bd6
+  text_prefix: This opening imprecision allows White
 - fullmove: 13
   side: black
   san_contains: b6
   text_prefix: We have reached an interesting
 - fullmove: 14
-  side: white
-  san_contains: xd6!
-  text_prefix: cxd6 And the resulting position is t
+  side: black
+  san_contains: cxd6
+  text_prefix: And the resulting position is the be
 - fullmove: 15
   side: white
   san_contains: a4!
@@ -17,3 +21,13 @@ expect:
   text_prefix: If l 5... a5 preventing a4-a5, the w
 source: Chess Structures Ch.14 Wojtaszek-Swiercz
 preamble_contains: "Learning objective"
+text_contains:
+- fullmove: 8
+  side: black
+  needles:
+    - "10.Qxd5"
+- fullmove: 14
+  side: black
+  needles:
+    - "Bd7"
+    - "Rac8"

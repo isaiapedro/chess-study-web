@@ -180,7 +180,10 @@ def _extract_vars_blocks(comment: str) -> tuple[str, list[str]]:
     return cleaned, variations
 
 
-def _split_layers(comment: str) -> tuple[str, str, list[str]]:
+def _split_layers(comment: str) -> tuple[str, str, list[str], str]:
+    """Return book text, engine text, variations, book_kind (curated|draft|legacy|none)."""
+    from chess_coach.book_notes_sidecar import BOOK_TAG_RE, parse_book_kind
+
     comment, variations = _extract_vars_blocks(comment)
     book = engine = ""
     if " | " in comment and ("[Book" in comment or "[Engine" in comment):
@@ -191,9 +194,17 @@ def _split_layers(comment: str) -> tuple[str, str, list[str]]:
         book = comment
     elif comment.startswith("[Engine"):
         engine = comment
+    kind, _ = parse_book_kind(book)
+    if book:
+        book = BOOK_TAG_RE.sub("", book).strip()
+        book = re.sub(r"^\[Book:[^\]]*\]\s*", "", book).strip()
     book = clean_book_note(book)
     engine = clean_book_note(engine)
-    return book, engine, variations
+    if not book:
+        kind = "none"
+    elif kind == "none":
+        kind = "legacy"
+    return book, engine, variations, kind
 
 
 def _nag_glyphs(nags: list[int]) -> str:
@@ -252,7 +263,7 @@ def _collect_plies(game: chess.pgn.Game) -> list[dict]:
         pgn_vars = _variation_sans(node, board)
         board.push(next_node.move)
         comment = next_node.comment or ""
-        book, engine, text_vars = _split_layers(comment)
+        book, engine, text_vars, book_kind = _split_layers(comment)
         variations = list(dict.fromkeys([*pgn_vars, *text_vars]))
         nags = sorted(int(n) for n in next_node.nags)
         plies.append(
@@ -264,6 +275,7 @@ def _collect_plies(game: chess.pgn.Game) -> list[dict]:
                 "fen": board.fen(),
                 "comment": clean_book_note(comment),
                 "book": book,
+                "bookKind": book_kind,
                 "engine": engine,
                 "variations": variations,
                 "forks": forks,
@@ -300,8 +312,13 @@ def _book_from_headers(game: chess.pgn.Game) -> tuple[str, str]:
 
 
 def _start_book_comment(game: chess.pgn.Game) -> str:
-    book, _engine, _vars = _split_layers(game.comment or "")
+    book, _engine, _vars, _kind = _split_layers(game.comment or "")
     return book
+
+
+def _start_book_kind(game: chess.pgn.Game) -> str:
+    _book, _engine, _vars, kind = _split_layers(game.comment or "")
+    return kind
 
 
 def build_game_payload(game: chess.pgn.Game, title: str | None = None) -> dict:
@@ -347,6 +364,7 @@ def build_game_payload(game: chess.pgn.Game, title: str | None = None) -> dict:
         "chapter": chapter,
         "startFen": game.board().fen(),
         "startBook": _start_book_comment(game),
+        "startBookKind": _start_book_kind(game),
         "plies": _collect_plies(game),
     }
 
@@ -2043,6 +2061,21 @@ def write_chapter_book(
         payload = build_game_payload(game)
         payload["sourcePgn"] = path.name
         payload["missing"] = False
+        # Full annotated PGN for Lichess study push (comments + variations).
+        if path.suffix.lower() == ".pgn":
+            payload["pgn"] = path.read_text(encoding="utf-8", errors="replace")
+        elif path.suffix.lower() == ".html":
+            sibling = path.with_suffix(".pgn")
+            alt = path.parent.parent.parent / "annotated" / "bookwalk" / path.name.replace(
+                "_bookwalk.html", "_bookwalk.pgn"
+            )
+            for cand in (sibling, alt, Path("data/annotated/bookwalk") / path.name.replace(
+                "_bookwalk.html", "_bookwalk.pgn"
+            )):
+                if cand.is_file():
+                    payload["pgn"] = cand.read_text(encoding="utf-8", errors="replace")
+                    payload["sourcePgn"] = cand.name
+                    break
         games.append(payload)
     if not games:
         raise ValueError("No games to build chapter book")

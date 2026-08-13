@@ -57,6 +57,92 @@ def test_score_line_anchors(stem: str, excerpt_path: Path, anchors_path: Path):
             f"{stem}: {fm} {side} text {text[:80]!r} missing prefix {prefix!r}"
         )
 
+    for exp in spec.get("text_contains") or []:
+        fm = exp["fullmove"]
+        side = exp["side"]
+        hits = [n for n in notes if n.fullmove == fm and n.side == side]
+        assert hits, f"{stem}: text_contains missing {fm} {side}"
+        blob = " ".join(hits[0].text.split())
+        for needle in exp.get("needles") or []:
+            assert needle in blob or needle.replace(" ", "") in blob.replace(" ", ""), (
+                f"{stem}: {fm} {side} missing {needle!r} in {blob[:160]!r}"
+            )
+
+
+def test_wojtaszek_bd6_qd5_bd7_legalized():
+    """Game 2 early mistakes: Bd6 attach, Qd5/Qxd5, Bd7/Rac8 — after Layer 5."""
+    import chess
+
+    from chess_coach.note_legalize import legalize_note_prose
+
+    excerpt = (FIXTURES / "wojtaszek_ch14_excerpt.txt").read_text(encoding="utf-8")
+    _pre, notes = extract_move_notes(excerpt)
+    bd6 = next(n for n in notes if n.fullmove == 8 and n.side == "black")
+    assert "imprecision" in bd6.text
+    assert "Bd6" in (bd6.san_hint or "")
+
+    before_bd6 = chess.Board()
+    for san in [
+        "d4",
+        "Nf6",
+        "c4",
+        "e6",
+        "g3",
+        "d5",
+        "Bg2",
+        "Bb4+",
+        "Nd2",
+        "O-O",
+        "Nf3",
+        "dxc4",
+        "Qc2",
+        "Nc6",
+        "Qxc4",
+    ]:
+        before_bd6.push_san(san)
+    fixed = legalize_note_prose(before_bd6, bd6.text)
+    assert "8... Qd5" in fixed or "8...Qd5" in fixed.replace(" ", "")
+    assert "10.Qxd5" in fixed.replace(" ", "")
+    assert "cxd5" not in fixed.split("10.")[1][:20] if "10." in fixed else True
+
+    cx = next(n for n in notes if n.fullmove == 14 and n.side == "black")
+    before_cx = chess.Board()
+    for san in [
+        "d4",
+        "Nf6",
+        "c4",
+        "e6",
+        "g3",
+        "d5",
+        "Bg2",
+        "Bb4+",
+        "Nd2",
+        "O-O",
+        "Nf3",
+        "dxc4",
+        "Qc2",
+        "Nc6",
+        "Qxc4",
+        "Bd6",
+        "O-O",
+        "Qe7",
+        "e4",
+        "e5",
+        "d5",
+        "Nb8",
+        "Qc2",
+        "Nbd7",
+        "Nc4",
+        "Nb6",
+        "Nxd6",
+    ]:
+        before_cx.push_san(san)
+    cx_fixed = legalize_note_prose(before_cx, cx.text)
+    assert "Bd7" in cx_fixed
+    assert "Rac8" in cx_fixed
+    assert "Qxc8" not in cx_fixed
+
+
 
 def test_bouaziz_ng6_not_on_cxd5():
     excerpt = (FIXTURES / "bouaziz_ch14_excerpt.txt").read_text(encoding="utf-8")

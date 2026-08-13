@@ -143,6 +143,24 @@ def _candidates(board: chess.Board, token: str) -> list[tuple[str, chess.Move]]:
     has_x = "x" in raw.lower()
 
     if _PIECE_SAN_RE.match(raw):
+        # Disambiguated piece+file/rank (Rac8, R1c8): same piece only — do not
+        # expand to every mover to that square (Rac8 must not become Qxc8).
+        if re.match(r"^[NBRQK](?:[a-h]|[1-8])[a-h][1-8]", raw, re.I):
+            parsed = _try_parse(board, raw)
+            if parsed is not None:
+                return [(_strip_marks(board.san(parsed)), parsed)]
+            want = raw[0].upper()
+            same: list[tuple[str, chess.Move]] = []
+            for san, move in _legal_to_dest(
+                board, dest, require_capture=True if has_x else None
+            ):
+                if _piece_class(san) == want:
+                    same.append((san, move))
+            if has_x and not same:
+                for san, move in _legal_to_dest(board, dest, require_capture=None):
+                    if _piece_class(san) == want:
+                        same.append((san, move))
+            return same
         cands = _legal_to_dest(board, dest, require_capture=True if has_x else None)
         if has_x and not cands:
             cands = _legal_to_dest(board, dest, require_capture=None)
@@ -266,6 +284,18 @@ def _best_continuation(
     return best
 
 
+def _dest_capture_piece_hint(rest: list[str], dest: str) -> str | None:
+    """If a later token captures ``dest`` with an explicit piece, return that piece."""
+    dest = (dest or "").lower()
+    if not dest:
+        return None
+    for tok in rest[:8]:
+        m = re.match(rf"^([NBRQK])x{re.escape(dest)}$", _strip_marks(tok), re.I)
+        if m:
+            return m.group(1).upper()
+    return None
+
+
 def _choose_move(
     board: chess.Board,
     token: str,
@@ -281,6 +311,15 @@ def _choose_move(
         return cands[0]
 
     exact = _try_parse(board, token)
+    # Bare dest + later Qxd5/Nxd5: prefer the piece that captures that square.
+    dest_m = _DEST_RE.search(_strip_marks(token))
+    if exact is None and dest_m and _BARE_SQUARE_RE.match(_strip_marks(token)):
+        hint = _dest_capture_piece_hint(rest, dest_m.group(1))
+        if hint:
+            hinted = [(san, move) for san, move in cands if _piece_class(san) == hint]
+            if len(hinted) == 1:
+                return hinted[0]
+
     n = len(cands)
 
     def rest_after(move: chess.Move) -> tuple[int, int, int, int]:
@@ -409,6 +448,12 @@ def _choose_move(
     winners = [(san, move) for key, san, move in scored if key == best_key]
     if len(winners) == 1:
         return winners[0]
+    dest_m = _DEST_RE.search(_strip_marks(token))
+    hint = _dest_capture_piece_hint(rest, dest_m.group(1) if dest_m else "")
+    if hint:
+        hinted = [(san, move) for san, move in winners if _piece_class(san) == hint]
+        if len(hinted) == 1:
+            return hinted[0]
     return None
 
 

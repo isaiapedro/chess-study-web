@@ -35,7 +35,7 @@ MOVE_LABEL_RE = re.compile(
 _VARIATION_CUE_RE = re.compile(
     r"(?i)\b(?:if|after|with|followed\s+by|instead\s+of|manoeuvre|maneuver|"
     r"continuation(?:\s+is)?|different\s+continuation|such\s+as|"
-    r"for\s+example|example|rather\s+than|"
+    r"for\s+example|example|rather\s+than|better\s+was|"
     r"but\s+not|or)\s+$"
 )
 
@@ -45,6 +45,7 @@ _VARIATION_TAIL_START_RE = re.compile(
     r"(?:A\s+)?(?:possible\s+)?continuation\s+is\b|"
     r"(?:A\s+)?different\s+continuation\b|"
     r"such\s+as\b|"
+    r"Better\s+was\b|"
     r"For\s+example\b:?|"
     r"Example\b:?|"
     r"followed\s+by\b|"
