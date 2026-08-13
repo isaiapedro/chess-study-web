@@ -417,6 +417,37 @@ class LocalMastersDB:
 
         return sorted(hits, key=score, reverse=True)
 
+    def find_by_eco(self, eco: str, *, limit: int = 5) -> list[LocalGameHit]:
+        """Sample master games sharing an ECO code (smart PGN similarity seed)."""
+        code = (eco or "").strip().upper()
+        if not code or not self.available:
+            return []
+        with self._connect() as conn:
+            rows = conn.execute(
+                """
+                SELECT id, path, offset, white, black, year, event, eco, result
+                FROM games
+                WHERE eco = ?
+                ORDER BY year DESC
+                LIMIT ?
+                """,
+                (code, max(1, limit)),
+            ).fetchall()
+        return [
+            LocalGameHit(
+                row_id=int(row["id"]),
+                path=Path(row["path"]),
+                offset=int(row["offset"]),
+                white=row["white"],
+                black=row["black"],
+                year=row["year"],
+                event=row["event"] or "",
+                eco=row["eco"] or "",
+                result=row["result"] or "",
+            )
+            for row in rows
+        ]
+
     def fetch_pgn(self, hit: LocalGameHit) -> str:
         if not hit.path.is_file():
             raise FileNotFoundError(f"indexed PGN missing: {hit.path}")

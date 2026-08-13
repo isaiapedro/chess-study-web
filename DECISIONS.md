@@ -132,3 +132,26 @@ Prefer Ollama `nomic-embed-text`. If unavailable, use a deterministic hashing em
 - User lines persist for the browser session (in-memory per game); reopen via green brackets in the move tree. Lost on full page reload.
 - Flip flag to `true` to restore engine notes + playable forks.
 
+
+## 2026-08-13 — Similarity RAG bridge (annotated positions → Chess Wrapped)
+
+- New Chroma collection `chess_annotated_positions`: bookwalk ply notes (curated YAML preferred) embedded with Ollama `nomic-embed-text`.
+- CLI: `chess-coach synthesize-annotated` (idempotent upsert); `chess-coach rag-hit-rate` samples FENs and reports curated/draft/book/empty mix.
+- `retrieve_for_position`: annotated first (curated boost + fen_key/ECO soft boost), then `chess_books` fallback.
+- Chess Wrapped API: `POST /api/v1/coach/retrieve` via `CHESS_COACH_ROOT` (default `workspace/experiments/chess-coach`). Soft-fails to [].
+- Mobile gameCoach: hybrid merge (vector then theme pack); coach cache `v48`. Privacy: FEN+themes+SAN only.
+- Grow attack/tactic coverage: `chess-coach chapter` on Art of Attack / Excelling at Chess Calculation, curate YAML, re-run synthesize.
+
+## 2026-08-13 — PDF → knowledge summaries → PGN-linked RAG
+
+- Order: `ingest` raw book chunks → `summarize-knowledge` (Ollama or extractive) writes short teaching cards → link masters games by ECO/theme → embed `chess_knowledge_summaries`.
+- `retrieve_for_position` priority: knowledge_summary → annotated bookwalk → raw book chunks.
+- CLI: `chess-coach knowledge-pipeline` orchestrates the full chain.
+- Mobile still hybrid via `/api/v1/coach/retrieve`; cache `v49`.
+
+## 2026-08-13 — App loads derived pack only
+
+- PDF ingest + masters indexing + summarization stay CLI-only.
+- `export-mobile-pack` writes summaries + motifs + frequent SAN lines into Expo `derivedCoachPack.ts`.
+- Mobile retrieve matches themes/ECO/recent moves locally; no live Chroma/API in Games analysis.
+- Cache `game-coach:v50`.

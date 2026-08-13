@@ -36,7 +36,55 @@ chess-coach ingest data/books          # real embeddings (Ollama)
 
 Scanned/empty PDFs auto-skipped. Prefer OCR → `.txt` for BAD books in preflight.
 
+## Similarity RAG → Chess Wrapped mobile
+
+Pipeline: **ingest PDFs → write knowledge summaries → link similar masters PGNs → embed RAG** (+ optional annotated bookwalk).
+
+```bash
+# Full pipeline (Ollama: nomic-embed-text + qwen3:8b recommended)
+chess-coach knowledge-pipeline data/books --reset-summaries
+
+# Or step-by-step:
+chess-coach ingest data/books
+chess-coach summarize-knowledge data/books --reset          # LLM summaries + ECO/PGN links
+chess-coach summarize-knowledge data/books --no-llm         # extractive fallback
+chess-coach synthesize-annotated                            # bookwalk ply vectors
+
+# Hit-rate sample (summary / curated / book mix)
+chess-coach rag-hit-rate --limit 40 --out data/viewer_out/rag_hit_rate.md
+
+# Grow attack / tactics coverage:
+# chess-coach chapter "data/books/The Art of Attack in Chess....pdf" --scheme chapter --chapter 1 --max-games 3
+```
+
+Summaries land in `data/knowledge_summaries/*.jsonl` and Chroma `chess_knowledge_summaries`.
+Each summary carries `eco_hints` + `similar_games` from the local masters index.
+
+### Ship to Expo (derived product only)
+
+The mobile app must **not** embed PDFs or the masters DB. Export a compact pack:
+
+```bash
+chess-coach export-mobile-pack
+# writes:
+#   data/derived/mobile_coach_pack.json
+#   ../../side_projects/chess/mobile/src/engine/gameCoach/derivedCoachPack.ts
+```
+
+Pack fields: summary text, themes/motifs, ECO hints, **frequent SAN lines** sampled from masters for those ECOs.
+`knowledge-pipeline` runs this export by default (`--no-export-mobile` to skip).
+
+Chess Wrapped API (from `workspace/side_projects/chess`):
+
+```bash
+export CHESS_COACH_ROOT=/absolute/path/to/workspace/experiments/chess-coach
+# start API as usual; POST /api/v1/coach/retrieve { fen, themes, phase, san, wantCount }
+```
+
+Mobile Games analysis calls that endpoint; if down, falls back to on-device theme pack.
+
 ## Local masters DB (recommended)
+
 
 Chessgames alone misses many book citations. Put a large OTB dump (e.g. [Lumbra Gigabase](https://lumbrasgigabase.com/en/)) in `data/masters/pgn/`, then:
 
@@ -133,13 +181,17 @@ Same auth idea as `workspace/side_projects/chess` (Bearer + `study:write`). Crea
 
 ```bash
 export LICHESS_TOKEN=lip_...   # or copy .env.example → .env
+# one-click from the chapter book UI (embeds full PGN + comments + variations):
+python scripts/serve_bookwalk.py --port 8081
+# open the chapter book → header "Lichess" button
+# or CLI:
 chess-coach study-push data/annotated/bookwalk --name "Bookwalk chapter"
 chess-coach study-push data/annotated/sample_blunder_annotated.pgn --dry-run
 # append to existing study:
 chess-coach study-push path/to/game_bookwalk.pgn --study-id AbCdEfGh
 ```
 
-Lichess keeps coach comments and move variations (book lines / engine best). Max 64 chapters per study.
+Lichess keeps coach comments and move variations (book lines / engine best). Max 64 chapters per study. Without `serve_bookwalk.py`, the button downloads the PGN instead.
 
 ## Markdown analysis report
 

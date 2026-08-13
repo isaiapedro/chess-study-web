@@ -63,7 +63,8 @@ chess-coach/
 │       ├── embeddings.py
 │       ├── ingest.py
 │       ├── retrieve.py
-│       └── preflight.py
+│       ├── preflight.py
+│       └── synthesize_annotated.py  # bookwalk → annotated_positions
 │
 └── data/
     ├── books/                # PDFs (gitignored) + sidecars
@@ -94,7 +95,7 @@ chess-coach/
 | `notation_dict.py` | Squares, pieces, !/? marks, Informator eval + OCR aliases |
 | `chessgames.py` | Search/fetch PGN (system `curl`) |
 | `viewer.py` | Big board + coach panel + live SF18 HTML (wheel/arrow stepping) |
-| `rag/*` | Chunk → embed → Chroma → retrieve |
+| `rag/*` | Chunk → embed → Chroma → retrieve; `synthesize_annotated` for bookwalk vectors |
 
 Install editable: `pip install -e .` → CLI `chess-coach`.
 

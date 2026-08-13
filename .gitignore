@@ -18,3 +18,4 @@ data/pgn_archive/
 *.pdf
 *.wasm
 *.sqlite
+data/derived/

@@ -13,7 +13,13 @@ from chess_coach.engine import StockfishEngine
 from chess_coach.pgn_io import load_game
 from chess_coach.rag.ingest import ingest_path, retag_patterns
 from chess_coach.rag.preflight import format_preflight_report, run_preflight
-from chess_coach.rag.retrieve import retrieve_passages
+from chess_coach.rag.retrieve import passages_to_nuggets, retrieve_for_position, retrieve_passages
+from chess_coach.rag.export_mobile_pack import export_mobile_pack
+from chess_coach.rag.summarize_knowledge import (
+    run_knowledge_pipeline,
+    summarize_knowledge_path,
+)
+from chess_coach.rag.synthesize_annotated import synthesize_annotated
 from chess_coach.report import write_report
 from chess_coach.book_walkthrough import refresh_bookwalk_dir, walkthrough_chapter
 from chess_coach.chapter import extract_citations, list_book_sections, load_chapter
@@ -377,6 +383,117 @@ def _build_parser() -> argparse.ArgumentParser:
         help="List chapters that would be uploaded; no API calls",
     )
 
+    synth = sub.add_parser(
+        "synthesize-annotated",
+        help="Embed bookwalk annotated plies into chess_annotated_positions",
+    )
+    synth.add_argument(
+        "--pgn-dir",
+        type=Path,
+        default=None,
+        help="Bookwalk PGN dir (default: config rag.annotated_pgn_dir)",
+    )
+    synth.add_argument("--reset", action="store_true", help="Delete annotated collection first")
+    synth.add_argument(
+        "--allow-hash-fallback",
+        action="store_true",
+        help="Allow weak hash embeddings if Ollama unavailable",
+    )
+
+    hit = sub.add_parser(
+        "rag-hit-rate",
+        help="Sample FENs from annotated PGNs and report retrieve hit mix",
+    )
+    hit.add_argument(
+        "--pgn-dir",
+        type=Path,
+        default=Path("data/annotated/bookwalk"),
+        help="PGN directory to sample FENs from",
+    )
+    hit.add_argument("--limit", type=int, default=40, help="Max positions to query")
+    hit.add_argument("--out", type=Path, default=None, help="Write markdown report")
+
+    summarize = sub.add_parser(
+        "summarize-knowledge",
+        help="PDF/TXT chunks → knowledge summaries + PGN links → embed RAG",
+    )
+    summarize.add_argument(
+        "path",
+        type=Path,
+        nargs="?",
+        default=Path("data/books"),
+        help="Book file or directory (default: data/books)",
+    )
+    summarize.add_argument("--reset", action="store_true", help="Reset summaries collection")
+    summarize.add_argument(
+        "--no-llm",
+        action="store_true",
+        help="Extractive summaries only (skip Ollama chat)",
+    )
+    summarize.add_argument(
+        "--max-chunks",
+        type=int,
+        default=24,
+        help="Max chunks per book to summarize (default: 24)",
+    )
+    summarize.add_argument(
+        "--allow-hash-fallback",
+        action="store_true",
+        help="Allow weak hash embeddings if Ollama unavailable",
+    )
+
+    pipeline = sub.add_parser(
+        "knowledge-pipeline",
+        help="ingest PDFs → summarize+PGN-link → embed → synthesize annotated",
+    )
+    pipeline.add_argument(
+        "path",
+        type=Path,
+        nargs="?",
+        default=Path("data/books"),
+        help="Books directory (default: data/books)",
+    )
+    pipeline.add_argument("--skip-ingest", action="store_true")
+    pipeline.add_argument("--skip-summarize", action="store_true")
+    pipeline.add_argument("--skip-annotated", action="store_true")
+    pipeline.add_argument("--no-llm", action="store_true")
+    pipeline.add_argument("--max-chunks", type=int, default=24)
+    pipeline.add_argument("--reset-summaries", action="store_true")
+    pipeline.add_argument("--allow-hash-fallback", action="store_true")
+    pipeline.add_argument(
+        "--export-mobile",
+        action="store_true",
+        default=True,
+        help="After pipeline, export derived pack for the Expo app (default on)",
+    )
+    pipeline.add_argument(
+        "--no-export-mobile",
+        action="store_true",
+        help="Skip mobile pack export",
+    )
+
+    export_pack = sub.add_parser(
+        "export-mobile-pack",
+        help="Export derived summaries+motifs+frequent SAN lines for Expo (no PDF/DB in app)",
+    )
+    export_pack.add_argument(
+        "--json-out",
+        type=Path,
+        default=Path("data/derived/mobile_coach_pack.json"),
+    )
+    export_pack.add_argument(
+        "--ts-out",
+        type=Path,
+        default=None,
+        help="Write TypeScript module for mobile (default: chess mobile derivedCoachPack.ts)",
+    )
+    export_pack.add_argument("--max-entries", type=int, default=120)
+    export_pack.add_argument(
+        "--no-frequent-lines",
+        action="store_true",
+        help="Skip masters frequent-line sampling",
+    )
+
     return parser
 
 
@@ -430,6 +547,215 @@ def cmd_retag_patterns(args: argparse.Namespace) -> int:
         print(f"Retag failed: {exc}", file=sys.stderr)
         return 2
     print(f"Pattern tags on {tagged}/{total} chunks (metadata only; embeddings unchanged)")
+    return 0
+
+
+def cmd_synthesize_annotated(args: argparse.Namespace) -> int:
+    config = load_config(args.config)
+    pgn_dir = None
+    if args.pgn_dir is not None:
+        pgn_dir = _resolve_existing(args.pgn_dir) or Path(args.pgn_dir)
+    try:
+        count = synthesize_annotated(
+            config,
+            pgn_dir=pgn_dir,
+            reset=args.reset,
+            allow_hash_fallback=args.allow_hash_fallback,
+        )
+    except Exception as exc:
+        print(f"Synthesize failed (need Ollama embed model?): {exc}", file=sys.stderr)
+        return 2
+    print(f"Done: {count} chunks → {config['rag'].get('annotated_collection')}")
+    return 0
+
+
+def cmd_summarize_knowledge(args: argparse.Namespace) -> int:
+    config = load_config(args.config)
+    path = _resolve_existing(args.path)
+    if path is None:
+        print(f"Path not found: {args.path}", file=sys.stderr)
+        return 1
+    try:
+        count = summarize_knowledge_path(
+            path,
+            config,
+            use_llm=not args.no_llm,
+            max_chunks_per_book=args.max_chunks,
+            reset=args.reset,
+            allow_hash_fallback=args.allow_hash_fallback,
+        )
+    except Exception as exc:
+        print(f"Summarize failed: {exc}", file=sys.stderr)
+        return 2
+    print(f"Embedded {count} knowledge summaries → {config['rag'].get('summaries_collection')}")
+    return 0
+
+
+def cmd_knowledge_pipeline(args: argparse.Namespace) -> int:
+    config = load_config(args.config)
+    path = _resolve_existing(args.path)
+    if path is None:
+        print(f"Path not found: {args.path}", file=sys.stderr)
+        return 1
+    try:
+        stats = run_knowledge_pipeline(
+            path,
+            config,
+            skip_ingest=args.skip_ingest,
+            skip_summarize=args.skip_summarize,
+            skip_annotated=args.skip_annotated,
+            use_llm=not args.no_llm,
+            max_chunks_per_book=args.max_chunks,
+            allow_hash_fallback=args.allow_hash_fallback,
+            reset_summaries=args.reset_summaries,
+        )
+    except Exception as exc:
+        print(f"Knowledge pipeline failed: {exc}", file=sys.stderr)
+        return 2
+    print(
+        f"Pipeline done: ingested={stats['ingested']} "
+        f"summaries={stats['summaries']} annotated={stats['annotated']}"
+    )
+    if not args.no_export_mobile:
+        return cmd_export_mobile_pack(
+            argparse.Namespace(
+                config=args.config,
+                json_out=Path("data/derived/mobile_coach_pack.json"),
+                ts_out=None,
+                max_entries=120,
+                no_frequent_lines=False,
+            )
+        )
+    return 0
+
+
+def _default_mobile_ts_out() -> Path:
+    # experiments/chess-coach → workspace → side_projects/chess/mobile/...
+    root = Path(__file__).resolve().parents[2]
+    return (
+        root.parents[1]
+        / "side_projects"
+        / "chess"
+        / "mobile"
+        / "src"
+        / "engine"
+        / "gameCoach"
+        / "derivedCoachPack.ts"
+    )
+
+
+def cmd_export_mobile_pack(args: argparse.Namespace) -> int:
+    config = load_config(args.config)
+    ts_out = args.ts_out
+    if ts_out is None:
+        ts_out = _default_mobile_ts_out()
+    try:
+        pack = export_mobile_pack(
+            config,
+            json_out=args.json_out,
+            ts_out=ts_out,
+            max_entries=args.max_entries,
+            attach_frequent_lines=not args.no_frequent_lines,
+        )
+    except Exception as exc:
+        print(f"Export failed: {exc}", file=sys.stderr)
+        return 2
+    print(f"Mobile pack ready: {pack.get('entryCount', 0)} entries")
+    return 0
+
+
+def cmd_rag_hit_rate(args: argparse.Namespace) -> int:
+    import chess
+    import chess.pgn
+
+    from chess_coach.rag.synthesize_annotated import _parse_book_comment
+
+    config = load_config(args.config)
+    directory = _resolve_existing(args.pgn_dir) or Path(args.pgn_dir)
+    if not directory.exists():
+        print(f"PGN dir not found: {directory}", file=sys.stderr)
+        return 1
+
+    samples: list[dict[str, str]] = []
+    for path in sorted(directory.glob("*_bookwalk.pgn")):
+        if len(samples) >= args.limit:
+            break
+        with path.open(encoding="utf-8", errors="replace") as handle:
+            game = chess.pgn.read_game(handle)
+        if game is None:
+            continue
+        board = game.board()
+        node = game
+        while node.variations and len(samples) < args.limit:
+            nxt = node.variation(0)
+            fen = board.fen()
+            san = board.san(nxt.move)
+            has_book = bool(_parse_book_comment(nxt.comment or ""))
+            board.push(nxt.move)
+            if has_book:
+                samples.append(
+                    {
+                        "fen": fen,
+                        "san": san,
+                        "eco": game.headers.get("ECO", ""),
+                        "opening": game.headers.get("Opening", "")
+                        or game.headers.get("BookChapter", ""),
+                        "path": path.name,
+                    }
+                )
+            node = nxt
+
+    counts = {"summary": 0, "curated": 0, "draft": 0, "book": 0, "empty": 0, "total": 0}
+    lines = ["# RAG hit-rate sample", ""]
+    for sample in samples:
+        counts["total"] += 1
+        try:
+            passages = retrieve_for_position(
+                sample["fen"],
+                config,
+                san=sample["san"],
+                eco=sample["eco"],
+                opening=sample["opening"],
+                want_count=2,
+            )
+        except Exception as exc:
+            counts["empty"] += 1
+            lines.append(f"- `{sample['path']}` {sample['san']}: ERROR {exc}")
+            continue
+        if not passages:
+            counts["empty"] += 1
+            lines.append(f"- `{sample['path']}` {sample['san']}: empty")
+            continue
+        top = passages[0]
+        if top.source == "knowledge_summary":
+            counts["summary"] += 1
+            kind = "summary"
+        elif top.source == "annotated_game" and top.quality == "curated":
+            counts["curated"] += 1
+            kind = "curated"
+        elif top.source == "annotated_game":
+            counts["draft"] += 1
+            kind = "draft"
+        else:
+            counts["book"] += 1
+            kind = "book"
+        lines.append(
+            f"- `{sample['path']}` {sample['san']}: {kind} score={top.score:.3f} — {top.text[:90]}…"
+        )
+
+    summary = (
+        f"total={counts['total']} summary={counts['summary']} curated={counts['curated']} "
+        f"draft={counts['draft']} book={counts['book']} empty={counts['empty']}"
+    )
+    lines.insert(2, summary)
+    lines.insert(3, "")
+    report = "\n".join(lines) + "\n"
+    print(report)
+    if args.out:
+        out = args.out if args.out.is_absolute() else Path.cwd() / args.out
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(report, encoding="utf-8")
+        print(f"Wrote {out}")
     return 0
 
 
@@ -1026,6 +1352,16 @@ def main(argv: list[str] | None = None) -> int:
         return cmd_ingest(args)
     if args.command == "retag-patterns":
         return cmd_retag_patterns(args)
+    if args.command == "synthesize-annotated":
+        return cmd_synthesize_annotated(args)
+    if args.command == "summarize-knowledge":
+        return cmd_summarize_knowledge(args)
+    if args.command == "knowledge-pipeline":
+        return cmd_knowledge_pipeline(args)
+    if args.command == "export-mobile-pack":
+        return cmd_export_mobile_pack(args)
+    if args.command == "rag-hit-rate":
+        return cmd_rag_hit_rate(args)
     if args.command == "analyze":
         return cmd_analyze(args)
     if args.command == "sections":

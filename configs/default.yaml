@@ -27,10 +27,18 @@ ontology:
 rag:
   persist_dir: data/chroma
   collection: chess_books
+  annotated_collection: chess_annotated_positions
+  annotated_pgn_dir: data/annotated/bookwalk
+  annotated_top_k: 3
+  summaries_collection: chess_knowledge_summaries
+  summaries_dir: data/knowledge_summaries
+  summaries_top_k: 4
   top_k: 4
   top_k_opening: 5
   min_score: 0.45
   min_score_opening: 0.50
+  min_score_annotated: 0.38
+  min_score_summaries: 0.36
 chunk:
   max_chars: 700
   overlap_chars: 80
