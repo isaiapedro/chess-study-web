@@ -1,0 +1,120 @@
+{
+  "key_id": "piece.blockade",
+  "key_type": "piece",
+  "label": "Blockade",
+  "idea_count": 3,
+  "ideas": [
+    {
+      "idea_id": "piece.blockade#0",
+      "key_id": "piece.blockade",
+      "key_type": "piece",
+      "label": "Blockade",
+      "principle": "Restrain first, attack second",
+      "phase": "middlegame",
+      "summary": "A blockade stops a passed or isolated pawn and turns it into a target. Choose a blockader that can remain stable without becoming passive.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "E60",
+        "E90",
+        "D26",
+        "D42"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Sakline Mostafa, Sajid vs Barua, Oitijjo 2026 (E60)",
+        "Ushenina, Anna vs Fressinet, Laurent 2026 (E60)"
+      ],
+      "themes": [
+        "blockade",
+        "pawn structures"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings"
+      ],
+      "specificity": 1,
+      "features": [
+        "passed pawn",
+        "isolated pawn"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "piece.blockade#1",
+      "key_id": "piece.blockade",
+      "key_type": "piece",
+      "label": "Blockade",
+      "principle": "Match the blockader to the phase",
+      "phase": "endgame",
+      "summary": "Knights are often ideal blockaders because they can attack while occupying the square in front of the pawn. Kings and bishops become effective blockaders in simplified endings.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "E60",
+        "E90",
+        "D26",
+        "D42"
+      ],
+      "games": [
+        "Baryshpolets vs Turov 2012",
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]"
+      ],
+      "themes": [
+        "blockade",
+        "piece activity"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings"
+      ],
+      "specificity": 3,
+      "features": [
+        "knight blockader",
+        "king activity",
+        "bishop coordination"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "piece.blockade#2",
+      "key_id": "piece.blockade",
+      "key_type": "piece",
+      "label": "Blockade",
+      "principle": "Coordinate the blockade against multiple passers",
+      "phase": "endgame",
+      "summary": "Against connected or doubled passers, establish the blockade before they advance with tempo. Centralize the king or bishop so it stops the lead pawn, guards the second passer, and releases a rook from defensive duty.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "E60",
+        "E90",
+        "D26",
+        "D42"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927",
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]"
+      ],
+      "themes": [
+        "blockade",
+        "doubled pawns",
+        "passed pawn"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings"
+      ],
+      "specificity": 5,
+      "features": [
+        "connected passers",
+        "lead pawn",
+        "rook activity"
+      ],
+      "slots": {},
+      "conditions": []
+    }
+  ]
+}

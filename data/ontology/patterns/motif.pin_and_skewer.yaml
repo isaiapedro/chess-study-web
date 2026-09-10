@@ -1,0 +1,19 @@
+id: motif.pin_and_skewer
+label: Pin and Skewer
+phase: any
+family: tactics
+aliases:
+- pin
+- skewer
+- absolute pin
+keywords:
+- pin
+- skewer
+- pinned
+- x-ray
+rules_of_thumb:
+- Exploit linear tactical alignment.
+plans:
+- Exploit linear tactical alignment.
+related:
+- attack.initiative

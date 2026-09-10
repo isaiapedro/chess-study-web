@@ -1,0 +1,19 @@
+id: motif.intermediate_move
+label: Intermediate Move (Zwischenzug)
+phase: any
+family: tactics
+aliases:
+- zwischenzug
+- intermezzo
+- intermediate move
+keywords:
+- zwischenzug
+- intermezzo
+- intermediate move
+- in-between
+rules_of_thumb:
+- Unexpected intermezzo checks or counter-threats.
+plans:
+- Unexpected intermezzo checks or counter-threats.
+related:
+- attack.initiative

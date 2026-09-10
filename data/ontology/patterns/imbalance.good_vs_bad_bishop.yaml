@@ -1,0 +1,20 @@
+id: imbalance.good_vs_bad_bishop
+label: Good vs Bad Bishop
+phase: middlegame
+family: imbalance
+aliases:
+- good bishop
+- bad bishop
+- bad light-squared bishop
+keywords:
+- good bishop
+- bad bishop
+- bishop of the wrong color
+- pawns on same color
+rules_of_thumb:
+- Fix opponent pawns on the bishop's color complex.
+plans:
+- Improve or trade the bad bishop; fix enemy pawns.
+related:
+- positional.color_complexes
+- imbalance.bishop_pair

@@ -1,0 +1,20 @@
+id: imbalance.knight_vs_bishop
+label: Knight vs Bishop
+phase: middlegame
+family: imbalance
+aliases:
+- knight versus bishop
+- bishop vs knight
+- minor piece imbalance
+keywords:
+- knight vs bishop
+- bishop vs knight
+- outpost knight
+- open diagonal
+rules_of_thumb:
+- Closed positions/outposts vs open diagonal scope.
+plans:
+- 'Knight: outposts and closed play. Bishop: open and long diagonals.'
+related:
+- positional.outpost
+- imbalance.bishop_pair

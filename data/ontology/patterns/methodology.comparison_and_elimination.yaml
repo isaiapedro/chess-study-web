@@ -1,0 +1,19 @@
+id: methodology.comparison_and_elimination
+label: Comparison and Elimination
+phase: any
+family: methodology
+aliases:
+- comparison
+- elimination
+- prune
+keywords:
+- comparison
+- elimination
+- prune variations
+- inferior line
+rules_of_thumb:
+- Prune inferior variation trees.
+plans:
+- Prune inferior variation trees.
+related:
+- positional.prophylaxis

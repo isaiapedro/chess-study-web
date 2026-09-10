@@ -1,0 +1,156 @@
+{
+  "key_id": "opening.kings_indian",
+  "key_type": "opening",
+  "label": "King's Indian Defence",
+  "idea_count": 4,
+  "ideas": [
+    {
+      "idea_id": "opening.kings_indian#0",
+      "key_id": "opening.kings_indian",
+      "key_type": "opening",
+      "label": "King's Indian Defence",
+      "principle": "Allow space only when you can challenge its pawn base.",
+      "phase": "opening",
+      "summary": "The King's Indian Defence concedes central space so Black can attack it later. White usually expands on the queenside or in the center, while Black relies on the dark-squared bishop and breaks with ...e5 or ...c5 to generate dynamic counterplay.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "King's Indian Defence",
+        "E60-E99"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Sakline Mostafa, Sajid vs Barua, Oitijjo 2026 (E60)",
+        "Ushenina, Anna vs Fressinet, Laurent 2026 (E60)"
+      ],
+      "themes": [
+        "counterattack",
+        "space advantage",
+        "dark-squared bishop"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings"
+      ],
+      "specificity": 1,
+      "features": [
+        "kingside fianchetto",
+        "white pawn center"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "opening.kings_indian#1",
+      "key_id": "opening.kings_indian",
+      "key_type": "opening",
+      "label": "King's Indian Defence",
+      "principle": "Attack on the wing indicated by your pawn chain.",
+      "phase": "middlegame",
+      "summary": "In closed King's Indian structures, the pawn chains point toward opposite wings. White commonly advances b4-b5 and attacks c7 or d6, while Black plays ...f5-f4 and transfers pieces toward the white king; speed and piece coordination outweigh small material gains.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "King's Indian Defence",
+        "Classical Variation",
+        "E90-E99"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Sakline Mostafa, Sajid vs Barua, Oitijjo 2026 (E60)",
+        "Ushenina, Anna vs Fressinet, Laurent 2026 (E60)"
+      ],
+      "themes": [
+        "opposite-wing attacks",
+        "pawn chain",
+        "initiative"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings"
+      ],
+      "specificity": 2,
+      "features": [
+        "locked center",
+        "f5 break",
+        "b4-b5 break"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "opening.kings_indian#2",
+      "key_id": "opening.kings_indian",
+      "key_type": "opening",
+      "label": "King's Indian Defence",
+      "principle": "Create a second break when the first wing is sealed.",
+      "phase": "middlegame",
+      "summary": "Black's thematic ...f5 break in the King's Indian attacks e4 and can open the f-file. If the kingside remains closed, ...h5-h4 and a bishop transfer from g7 can create new entry points; if White blocks everything, Black should consider ...c6 and ...d5 to strike centrally.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "King's Indian Defence",
+        "E60-E99"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Sakline Mostafa, Sajid vs Barua, Oitijjo 2026 (E60)",
+        "Ushenina, Anna vs Fressinet, Laurent 2026 (E60)"
+      ],
+      "themes": [
+        "f-pawn break",
+        "file opening",
+        "secondary break"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings"
+      ],
+      "specificity": 4,
+      "features": [
+        "e4 pawn base",
+        "f-file",
+        "g7 bishop"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "opening.kings_indian#3",
+      "key_id": "opening.kings_indian",
+      "key_type": "opening",
+      "label": "King's Indian Defence",
+      "principle": "Use a passed pawn as a restraint before advancing it.",
+      "phase": "middlegame",
+      "summary": "King's Indian endgames can reverse the opening's attacking logic: once queens are gone, Black's king and dark-squared bishop must become active. A protected passed pawn can hold defenders in place while the king crosses the board to attack the queenside.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "King's Indian Defence",
+        "E60-E99"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Sakline Mostafa, Sajid vs Barua, Oitijjo 2026 (E60)",
+        "Ushenina, Anna vs Fressinet, Laurent 2026 (E60)"
+      ],
+      "themes": [
+        "passed pawn",
+        "king activity",
+        "endgame transition"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings"
+      ],
+      "specificity": 5,
+      "features": [
+        "protected passed pawn",
+        "active king",
+        "dark-squared bishop"
+      ],
+      "slots": {},
+      "conditions": []
+    }
+  ]
+}

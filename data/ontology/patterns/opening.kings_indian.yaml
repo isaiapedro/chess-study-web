@@ -1,15 +1,17 @@
 id: opening.kings_indian
 label: King's Indian Defence
 phase: opening
-family: indian
+family: opening
 aliases:
 - king's indian
 - kings indian
+- kid
 keywords:
 - King's Indian
-- Kings Indian
-- KID
-- '...g6 ...Bg7 ...d6'
+- Mar del Plata
+- Sämisch
+- Samisch
+- Four Pawns
 eco_prefixes:
 - E60
 - E61
@@ -55,18 +57,11 @@ opening_tokens:
 - king's indian
 - kings indian
 - kid
-rules_of_thumb:
-- Black fianchetto and often strikes with ...e5 or ...c5; kingside attacks are thematic after a closed
-  centre.
-- White chooses Classical, Sämisch, or Fianchetto setups — space vs Black's dynamic breaks.
-plans:
-- Black — ...f5 attack or queenside counterplay depending on the line.
-- White — central bind, queenside expansion, meet ...f5 with piece play.
-related:
-- imbalance.space
-- imbalance.king_safety
-- structure.pawn_chain
 detect: eco_or_opening
-exemplars:
-- Carlsen vs McShane, London 2009 (chapter)
-- Fischer vs Myagmarsuren, Sousse 1967
+rules_of_thumb:
+- Mar del Plata, Classical, Sämisch, Four Pawns.
+plans:
+- Kingside attack vs queenside space.
+related:
+- structure.pawn_chain
+- attack.king_safety

@@ -1,0 +1,183 @@
+{
+  "key_id": "opening.scandinavian",
+  "key_type": "opening",
+  "label": "Scandinavian Defence",
+  "idea_count": 4,
+  "ideas": [
+    {
+      "idea_id": "opening.scandinavian#0",
+      "key_id": "opening.scandinavian",
+      "key_type": "opening",
+      "label": "Scandinavian Defence",
+      "principle": "Accept a tempo loss only for a clear structural goal.",
+      "phase": "opening",
+      "summary": "The Scandinavian Defence challenges White's e4-pawn immediately and forces an early central exchange. Black accepts some loss of time with the queen in exchange for a clear structure, then aims to complete development and strike at White's center.",
+      "san_lines": [
+        "e4 d5 exd5 Qxd5"
+      ],
+      "fens": [
+        "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1",
+        "rnbqkbnr/ppp1pppp/8/3p4/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2",
+        "rnbqkbnr/ppp1pppp/8/3P4/8/8/PPPP1PPP/RNBQKBNR b KQkq - 0 2"
+      ],
+      "openings": [
+        "Scandinavian Defence",
+        "B01",
+        "C00",
+        "C11"
+      ],
+      "games": [
+        "Naidon, Pietro Weber vs Born, Ary 2026 (C00)",
+        "Eslava Cordoba, Salome vs Rodriguez Patino, Santiago 2026 (C00)",
+        "Surkeev, Shumkar vs Fakhriddinxujaev, Umarxon 2026 (C11)",
+        "Rozman, Levy vs Song, Julien 2026 (C11)"
+      ],
+      "themes": [
+        "early central challenge",
+        "queen development",
+        "pawn structure"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide",
+        "FCO: Fundamental Chess Openings",
+        "Mastering Opening Strategy",
+        "Pawn structure chess"
+      ],
+      "specificity": 1,
+      "features": [
+        "open d-file",
+        "white central space"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "opening.scandinavian#1",
+      "key_id": "opening.scandinavian",
+      "key_type": "opening",
+      "label": "Scandinavian Defence",
+      "principle": "Use the open bishop diagonal before fixing the pawn chain.",
+      "phase": "opening",
+      "summary": "Scandinavian structures often resemble the Caro-Kann or Slav: Black develops the light-squared bishop before ...e6 and builds a compact position. The main freeing ideas are ...c5 and ...e5, while careless queen moves can leave Black behind in development.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Scandinavian Defence",
+        "B01",
+        "C00",
+        "C11"
+      ],
+      "games": [
+        "Naidon, Pietro Weber vs Born, Ary 2026 (C00)",
+        "Eslava Cordoba, Salome vs Rodriguez Patino, Santiago 2026 (C00)",
+        "Surkeev, Shumkar vs Fakhriddinxujaev, Umarxon 2026 (C11)",
+        "Rozman, Levy vs Song, Julien 2026 (C11)"
+      ],
+      "themes": [
+        "bishop development",
+        "central break",
+        "tempo"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide",
+        "FCO: Fundamental Chess Openings",
+        "Mastering Opening Strategy",
+        "Pawn structure chess"
+      ],
+      "specificity": 2,
+      "features": [
+        "caro-slav structure",
+        "bishop outside chain"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "opening.scandinavian#2",
+      "key_id": "opening.scandinavian",
+      "key_type": "opening",
+      "label": "Scandinavian Defence",
+      "principle": "Place the queen where it supports breaks without blocking development.",
+      "phase": "opening",
+      "summary": "In ...Qd6 Scandinavian setups, Black's queen supports e5 and kingside castling but can obstruct the dark-squared bishop. Black should coordinate ...c6, ...Qc7 or ...Qc7-like regrouping, and ...e5 without allowing White to gain tempi through Bf4 or Ne4.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Scandinavian Defence",
+        "Gubinsky-Melts Defence",
+        "B01",
+        "C00"
+      ],
+      "games": [
+        "Naidon, Pietro Weber vs Born, Ary 2026 (C00)",
+        "Eslava Cordoba, Salome vs Rodriguez Patino, Santiago 2026 (C00)",
+        "Surkeev, Shumkar vs Fakhriddinxujaev, Umarxon 2026 (C11)",
+        "Rozman, Levy vs Song, Julien 2026 (C11)"
+      ],
+      "themes": [
+        "queen placement",
+        "piece coordination",
+        "e5 break"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide",
+        "FCO: Fundamental Chess Openings",
+        "Mastering Opening Strategy",
+        "Pawn structure chess"
+      ],
+      "specificity": 4,
+      "features": [
+        "queen on d6",
+        "c6 support",
+        "central break"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "opening.scandinavian#3",
+      "key_id": "opening.scandinavian",
+      "key_type": "opening",
+      "label": "Scandinavian Defence",
+      "principle": "Blockade a passed pawn before it reaches the sixth rank.",
+      "phase": "middlegame",
+      "summary": "Scandinavian endgames can favor Black when the opening's early exchange leaves a sound, easy-to-defend structure. Still, passed pawns must be blockaded actively: the king and knight should reach central squares before an advanced pawn forces a bishop sacrifice at promotion.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Scandinavian Defence",
+        "B01",
+        "C00",
+        "C11"
+      ],
+      "games": [
+        "Naidon, Pietro Weber vs Born, Ary 2026 (C00)",
+        "Eslava Cordoba, Salome vs Rodriguez Patino, Santiago 2026 (C00)",
+        "Surkeev, Shumkar vs Fakhriddinxujaev, Umarxon 2026 (C11)",
+        "Rozman, Levy vs Song, Julien 2026 (C11)"
+      ],
+      "themes": [
+        "passed pawn",
+        "blockade",
+        "endgame"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide",
+        "FCO: Fundamental Chess Openings",
+        "Mastering Opening Strategy",
+        "Pawn structure chess"
+      ],
+      "specificity": 5,
+      "features": [
+        "central passed pawn",
+        "minor-piece ending"
+      ],
+      "slots": {},
+      "conditions": []
+    }
+  ]
+}

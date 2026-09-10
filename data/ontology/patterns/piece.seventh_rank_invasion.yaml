@@ -1,0 +1,20 @@
+id: piece.seventh_rank_invasion
+label: Seventh-Rank Invasion
+phase: middlegame
+family: piece
+aliases:
+- seventh rank
+- 7th rank
+- rook on the seventh
+keywords:
+- seventh rank
+- 7th rank
+- eighth rank
+- rook invasion
+- doubling rooks
+rules_of_thumb:
+- Doubling rooks or penetrating on the 7th/8th rank.
+plans:
+- Doubling rooks or penetrating on the 7th/8th rank.
+related:
+- piece.coordination

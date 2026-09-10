@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import re
 import sys
 from pathlib import Path
@@ -15,6 +16,8 @@ from chess_coach.rag.ingest import ingest_path, retag_patterns
 from chess_coach.rag.preflight import format_preflight_report, run_preflight
 from chess_coach.rag.retrieve import passages_to_nuggets, retrieve_for_position, retrieve_passages
 from chess_coach.rag.export_mobile_pack import export_mobile_pack
+from chess_coach.rag.key_bucket_summarize import summarize_by_key_path
+from chess_coach.rag.summarize_key_ideas import summarize_key_ideas_path
 from chess_coach.rag.summarize_knowledge import (
     run_knowledge_pipeline,
     summarize_knowledge_path,
@@ -69,6 +72,11 @@ def _build_parser() -> argparse.ArgumentParser:
     ingest = sub.add_parser("ingest", help="Ingest chess books into Chroma with real embeddings")
     ingest.add_argument("path", type=Path, help="Book file or directory")
     ingest.add_argument("--reset", action="store_true", help="Delete existing collection first")
+    ingest.add_argument(
+        "--force",
+        action="store_true",
+        help="Re-embed books even if already fully ingested",
+    )
     ingest.add_argument(
         "--allow-hash-fallback",
         action="store_true",
@@ -426,6 +434,11 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     summarize.add_argument("--reset", action="store_true", help="Reset summaries collection")
     summarize.add_argument(
+        "--force",
+        action="store_true",
+        help="Re-summarize even if jsonl already exists for a book",
+    )
+    summarize.add_argument(
         "--no-llm",
         action="store_true",
         help="Extractive summaries only (skip Ollama chat)",
@@ -434,7 +447,8 @@ def _build_parser() -> argparse.ArgumentParser:
         "--max-chunks",
         type=int,
         default=24,
-        help="Max chunks per book to summarize (default: 24)",
+        help="Max teachable summaries per book, sampled across whole book "
+        "(default: 24). Use 0 for every teachable chunk.",
     )
     summarize.add_argument(
         "--allow-hash-fallback",
@@ -442,9 +456,83 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Allow weak hash embeddings if Ollama unavailable",
     )
 
+    key_sum = sub.add_parser(
+        "summarize-by-key",
+        help="Elect chunks → soft-key docs (append) → LLM summary per key → embed",
+    )
+    key_sum.add_argument(
+        "path",
+        type=Path,
+        nargs="?",
+        default=Path("data/books"),
+        help="Book file or directory (default: data/books)",
+    )
+    key_sum.add_argument("--reset", action="store_true", help="Reset key buckets + summaries")
+    key_sum.add_argument(
+        "--force",
+        action="store_true",
+        help="Rebuild buckets and re-run LLM even if key summary exists",
+    )
+    key_sum.add_argument("--no-llm", action="store_true", help="Extractive key summaries only")
+    key_sum.add_argument(
+        "--max-chunks",
+        type=int,
+        default=48,
+        help="Max elected teachable chunks per book (0 = all)",
+    )
+    key_sum.add_argument(
+        "--max-excerpts-per-key",
+        type=int,
+        default=16,
+        help="Max excerpts fed to the LLM per soft key",
+    )
+    key_sum.add_argument(
+        "--min-chunks-per-key",
+        type=int,
+        default=2,
+        help="Skip keys with fewer elected chunks",
+    )
+    key_sum.add_argument(
+        "--allow-hash-fallback",
+        action="store_true",
+        help="Allow weak hash embeddings if Ollama unavailable",
+    )
+
+    key_ideas = sub.add_parser(
+        "summarize-key-ideas",
+        help="LLM: soft-key buckets → principle ideas + FEN/SAN/openings/games",
+    )
+    key_ideas.add_argument(
+        "--reset",
+        action="store_true",
+        help="Wipe existing key ideas and rebuild",
+    )
+    key_ideas.add_argument(
+        "--force",
+        action="store_true",
+        help="Rebuild ideas even when a key already has ideas",
+    )
+    key_ideas.add_argument(
+        "--no-llm",
+        action="store_true",
+        help="Extractive idea fallback only (no Ollama)",
+    )
+    key_ideas.add_argument(
+        "--max-ideas",
+        type=int,
+        default=6,
+        help="Max composed notes per soft key (default: 6)",
+    )
+    key_ideas.add_argument(
+        "--only-key",
+        type=str,
+        default=None,
+        help="Rebuild a single soft key id",
+    )
+
     pipeline = sub.add_parser(
         "knowledge-pipeline",
-        help="ingest PDFs → summarize+PGN-link → embed → synthesize annotated",
+        help="ingest → summarize → soft-key buckets → synthesize annotated",
     )
     pipeline.add_argument(
         "path",
@@ -455,9 +543,34 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     pipeline.add_argument("--skip-ingest", action="store_true")
     pipeline.add_argument("--skip-summarize", action="store_true")
+    pipeline.add_argument(
+        "--skip-key-buckets",
+        action="store_true",
+        help="Skip soft-key document build + per-key LLM summaries",
+    )
     pipeline.add_argument("--skip-annotated", action="store_true")
+    pipeline.add_argument(
+        "--force-ingest",
+        action="store_true",
+        help="Re-embed books even if already fully in Chroma",
+    )
+    pipeline.add_argument(
+        "--force-summarize",
+        action="store_true",
+        help="Re-run LLM summarize even if jsonl already exists",
+    )
+    pipeline.add_argument(
+        "--force-key-buckets",
+        action="store_true",
+        help="Rebuild soft-key docs and re-run per-key LLM summaries",
+    )
     pipeline.add_argument("--no-llm", action="store_true")
-    pipeline.add_argument("--max-chunks", type=int, default=24)
+    pipeline.add_argument(
+        "--max-chunks",
+        type=int,
+        default=24,
+        help="Max teachable summaries per book across whole book (0 = all)",
+    )
     pipeline.add_argument("--reset-summaries", action="store_true")
     pipeline.add_argument("--allow-hash-fallback", action="store_true")
     pipeline.add_argument(
@@ -482,16 +595,93 @@ def _build_parser() -> argparse.ArgumentParser:
         default=Path("data/derived/mobile_coach_pack.json"),
     )
     export_pack.add_argument(
+        "--asset-out",
+        type=Path,
+        default=None,
+        help="Write Expo bundled asset JSON (default: chess mobile assets/coach/mobile_coach_pack.json)",
+    )
+    export_pack.add_argument(
         "--ts-out",
         type=Path,
         default=None,
-        help="Write TypeScript module for mobile (default: chess mobile derivedCoachPack.ts)",
+        help="Write types-only TS module (default: chess mobile derivedCoachPack.ts)",
     )
-    export_pack.add_argument("--max-entries", type=int, default=120)
+    export_pack.add_argument(
+        "--max-entries",
+        type=int,
+        default=300,
+        help="Max pack cards (default: 300). Use 0 for every available entry.",
+    )
+    export_pack.add_argument(
+        "--source",
+        choices=["auto", "key", "chunk"],
+        default="auto",
+        help="Pack source: soft-key summaries (default auto), or legacy per-chunk",
+    )
     export_pack.add_argument(
         "--no-frequent-lines",
         action="store_true",
         help="Skip masters frequent-line sampling",
+    )
+    export_pack.add_argument(
+        "--no-bookwalk",
+        action="store_true",
+        help="Skip FEN-locked bookwalk passage attach",
+    )
+    export_pack.add_argument(
+        "--bookwalk-dir",
+        type=Path,
+        default=None,
+        help="Bookwalk PGN dir (default: data/annotated/bookwalk)",
+    )
+    export_pack.add_argument(
+        "--moments",
+        type=Path,
+        default=None,
+        help="Annotate/dump JSON (metrics_all.json) for offline LLM comments",
+    )
+    export_pack.add_argument(
+        "--notes-schema-out",
+        type=Path,
+        default=None,
+        help="Write merged notes_schema.json (default: mobile assets/coach/notes_schema.json)",
+    )
+    export_pack.add_argument(
+        "--no-offline-llm",
+        action="store_true",
+        help="Stitch comments from engine facts; skip Ollama",
+    )
+    export_pack.add_argument(
+        "--no-game-specific-comments",
+        action="store_true",
+        help="Only write reusable pattern notes (no ply/SAN guards)",
+    )
+
+    offline = sub.add_parser(
+        "generate-offline-comments",
+        help="LLM comments from a moments dump (sidecar JSON; not notes_schema)",
+    )
+    offline.add_argument(
+        "--moments",
+        type=Path,
+        default=None,
+        help="Annotate/dump JSON (default: chess samples/metrics_all.json)",
+    )
+    offline.add_argument(
+        "--notes-schema-out",
+        type=Path,
+        default=None,
+        help="Merged notes_schema.json path",
+    )
+    offline.add_argument(
+        "--no-offline-llm",
+        action="store_true",
+        help="Stitch from engine facts; skip Ollama",
+    )
+    offline.add_argument(
+        "--no-game-specific-comments",
+        action="store_true",
+        help="Only write reusable pattern notes",
     )
 
     return parser
@@ -531,6 +721,7 @@ def cmd_ingest(args: argparse.Namespace) -> int:
             config,
             reset=args.reset,
             allow_hash_fallback=args.allow_hash_fallback,
+            force=args.force,
         )
     except Exception as exc:
         print(f"Ingest failed (need Ollama embed model?): {exc}", file=sys.stderr)
@@ -583,11 +774,61 @@ def cmd_summarize_knowledge(args: argparse.Namespace) -> int:
             max_chunks_per_book=args.max_chunks,
             reset=args.reset,
             allow_hash_fallback=args.allow_hash_fallback,
+            force=args.force or args.reset,
         )
     except Exception as exc:
         print(f"Summarize failed: {exc}", file=sys.stderr)
         return 2
     print(f"Embedded {count} knowledge summaries → {config['rag'].get('summaries_collection')}")
+    return 0
+
+
+def cmd_summarize_by_key(args: argparse.Namespace) -> int:
+    config = load_config(args.config)
+    path = _resolve_existing(args.path)
+    if path is None:
+        print(f"Path not found: {args.path}", file=sys.stderr)
+        return 1
+    try:
+        stats = summarize_by_key_path(
+            path,
+            config,
+            use_llm=not args.no_llm,
+            max_chunks_per_book=args.max_chunks,
+            max_excerpts_per_key=args.max_excerpts_per_key,
+            min_chunks_per_key=args.min_chunks_per_key,
+            force=args.force or args.reset,
+            reset=args.reset,
+            allow_hash_fallback=args.allow_hash_fallback,
+        )
+    except Exception as exc:
+        print(f"Summarize-by-key failed: {exc}", file=sys.stderr)
+        return 2
+    print(
+        f"Keys={stats['keys']} summaries={stats['summaries']} "
+        f"embedded={stats['embedded']} → {config['rag'].get('key_summaries_collection')}"
+    )
+    return 0
+
+
+def cmd_summarize_key_ideas(args: argparse.Namespace) -> int:
+    config = load_config(args.config)
+    try:
+        stats = summarize_key_ideas_path(
+            config,
+            use_llm=not args.no_llm,
+            force=args.force or args.reset,
+            reset=args.reset,
+            max_ideas=args.max_ideas,
+            only_key=args.only_key,
+        )
+    except Exception as exc:
+        print(f"Summarize-key-ideas failed: {exc}", file=sys.stderr)
+        return 2
+    print(
+        f"Ideas={stats['ideas']} keys={stats['keys_built']} "
+        f"skipped={stats['keys_skipped']} by_phase={stats['by_phase']} → {stats['out']}"
+    )
     return 0
 
 
@@ -603,40 +844,49 @@ def cmd_knowledge_pipeline(args: argparse.Namespace) -> int:
             config,
             skip_ingest=args.skip_ingest,
             skip_summarize=args.skip_summarize,
+            skip_key_buckets=args.skip_key_buckets,
             skip_annotated=args.skip_annotated,
             use_llm=not args.no_llm,
             max_chunks_per_book=args.max_chunks,
             allow_hash_fallback=args.allow_hash_fallback,
             reset_summaries=args.reset_summaries,
+            force_ingest=args.force_ingest,
+            force_summarize=args.force_summarize,
+            force_key_buckets=args.force_key_buckets,
         )
     except Exception as exc:
         print(f"Knowledge pipeline failed: {exc}", file=sys.stderr)
         return 2
     print(
         f"Pipeline done: ingested={stats['ingested']} "
-        f"summaries={stats['summaries']} annotated={stats['annotated']}"
+        f"summaries={stats['summaries']} "
+        f"key_summaries={stats.get('key_summaries', 0)} "
+        f"annotated={stats['annotated']}"
     )
     if not args.no_export_mobile:
         return cmd_export_mobile_pack(
             argparse.Namespace(
                 config=args.config,
                 json_out=Path("data/derived/mobile_coach_pack.json"),
+                asset_out=None,
                 ts_out=None,
-                max_entries=120,
+                max_entries=300,
                 no_frequent_lines=False,
+                source="auto",
             )
         )
     return 0
 
 
-def _default_mobile_ts_out() -> Path:
-    # experiments/chess-coach → workspace → side_projects/chess/mobile/...
+def _default_mobile_root() -> Path:
+    # experiments/chess-coach → workspace → side_projects/chess/mobile
     root = Path(__file__).resolve().parents[2]
+    return root.parents[1] / "side_projects" / "chess" / "mobile"
+
+
+def _default_mobile_ts_out() -> Path:
     return (
-        root.parents[1]
-        / "side_projects"
-        / "chess"
-        / "mobile"
+        _default_mobile_root()
         / "src"
         / "engine"
         / "gameCoach"
@@ -644,23 +894,89 @@ def _default_mobile_ts_out() -> Path:
     )
 
 
+def _default_mobile_asset_out() -> Path:
+    return _default_mobile_root() / "assets" / "coach" / "mobile_coach_pack.json"
+
+
+def _default_moments_json() -> Path | None:
+    path = _default_mobile_root().parent / "samples" / "metrics_all.json"
+    return path if path.exists() else None
+
+
 def cmd_export_mobile_pack(args: argparse.Namespace) -> int:
     config = load_config(args.config)
     ts_out = args.ts_out
     if ts_out is None:
         ts_out = _default_mobile_ts_out()
+    asset_out = getattr(args, "asset_out", None)
+    if asset_out is None:
+        asset_out = _default_mobile_asset_out()
     try:
         pack = export_mobile_pack(
             config,
             json_out=args.json_out,
+            asset_out=asset_out,
             ts_out=ts_out,
             max_entries=args.max_entries,
             attach_frequent_lines=not args.no_frequent_lines,
+            attach_bookwalk=not getattr(args, "no_bookwalk", False),
+            bookwalk_dir=getattr(args, "bookwalk_dir", None),
+            source=getattr(args, "source", "auto"),
+            moments_json=getattr(args, "moments", None),
+            notes_schema_out=getattr(args, "notes_schema_out", None),
+            use_offline_llm=not getattr(args, "no_offline_llm", False),
+            game_specific_comments=not getattr(args, "no_game_specific_comments", False),
         )
     except Exception as exc:
         print(f"Export failed: {exc}", file=sys.stderr)
         return 2
     print(f"Mobile pack ready: {pack.get('entryCount', 0)} entries")
+    return 0
+
+
+def cmd_generate_offline_comments(args: argparse.Namespace) -> int:
+    from chess_coach.rag.offline_llm_comments import (
+        generate_offline_comment_notes,
+        load_metrics_json,
+        merge_notes_schema,
+        write_notes_schema,
+    )
+
+    config = load_config(args.config)
+    moments = getattr(args, "moments", None) or _default_moments_json()
+    if moments is None:
+        print("metrics_all.json not found; pass --moments", file=sys.stderr)
+        return 1
+    path = moments if Path(moments).is_absolute() else Path(moments)
+    resolved = path if path.exists() else _resolve_existing(path)
+    if resolved is None or not resolved.exists():
+        print(f"Moments JSON not found: {moments}", file=sys.stderr)
+        return 1
+    schema_out = getattr(args, "notes_schema_out", None)
+    data = load_metrics_json(resolved)
+    generated = generate_offline_comment_notes(
+        data,
+        config,
+        use_llm=not getattr(args, "no_offline_llm", False),
+        game_specific=not getattr(args, "no_game_specific_comments", False),
+    )
+    if schema_out is not None:
+        schema_path = schema_out if Path(schema_out).is_absolute() else Path(schema_out)
+        if schema_path.exists():
+            schema = json.loads(schema_path.read_text(encoding="utf-8"))
+        else:
+            schema = {"version": 1, "notes": []}
+        merged = merge_notes_schema(schema, generated)
+        write_notes_schema(merged, schema_path)
+        print(f"Wrote {len(generated)} offline comments → {schema_path}")
+        return 0
+    out_path = resolved.with_suffix(".comments.json")
+    out_path.write_text(
+        json.dumps({"notes": generated}, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    print(f"Wrote {len(generated)} game-specific comments → {out_path}")
+    print("App comments come from analyze-time /api/v1/coach/comments, not notes_schema.")
     return 0
 
 
@@ -1356,10 +1672,16 @@ def main(argv: list[str] | None = None) -> int:
         return cmd_synthesize_annotated(args)
     if args.command == "summarize-knowledge":
         return cmd_summarize_knowledge(args)
+    if args.command == "summarize-by-key":
+        return cmd_summarize_by_key(args)
+    if args.command == "summarize-key-ideas":
+        return cmd_summarize_key_ideas(args)
     if args.command == "knowledge-pipeline":
         return cmd_knowledge_pipeline(args)
     if args.command == "export-mobile-pack":
         return cmd_export_mobile_pack(args)
+    if args.command == "generate-offline-comments":
+        return cmd_generate_offline_comments(args)
     if args.command == "rag-hit-rate":
         return cmd_rag_hit_rate(args)
     if args.command == "analyze":

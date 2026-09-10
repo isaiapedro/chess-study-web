@@ -1,0 +1,18 @@
+id: positional.outpost
+label: Outpost
+phase: middlegame
+family: positional
+aliases:
+- outpost
+- strong square
+keywords:
+- outpost
+- strong square
+- hole
+rules_of_thumb:
+- Establish pieces on weak central or advanced squares.
+plans:
+- Establish pieces on weak central or advanced squares.
+related:
+- imbalance.knight_vs_bishop
+- piece.blockade

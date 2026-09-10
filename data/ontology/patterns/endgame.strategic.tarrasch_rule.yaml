@@ -1,0 +1,17 @@
+id: endgame.strategic.tarrasch_rule
+label: Tarrasch Rule
+phase: endgame
+family: endgame_strategic
+aliases:
+- tarrasch rule
+- rook behind passed pawn
+keywords:
+- tarrasch
+- rook behind
+- behind the passer
+rules_of_thumb:
+- Place rooks behind passed pawns.
+plans:
+- Place rooks behind passed pawns.
+related:
+- structure.passed_pawn

@@ -1,0 +1,23 @@
+id: opening.scandinavian
+label: Scandinavian Defence
+phase: opening
+family: opening
+aliases:
+- scandinavian
+- center counter
+keywords:
+- Scandinavian
+- Center Counter
+- '...d5'
+eco_prefixes:
+- B01
+opening_tokens:
+- scandinavian
+- center counter
+detect: eco_or_opening
+rules_of_thumb:
+- Early ...d5 vs e4; queen early or modern setups.
+plans:
+- Pressure e4; develop rapidly.
+related:
+- opening.caro_kann

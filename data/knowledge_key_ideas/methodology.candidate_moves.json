@@ -1,0 +1,107 @@
+{
+  "key_id": "methodology.candidate_moves",
+  "key_type": "methodology",
+  "label": "Candidate Moves",
+  "idea_count": 3,
+  "ideas": [
+    {
+      "idea_id": "methodology.candidate_moves#0",
+      "key_id": "methodology.candidate_moves",
+      "key_type": "methodology",
+      "label": "Candidate Moves",
+      "principle": "Build candidates before calculating",
+      "phase": "any",
+      "summary": "Before calculating, list a small set of moves that answer the position's most urgent need: checks, captures, threats, defensive resources, and improving moves.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Radoslaw Wojtaszek vs Alexei Fedorov 2012 (E62) [bookwalk]",
+        "Volodin, Alexandr E. vs Riazantsev, Alexander 2026 (B12)"
+      ],
+      "themes": [
+        "candidate moves",
+        "calculation"
+      ],
+      "source_books": [
+        "Everyones First Chess Workbook Fundamental Tactics and Checkmates for Improvers - 738 Practical Exercises",
+        "Playing the Petroff",
+        "Pump Up Your Rating"
+      ],
+      "specificity": 1,
+      "features": [],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "methodology.candidate_moves#1",
+      "key_id": "methodology.candidate_moves",
+      "key_type": "methodology",
+      "label": "Candidate Moves",
+      "principle": "Balance forcing and quiet candidates",
+      "phase": "middlegame",
+      "summary": "Compare forcing moves with quiet alternatives. A move that creates immediate pressure can outrank a slow improvement, but only after checking the opponent's strongest reply.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [],
+      "games": [
+        "Baryshpolets vs Turov 2012",
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]"
+      ],
+      "themes": [
+        "candidate moves",
+        "decision making"
+      ],
+      "source_books": [
+        "Everyones First Chess Workbook Fundamental Tactics and Checkmates for Improvers - 738 Practical Exercises",
+        "Playing the Petroff",
+        "Pump Up Your Rating"
+      ],
+      "specificity": 3,
+      "features": [
+        "initiative",
+        "opponent threats"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "methodology.candidate_moves#2",
+      "key_id": "methodology.candidate_moves",
+      "key_type": "methodology",
+      "label": "Candidate Moves",
+      "principle": "Generate candidates by function",
+      "phase": "endgame",
+      "summary": "When one pawn is attacked and another can be captured, include defending, counterattacking, and changing the pawn structure as separate candidates. Calculate each through the opponent's most forcing response before comparing outcomes.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927",
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]"
+      ],
+      "themes": [
+        "candidate moves",
+        "endgame technique",
+        "calculation"
+      ],
+      "source_books": [
+        "Everyones First Chess Workbook Fundamental Tactics and Checkmates for Improvers - 738 Practical Exercises",
+        "Playing the Petroff",
+        "Pump Up Your Rating"
+      ],
+      "specificity": 5,
+      "features": [
+        "attacked pawn",
+        "counterattack",
+        "pawn structure"
+      ],
+      "slots": {},
+      "conditions": []
+    }
+  ]
+}

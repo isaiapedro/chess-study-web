@@ -1,22 +1,17 @@
 id: structure.doubled_pawns
 label: Doubled Pawns
-phase: any
+phase: middlegame
 family: chess_structures
 aliases:
 - doubled pawns
 keywords:
 - doubled pawns
-- doubled c-pawns
-- structural weakness
+- doubled pawn
 rules_of_thumb:
-- Doubled pawns are often static weaknesses but can open files for rooks.
-- Trade into endgames only if the doubled complex is not easily targeted.
-- Sometimes accepted voluntarily for bishop pair or open lines.
+- Dynamic doubled-pawn breaks vs structural weakness.
 plans:
-- 'Owner: use the open file, undouble if clean chance appears.'
-- 'Opponent: fix and pressure the front pawn of the double.'
+- Use open file and activity.
+- Opponent fix and target the doubled file.
 related:
-- imbalance.bishop_pair
-- structure.open_c_file
-detect: board_doubled_pawns
-exemplars: []
+- imbalance.material_asymmetry
+detect: board_doubled

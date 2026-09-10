@@ -1,0 +1,155 @@
+{
+  "key_id": "endgame.strategic.active_king",
+  "key_type": "endgame",
+  "label": "Active King",
+  "idea_count": 3,
+  "ideas": [
+    {
+      "idea_id": "endgame.strategic.active_king#0",
+      "key_id": "endgame.strategic.active_king",
+      "key_type": "endgame",
+      "label": "Active King",
+      "principle": "Activate the king when tactical danger has subsided.",
+      "phase": "endgame",
+      "summary": "- Centralize the king to attack pawns, support passers, and deny entry squares. - Do not rush pawn pushes while the king still sits on the back rank.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]"
+      ],
+      "themes": [
+        "endgame.strategic.active_king",
+        "piece.simplification"
+      ],
+      "source_books": [
+        "Dvoretsky's Endgame Manual",
+        "Mastering Endgame Strategy",
+        "My Great Predecessors - Volume 4",
+        "Small Steps to Giant Improvement: Master Pawn Play in Chess"
+      ],
+      "specificity": 1,
+      "features": [
+        "reduced-material",
+        "king-entry-squares",
+        "weak-pawns"
+      ],
+      "slots": {
+        "worked": "the ending simplified enough for the king to become a fighting piece",
+        "attention": "the king is still too passive to escort pawns or seize key squares",
+        "lesson": "centralize the king once tactical danger has subsided",
+        "plan": "bring the king forward before further pawn advances"
+      },
+      "conditions": [
+        {
+          "softKey": "endgame.strategic.active_king",
+          "polarity": "any"
+        },
+        {
+          "metric": "king_centralization",
+          "polarity": "bad"
+        },
+        {
+          "metric": "vector_king_mechanics",
+          "polarity": "bad"
+        }
+      ]
+    },
+    {
+      "idea_id": "endgame.strategic.active_king#1",
+      "key_id": "endgame.strategic.active_king",
+      "key_type": "endgame",
+      "label": "Active King",
+      "principle": "Convert king activity into restriction before changing the pawn structure.",
+      "phase": "endgame",
+      "summary": "- Secure a central outpost and restrict the enemy king first. - Only then create or advance a passed pawn.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]"
+      ],
+      "themes": [
+        "endgame.strategic.active_king",
+        "structure.passed_pawn"
+      ],
+      "source_books": [
+        "Dvoretsky's Endgame Manual",
+        "Mastering Endgame Strategy",
+        "My Great Predecessors - Volume 4",
+        "Small Steps to Giant Improvement: Master Pawn Play in Chess"
+      ],
+      "specificity": 3,
+      "features": [
+        "central-king-outpost",
+        "opposition",
+        "pawn-majority"
+      ],
+      "slots": {
+        "worked": "your king already claimed useful central ground",
+        "attention": "the pawn structure still needs changing only after the enemy king is restricted",
+        "lesson": "convert king activity into restriction before changing the pawn structure",
+        "plan": "fix a passer only after the opposing king is cut off"
+      },
+      "conditions": [
+        {
+          "softKey": "endgame.strategic.active_king",
+          "polarity": "good"
+        },
+        {
+          "metric": "conversion_state",
+          "polarity": "good"
+        }
+      ]
+    },
+    {
+      "idea_id": "endgame.strategic.active_king#2",
+      "key_id": "endgame.strategic.active_king",
+      "key_type": "endgame",
+      "label": "Active King",
+      "principle": "Use a pawn move to create a protected route for the king.",
+      "phase": "endgame",
+      "summary": "- Prefer a tempo-gaining pawn move that opens the king's route. - Avoid pawn rushes that expose new weaknesses before entry.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]"
+      ],
+      "themes": [
+        "endgame.strategic.active_king",
+        "structure.passed_pawn"
+      ],
+      "source_books": [
+        "Dvoretsky's Endgame Manual",
+        "Mastering Endgame Strategy",
+        "My Great Predecessors - Volume 4",
+        "Small Steps to Giant Improvement: Master Pawn Play in Chess"
+      ],
+      "specificity": 4,
+      "features": [
+        "king-route",
+        "tempo-gaining-pawn-move",
+        "central-entry"
+      ],
+      "slots": {
+        "worked": "a pawn lever already opened a path for the king",
+        "attention": "the king still needs a protected route before the next pawn push",
+        "lesson": "use a forcing pawn move to create a safe king entry route"
+      },
+      "conditions": [
+        {
+          "softKey": "endgame.strategic.active_king",
+          "polarity": "bad"
+        },
+        {
+          "feature": "tempo-gaining-pawn-move",
+          "polarity": "any"
+        }
+      ]
+    }
+  ]
+}

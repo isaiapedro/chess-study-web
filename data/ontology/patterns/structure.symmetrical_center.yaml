@@ -1,0 +1,21 @@
+id: structure.symmetrical_center
+label: Symmetrical Centre
+phase: middlegame
+family: chess_structures
+aliases:
+- symmetrical center
+- symmetrical centre
+- equal centre
+keywords:
+- symmetrical
+- equal center
+- equal centre
+- liquidat
+rules_of_thumb:
+- Equal center liquidations requiring piece activity.
+plans:
+- Improve pieces before forcing.
+- Create a second weakness.
+related:
+- positional.two_weaknesses
+- piece.centralization

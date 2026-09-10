@@ -1,0 +1,22 @@
+id: motif.sacrifice
+label: Sacrifice
+phase: any
+family: tactics
+aliases:
+- sacrifice
+- positional sacrifice
+- exchange sac
+keywords:
+- sacrifice
+- 'sac '
+- exchange sac
+- clearance
+- deflection
+- attraction
+- interference
+rules_of_thumb:
+- Clearance, deflection, attraction, interference, or positional sacrifices.
+plans:
+- Clearance, deflection, attraction, interference, or positional sacrifices.
+related:
+- attack.initiative

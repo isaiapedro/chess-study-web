@@ -380,15 +380,194 @@ def extract_final_move_book_tail(
     return tail[:6000]
 
 
+def proportional_ply_slots(n_notes: int, n_plies: int) -> list[int]:
+    """
+    Split the mainline into ``n_notes`` equal segments; put note *i* at the
+    midpoint of segment *i* (1-based ply indices into that span).
+    """
+    if n_notes <= 0 or n_plies <= 0:
+        return []
+    if n_notes == 1:
+        return [max(1, (n_plies + 1) // 2)]
+    slots: list[int] = []
+    for i in range(n_notes):
+        lo = int(i * n_plies / n_notes)
+        hi = int((i + 1) * n_plies / n_notes) - 1
+        if hi < lo:
+            hi = lo
+        mid = (lo + hi) // 2
+        ply = max(1, min(n_plies, mid + 1))
+        slots.append(ply)
+    for i in range(1, len(slots)):
+        if slots[i] <= slots[i - 1]:
+            slots[i] = min(n_plies, slots[i - 1] + 1)
+    return slots
+
+
+def align_notes_proportionally(
+    game: chess.pgn.Game,
+    notes: list[BookMoveNote],
+    *,
+    skip_opening_plies: int = 0,
+) -> list[AlignedBookNote]:
+    """
+    OCR-noise fallback: N chapter comments → N equal slices of the game.
+
+    Preserves book order; ignores unreliable fullmove/SAN labels.
+    """
+    mainline = _mainline(game)
+    if not mainline or not notes:
+        return []
+    usable: list[str] = []
+    for note in notes:
+        prose = clean_book_note(note.text or "")
+        m = _PROSE_START_RE.search(prose)
+        if m:
+            prose = prose[m.start() :]
+        prose = re.sub(r"\s+", " ", prose).strip()
+        if not prose_is_usable(prose):
+            prose = re.sub(r"\s+", " ", (note.text or "").strip())
+        if len(prose) < 24:
+            continue
+        usable.append(prose)
+    if not usable:
+        return []
+
+    span = mainline
+    if skip_opening_plies > 0 and len(mainline) > skip_opening_plies + 4:
+        span = mainline[skip_opening_plies:]
+    slots = proportional_ply_slots(len(usable), len(span))
+    out: list[AlignedBookNote] = []
+    for prose, local_ply in zip(usable, slots):
+        idx = max(0, min(len(span) - 1, local_ply - 1))
+        ply, fullmove, side, san = span[idx]
+        out.append(
+            AlignedBookNote(
+                ply=ply,
+                fullmove=fullmove,
+                side=side,
+                san=san,
+                text=prose,
+                variations=[],
+            )
+        )
+    return out
+
+
+def ocr_labels_look_noisy(
+    notes: list[BookMoveNote],
+    mainline: list[tuple[int, int, str, str]],
+) -> bool:
+    """True when chapter move labels themselves look collapsed / out of range."""
+    if not notes or not mainline:
+        return bool(notes)
+    fullmoves = [int(n.fullmove or 0) for n in notes]
+    if sum(1 for fm in fullmoves if fm <= 0) >= max(2, len(notes) // 2):
+        return True
+    if len(notes) >= 3 and len(set(fullmoves)) <= 1:
+        return True
+    max_game_fm = max(m[1] for m in mainline)
+    if sum(1 for fm in fullmoves if fm > max_game_fm + 2) >= max(2, len(notes) // 3):
+        return True
+    return False
+
+
+def ocr_alignment_is_noisy(
+    notes: list[BookMoveNote],
+    aligned: list[AlignedBookNote],
+    mainline: list[tuple[int, int, str, str]],
+) -> bool:
+    """True when OCR ply anchors should be replaced by proportional spacing."""
+    if not notes:
+        return False
+    if not mainline:
+        return True
+    if ocr_labels_look_noisy(notes, mainline):
+        return True
+    if not aligned:
+        return True
+    if len(aligned) < max(2, int(len(notes) * 0.4)):
+        return True
+    if len(aligned) >= 4:
+        plies = [a.ply for a in aligned]
+        if max(plies) - min(plies) < max(3, len(mainline) // 10):
+            return True
+    return False
+
+
+def align_curated_notes_to_game(
+    game: chess.pgn.Game,
+    notes: list[BookMoveNote],
+) -> list[AlignedBookNote]:
+    """
+    Attach human-curated notes by fullmove/side/SAN only.
+
+    Skips OCR cleaning, whitespace collapse, and SAN legalization so didactic
+    prose (paragraphs, words like ``sit``) stays intact.
+    """
+    mainline = _mainline(game)
+    if not mainline:
+        return []
+    by_ply: dict[int, AlignedBookNote] = {}
+    for note in notes:
+        text = (note.text or "").replace("{", "(").replace("}", ")").strip()
+        if not text:
+            continue
+        side = (note.side or "white").lower()
+        hint = note.san_hint or ""
+        ply = None
+        fullmove = note.fullmove
+        san = hint
+        for p, fm, s, gsan in mainline:
+            if fm != note.fullmove or s != side:
+                continue
+            if hint and not _san_eq(hint, gsan) and not _san_similar(hint, gsan):
+                continue
+            ply, fullmove, san = p, fm, gsan
+            break
+        if ply is None:
+            for p, fm, s, gsan in mainline:
+                if fm == note.fullmove and s == side:
+                    ply, fullmove, san = p, fm, gsan
+                    break
+        if ply is None:
+            continue
+        existing = by_ply.get(ply)
+        if existing is None:
+            by_ply[ply] = AlignedBookNote(
+                ply=ply,
+                fullmove=fullmove,
+                side=side,
+                san=san,
+                text=text,
+                variations=[],
+            )
+        elif text and text not in existing.text:
+            existing.text = (existing.text.rstrip() + "\n\n" + text).strip()
+    return [by_ply[k] for k in sorted(by_ply)]
+
+
 def align_notes_to_game(
     game: chess.pgn.Game,
     notes: list[BookMoveNote],
     *,
     context: str = "",
+    curated: bool = False,
+    proportional_fallback: bool = True,
+    skip_opening_plies: int = 0,
 ) -> list[AlignedBookNote]:
+    if curated:
+        return align_curated_notes_to_game(game, notes)
+
     mainline = _mainline(game)
     if not mainline:
         return []
+
+    # Prefer SAN/fullmove anchors. Proportional only if anchoring yields nothing
+    # (slice midpoints invent wrong FENs for the mobile pack).
+    if proportional_fallback and ocr_labels_look_noisy(notes, mainline):
+        # Still try SAN path below; proportional is last resort after empty/noisy.
+        pass
 
     by_ply: dict[int, AlignedBookNote] = {}
     for note in notes:
@@ -482,6 +661,15 @@ def align_notes_to_game(
         )
 
     aligned = [by_ply[k] for k in sorted(by_ply) if by_ply[k].text.strip()]
+    if proportional_fallback and (
+        not aligned or ocr_alignment_is_noisy(notes, aligned, mainline)
+    ):
+        # Only invent slice midpoints when SAN/fullmove produced no usable set.
+        if not aligned:
+            return align_notes_proportionally(
+                game, notes, skip_opening_plies=skip_opening_plies
+            )
+        # Keep sparse-but-real SAN anchors rather than replacing with slices.
     for note in aligned:
         note.text = legalize_aligned_note_text(game, note.ply, note.text)
         note.variations = [

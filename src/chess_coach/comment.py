@@ -8,8 +8,10 @@ import chess
 import httpx
 
 from chess_coach.analyze import CriticalMoment
+from chess_coach.eco_names import format_eco_phrase, normalize_eco
 from chess_coach.logutil import log
 from chess_coach.ontology.cards import format_exemplars, format_pattern_cards
+from chess_coach.ontology.load import load_ontology
 from chess_coach.rag.quality import filter_passages
 from chess_coach.rag.retrieve import Passage
 from chess_coach.validate import validate_commentary
@@ -26,15 +28,22 @@ class Commentary:
     warnings: list[str]
 
 
-SYSTEM_PROMPT = """You are a local chess coach. Stockfish numbers are ground truth.
+SYSTEM_PROMPT = """You are a local chess coach writing short educational notes for a student.
+Stockfish numbers are ground truth.
+
 Rules:
 1. Never invent evaluations that contradict the provided engine data.
-2. Only mention moves that appear in the played move, best move, or PV list — or clearly label speculative plans without concrete illegal SANs.
-3. Use book passages ONLY when they clearly discuss this structure/move; never paste generic opening introductions.
-4. Pattern ontology cards are trusted rule-of-thumb context for THIS structure — use them when relevant.
-5. Exemplar games are real archive references — you may say "cf. X vs Y, year" only from that list; never invent games.
-6. Cite book titles when you borrow phrasing or plans.
-7. Keep the note short and specific to THIS ply: what the move does, what White/Black wants next, engine alternative if relevant.
+2. Do NOT open by repeating the move number and SAN (the board already shows it).
+3. If an ECO code appears, always expand it once in plain language
+   (e.g. "Catalan Opening (ECO E01)" — never leave bare "E01").
+4. Teach one concrete idea for THIS position: a structure theme, plan, or
+   fundamental rule (open files, space, bad bishop, pawn breaks, etc.).
+5. Only mention moves from the played move, best move, or PV — or label plans
+   as ideas without illegal SANs.
+6. Use book passages ONLY when they clearly discuss this structure/move.
+7. Pattern ontology cards are trusted structure rules — use at most one fresh
+   idea; do not paste the same card text every ply.
+8. Keep 2–4 short sentences. Educational, not a move dump.
 """
 
 
@@ -54,6 +63,141 @@ def _clip_passage(text: str, limit: int = 220) -> str:
     return (cut or text[: limit - 1]) + "…"
 
 
+def _side_word(moment: CriticalMoment) -> str:
+    return "White" if moment.side == "white" else "Black"
+
+
+def _opening_concept(moment: CriticalMoment) -> str:
+    return format_eco_phrase(moment.features.eco, moment.features.opening)
+
+
+def _move_idea(moment: CriticalMoment) -> str:
+    """Plain-language description of what the move does — no SAN echo."""
+    side = _side_word(moment)
+    try:
+        board = chess.Board(moment.fen_before)
+        move = board.parse_san(moment.played_san)
+    except ValueError:
+        return f"{side} continues development."
+    piece = board.piece_at(move.from_square)
+    to_name = chess.square_name(move.to_square)
+    from_name = chess.square_name(move.from_square)
+
+    if board.is_castling(move):
+        wing = "kingside" if chess.square_file(move.to_square) == 6 else "queenside"
+        return f"{side} castles {wing}, connecting the rooks and tucking the king away."
+
+    if board.is_en_passant(move):
+        return f"{side} takes en passant on {to_name}, clearing a central foothold."
+
+    if board.is_capture(move):
+        victim = board.piece_at(move.to_square)
+        vname = {
+            chess.PAWN: "pawn",
+            chess.KNIGHT: "knight",
+            chess.BISHOP: "bishop",
+            chess.ROOK: "rook",
+            chess.QUEEN: "queen",
+        }.get(victim.piece_type, "piece") if victim else "piece"
+        pname = {
+            chess.PAWN: "pawn",
+            chess.KNIGHT: "knight",
+            chess.BISHOP: "bishop",
+            chess.ROOK: "rook",
+            chess.QUEEN: "queen",
+            chess.KING: "king",
+        }.get(piece.piece_type, "piece") if piece else "piece"
+        return f"{side}'s {pname} captures the {vname} on {to_name}."
+
+    if piece and piece.piece_type == chess.PAWN:
+        advance = abs(chess.square_rank(move.to_square) - chess.square_rank(move.from_square))
+        if advance == 2:
+            return f"{side} leaps the pawn to {to_name}, grabbing space and opening lines."
+        return f"{side} nudges the pawn to {to_name}, shaping the pawn structure."
+
+    if piece:
+        pname = {
+            chess.KNIGHT: "knight",
+            chess.BISHOP: "bishop",
+            chess.ROOK: "rook",
+            chess.QUEEN: "queen",
+            chess.KING: "king",
+        }.get(piece.piece_type, "piece")
+        return f"{side} reroutes the {pname} from {from_name} to {to_name}."
+    return f"{side} improves the position."
+
+
+def _quality_clause(moment: CriticalMoment) -> str:
+    side = _side_word(moment)
+    best = (moment.best_san or "").strip()
+    played = (moment.played_san or "").strip()
+    if best and best == played:
+        if moment.delta_cp >= 80:
+            return (
+                f"It is Stockfish's top choice here, yet the eval still swings "
+                f"{moment.delta_cp}cp — tactics are sharp."
+            )
+        return "Engine agrees this is one of the strongest replies."
+    if moment.delta_cp >= 300:
+        return f"A serious mistake ({moment.delta_cp}cp); safer was {best or 'the engine move'}."
+    if moment.delta_cp >= 150:
+        return f"An error ({moment.delta_cp}cp); {best or 'the engine move'} was more reliable."
+    if moment.delta_cp >= 80:
+        return f"Slightly inaccurate ({moment.delta_cp}cp); engine prefers {best or 'another idea'}."
+    if best and best != played and moment.delta_cp >= 40:
+        return f"Playable, though the engine leans toward {best} ({moment.delta_cp}cp)."
+    return f"A solid continuation for {side} at this depth."
+
+
+def _knowledge_nugget(
+    moment: CriticalMoment,
+    used_fingerprints: set[str] | None,
+) -> str:
+    """One fresh fundamental idea for this structure — never the same text twice."""
+    used = used_fingerprints if used_fingerprints is not None else set()
+    catalog = load_ontology()
+    for pid in moment.features.patterns:
+        pattern = catalog.get(pid)
+        if not pattern:
+            continue
+        bits: list[str] = []
+        bits.extend(pattern.rules_of_thumb)
+        bits.extend(pattern.plans)
+        for bit in bits:
+            text = (bit or "").strip()
+            if len(text) < 20:
+                continue
+            fp = f"nugget:{(pid + ':' + text[:100]).lower()}"
+            if fp in used:
+                continue
+            used.add(fp)
+            label = pattern.label.strip()
+            return f"Key idea ({label}): {text}"
+    # Theme-only fallback when ontology silent
+    themes = [t for t in moment.features.themes if t not in {"opening", "endgame"}]
+    for theme in themes:
+        fp = f"theme:{theme}"
+        if fp in used:
+            continue
+        used.add(fp)
+        tips = {
+            "open file": "Controlling an open file only pays off if you can invade on the 7th/2nd rank or create a concrete target.",
+            "bishop pair": "The two bishops shine in open centres — look to open lines before the opponent can trade one off.",
+            "space": "With a space advantage, improve slowly and deny counterplay; avoid random piece trades that free the cramped side.",
+            "passed pawn": "A passed pawn is a long-term asset — escort it, or force the opponent's pieces into passive blockade.",
+            "king safety": "When kings are exposed, tempo and open lines matter more than quiet positional gains.",
+            "piece activity": "Active pieces compensate for structure flaws — ask which piece has no useful job yet.",
+            "isolated queen pawn": "IQP play: use open files and piece activity before the endgame, where the isolani can become a weakness.",
+            "hanging pawns": "Hanging pawns want mobility (advance or pressure); if frozen, they become fixed targets.",
+            "minority attack": "A minority attack (...b5–b4 or b4–b5) aims to create a weak pawn on the queenside majority.",
+            "pawn chain": "Attack a pawn chain at its base; the tip advances, the base is the structural hinge.",
+        }
+        tip = tips.get(theme)
+        if tip:
+            return tip
+    return ""
+
+
 def build_prompt(moment: CriticalMoment, passages: list[Passage]) -> str:
     passage_block = "No matching book passages (engine-only mode)."
     if passages:
@@ -66,10 +210,11 @@ def build_prompt(moment: CriticalMoment, passages: list[Passage]) -> str:
 
     cards = format_pattern_cards(moment.features.patterns) or "(none detected)"
     exemplars = format_exemplars(moment.features.patterns) or "(none)"
+    opening = _opening_concept(moment) or "n/a"
     return f"""Position FEN: {moment.fen_before}
 Side to move: {moment.side}
 Move number: {moment.fullmove}
-Played: {moment.played_san}
+Played (do not echo as the first words): {moment.played_san}
 Engine best: {moment.best_san or "n/a"}
 Eval before (White POV): {_format_eval(moment.eval_before_cp, moment.mate_before)}
 Eval after (White POV): {_format_eval(moment.eval_after_cp, moment.mate_after)}
@@ -78,9 +223,9 @@ PV: {' '.join(moment.pv_san) if moment.pv_san else 'n/a'}
 Depth: {moment.depth}
 Themes: {', '.join(moment.features.themes) or 'none'}
 Patterns: {', '.join(moment.features.patterns) or 'none'}
-Opening/ECO: {moment.features.opening or 'n/a'} / {moment.features.eco or 'n/a'}
+Opening label (already expanded — use this wording, not bare ECO codes): {opening}
 
-Ontology pattern cards (structure rules of thumb):
+Ontology pattern cards (pick ONE fresh idea max):
 {cards}
 
 Archive exemplar games (cite only from this list if useful):
@@ -89,103 +234,57 @@ Archive exemplar games (cite only from this list if useful):
 Book passages (only use if clearly about this position/plan):
 {passage_block}
 
-Write 1-3 sentences about THIS move in THIS game. Tie plans to the pattern cards when they fit. No generic opening history.
+Write 2–4 educational sentences about THIS position after the move.
+Start with a concept or plan, not "{moment.fullmove}. {moment.played_san}".
+Expand any ECO jargon. Teach one fundamental for this structure.
 """
 
 
-def _move_facts(moment: CriticalMoment) -> list[str]:
-    """Concrete board facts from the played move (no book text)."""
-    facts: list[str] = []
-    try:
-        board = chess.Board(moment.fen_before)
-        move = board.parse_san(moment.played_san)
-    except ValueError:
-        return facts
-    piece = board.piece_at(move.from_square)
-    pname = piece.symbol().upper() if piece else "?"
-    if board.is_capture(move):
-        victim = board.piece_at(move.to_square)
-        if move.drop is None and chess.BB_SQUARES[move.to_square] & board.occupied == 0 and board.is_en_passant(move):
-            facts.append(f"{pname} takes en passant on {chess.square_name(move.to_square)}")
-        elif victim:
-            facts.append(f"{pname}x{victim.symbol().upper()} on {chess.square_name(move.to_square)}")
-        else:
-            facts.append(f"captures on {chess.square_name(move.to_square)}")
-    elif piece and piece.piece_type == chess.PAWN and abs(chess.square_file(move.from_square) - chess.square_file(move.to_square)) == 0:
-        advance = abs(chess.square_rank(move.to_square) - chess.square_rank(move.from_square))
-        if advance == 2:
-            facts.append(f"pawn leaps to {chess.square_name(move.to_square)}")
-        else:
-            facts.append(f"pawn to {chess.square_name(move.to_square)}")
-    elif board.is_castling(move):
-        facts.append("short castle" if chess.square_file(move.to_square) == 6 else "long castle")
-    elif piece:
-        facts.append(f"{pname}→{chess.square_name(move.to_square)}")
+def engine_grounded_note(
+    moment: CriticalMoment,
+    *,
+    used_fingerprints: set[str] | None = None,
+) -> str:
+    """Didactic engine note — no move-number spam, ECO explained, one concept."""
+    sentences: list[str] = []
+    opening = _opening_concept(moment)
+    eco = normalize_eco(moment.features.eco)
+    used = used_fingerprints if used_fingerprints is not None else set()
 
-    board.push(move)
-    if board.is_checkmate():
-        facts.append("checkmate")
-    elif board.is_check():
-        facts.append("check")
-    return facts
+    if opening:
+        fp = f"opening:{eco or opening[:40].lower()}"
+        if fp not in used:
+            used.add(fp)
+            if moment.features.phase == "opening":
+                sentences.append(f"We are in the {opening}.")
+            else:
+                sentences.append(f"The pawn structure still reflects the {opening}.")
 
+    sentences.append(_move_idea(moment))
 
-def engine_grounded_note(moment: CriticalMoment) -> str:
-    """Concrete note from engine + board features — never a book dump."""
-    move = f"{moment.fullmove}{'.' if moment.side == 'white' else '...'} {moment.played_san}"
-    side = "White" if moment.side == "white" else "Black"
-    bits: list[str] = [move]
+    nugget = _knowledge_nugget(moment, used)
+    if nugget:
+        sentences.append(nugget)
 
-    facts = _move_facts(moment)
-    if facts:
-        bits.append("(" + "; ".join(facts) + ")")
+    sentences.append(_quality_clause(moment))
 
-    themes = [t for t in moment.features.themes if t not in {"opening"}]
-    if themes:
-        bits.append("Theme: " + ", ".join(themes[:3]) + ".")
-    elif moment.features.phase == "opening" and (moment.features.eco or moment.features.opening):
-        label = moment.features.opening or moment.features.eco
-        bits.append(f"Developing in {label}.")
-    else:
-        bits.append(f"{moment.features.phase.capitalize()} phase.")
-
-    imb = moment.features.material_imbalance
-    if abs(imb) >= 2:
-        leader = "White" if imb > 0 else "Black"
-        bits.append(f"Material tip {leader} (~{abs(imb)}).")
-
-    best = moment.best_san or ""
-    played = moment.played_san or ""
-    if best and best == played:
-        if moment.delta_cp >= 80:
-            bits.append(
-                f"Top engine move, but eval still swings {moment.delta_cp}cp after it (tactical).")
-        else:
-            bits.append(f"Matches Stockfish's top choice for {side}.")
-    elif moment.delta_cp >= 300:
-        bits.append(
-            f"{side} blunders ({moment.delta_cp}cp); better was {best or 'the engine move'}."
-        )
-    elif moment.delta_cp >= 150:
-        bits.append(
-            f"{side} errs ({moment.delta_cp}cp); {best or 'engine move'} was safer."
-        )
-    elif moment.delta_cp >= 80:
-        bits.append(
-            f"Inaccuracy ({moment.delta_cp}cp); engine likes {best or 'another move'}."
-        )
-    elif best and best != played and moment.delta_cp >= 40:
-        bits.append(f"Playable; engine slight preference {best} ({moment.delta_cp}cp).")
-    else:
-        bits.append(f"Solid for {side} at this depth.")
-
-    if moment.pv_san and (moment.delta_cp >= 40 or (best and best != played)):
-        cont = [s for s in moment.pv_san[:5] if s != played]
+    if moment.pv_san and (
+        moment.delta_cp >= 40 or (moment.best_san and moment.best_san != moment.played_san)
+    ):
+        cont = [s for s in moment.pv_san[:4] if s != moment.played_san]
         if cont:
-            bits.append("Main line " + " ".join(cont) + ".")
+            sentences.append("Typical engine continuation: " + " ".join(cont) + ".")
+
     if moment.eval_after_cp is not None or moment.mate_after is not None:
-        bits.append(f"Eval now {_format_eval(moment.eval_after_cp, moment.mate_after)}.")
-    return " ".join(bits)
+        sentences.append(f"Eval now {_format_eval(moment.eval_after_cp, moment.mate_after)}.")
+
+    text = " ".join(s.strip() for s in sentences if s and s.strip())
+    text = re.sub(
+        rf"^\s*{moment.fullmove}\s*\.\.?\.?\s*{re.escape(moment.played_san or '')}\s*",
+        "",
+        text,
+    ).strip()
+    return text
 
 
 def pedagogical_fallback(
@@ -195,19 +294,19 @@ def pedagogical_fallback(
     used_fingerprints: set[str] | None = None,
     allow_book_quote: bool = False,
 ) -> Commentary:
-    """Engine-first note + short ontology rule; optional filtered book quote."""
-    lines = [engine_grounded_note(moment)]
+    """Engine-first didactic note + optional filtered book quote."""
+    used = used_fingerprints if used_fingerprints is not None else set()
+    lines = [engine_grounded_note(moment, used_fingerprints=used)]
     citations: list[str] = []
-    cards = format_pattern_cards(moment.features.patterns, hops=0, limit=2)
-    if cards:
-        first = cards.splitlines()[0].lstrip("- ").strip()
-        if first:
-            lines.append(f"Pattern: {first}")
     exemplars = format_exemplars(moment.features.patterns, limit=1)
     if exemplars:
-        lines.append("cf. " + exemplars.lstrip("- ").strip())
+        line = "cf. " + exemplars.lstrip("- ").strip()
+        fp = f"ex:{line[:80].lower()}"
+        if fp not in used:
+            used.add(fp)
+            lines.append(line)
     if allow_book_quote:
-        good = filter_passages(passages, moment, used_fingerprints=used_fingerprints, limit=1)
+        good = filter_passages(passages, moment, used_fingerprints=used, limit=1)
         if good:
             citations = [good[0].book]
             lines.append(f"[{good[0].book}] {_clip_passage(good[0].text)}")
@@ -258,10 +357,15 @@ def explain(
             content = str(message.get("content") or "").strip()
             content = _THINK_RE.sub("", content).strip()
             content = _THINK_TRAIL_RE.sub("", content).strip()
-            # Drop leaked chain-of-thought if model stuffed it into content
             if "\n" in content and content.lower().startswith(("okay,", "ok,", "the user")):
                 paras = [p.strip() for p in content.split("\n\n") if p.strip()]
                 content = paras[-1] if paras else content
+        # Expand bare ECO leftovers the model might still emit
+        eco = normalize_eco(moment.features.eco)
+        if eco and re.search(rf"\b{eco}\b", content) and "ECO" not in content:
+            phrase = format_eco_phrase(eco, moment.features.opening)
+            if phrase:
+                content = re.sub(rf"\b{eco}\b", phrase, content, count=1)
         text, warnings = validate_commentary(moment, content)
         return Commentary(
             text=text,

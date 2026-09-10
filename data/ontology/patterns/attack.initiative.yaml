@@ -1,0 +1,19 @@
+id: attack.initiative
+label: Initiative
+phase: middlegame
+family: attack
+aliases:
+- initiative
+- tempo
+keywords:
+- initiative
+- tempo
+- maintain pressure
+- seize time
+rules_of_thumb:
+- Maintain pressure to dictate tempo and seize time.
+plans:
+- Maintain pressure to dictate tempo and seize time.
+related:
+- motif.sacrifice
+- attack.king_safety

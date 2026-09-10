@@ -1,0 +1,121 @@
+{
+  "key_id": "methodology.prophylactic_thinking",
+  "key_type": "methodology",
+  "label": "Prophylactic Thinking",
+  "idea_count": 3,
+  "ideas": [
+    {
+      "idea_id": "methodology.prophylactic_thinking#0",
+      "key_id": "methodology.prophylactic_thinking",
+      "key_type": "methodology",
+      "label": "Prophylactic Thinking",
+      "principle": "Identify the opponent's next idea",
+      "phase": "any",
+      "summary": "Before every serious decision, ask what the opponent wants next and which of their pieces or pawn breaks will make that plan work.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "C60",
+        "C90"
+      ],
+      "games": [
+        "Mark Taimanov vs Miguel Najdorf 1953 (E99) [bookwalk]",
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Alessi, Clio vs Giorgadze, Mariam Ere 2026 (C60)"
+      ],
+      "themes": [
+        "prophylaxis",
+        "thinking process"
+      ],
+      "source_books": [
+        "Maneuvering: The Art of Piece Play",
+        "Mastering Endgame Strategy",
+        "Mastering Opening Strategy",
+        "My Great Predecessors - Volume 4",
+        "Secrets of Positional Play"
+      ],
+      "specificity": 1,
+      "features": [],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "methodology.prophylactic_thinking#1",
+      "key_id": "methodology.prophylactic_thinking",
+      "key_type": "methodology",
+      "label": "Prophylactic Thinking",
+      "principle": "Combine prevention with improvement",
+      "phase": "middlegame",
+      "summary": "Prefer a useful move that both improves your position and hinders the opponent. Pure defense is less attractive when development, coordination, or a pawn lever can be restricted simultaneously.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "C60",
+        "C90"
+      ],
+      "games": [
+        "Mark Taimanov vs Miguel Najdorf 1953",
+        "Mark Taimanov vs Miguel Najdorf 1953 (E99) [bookwalk]",
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]"
+      ],
+      "themes": [
+        "prophylaxis",
+        "piece coordination"
+      ],
+      "source_books": [
+        "Maneuvering: The Art of Piece Play",
+        "Mastering Endgame Strategy",
+        "Mastering Opening Strategy",
+        "My Great Predecessors - Volume 4",
+        "Secrets of Positional Play"
+      ],
+      "specificity": 3,
+      "features": [
+        "development",
+        "pawn lever"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "methodology.prophylactic_thinking#2",
+      "key_id": "methodology.prophylactic_thinking",
+      "key_type": "methodology",
+      "label": "Prophylactic Thinking",
+      "principle": "Deny the key regrouping square",
+      "phase": "middlegame",
+      "summary": "If the opponent needs a queen retreat or regrouping square to free cramped pieces, control that square first. Then improve calmly while their pieces remain locked behind their pawn structure.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Ruy Lopez"
+      ],
+      "games": [
+        "Baryshpolets vs Turov 2012",
+        "Mark Taimanov vs Miguel Najdorf 1953 (E99) [bookwalk]",
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]"
+      ],
+      "themes": [
+        "prophylaxis",
+        "restriction",
+        "piece maneuvering"
+      ],
+      "source_books": [
+        "Maneuvering: The Art of Piece Play",
+        "Mastering Endgame Strategy",
+        "Mastering Opening Strategy",
+        "My Great Predecessors - Volume 4",
+        "Secrets of Positional Play"
+      ],
+      "specificity": 5,
+      "features": [
+        "regrouping square",
+        "cramped pieces",
+        "pawn structure"
+      ],
+      "slots": {},
+      "conditions": []
+    }
+  ]
+}

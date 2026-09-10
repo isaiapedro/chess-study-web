@@ -1,0 +1,121 @@
+{
+  "key_id": "structure.scheveningen",
+  "key_type": "structure",
+  "label": "Scheveningen / Small Centre",
+  "idea_count": 3,
+  "ideas": [
+    {
+      "idea_id": "structure.scheveningen#0",
+      "key_id": "structure.scheveningen",
+      "key_type": "structure",
+      "label": "Scheveningen / Small Centre",
+      "principle": "Balance compact defense with timely counterplay",
+      "phase": "middlegame",
+      "summary": "The Scheveningen small center is flexible but compact. Black prepares central counterplay while White uses space for a kingside attack or pressure on the queenside.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Sicilian Scheveningen",
+        "B90",
+        "B70"
+      ],
+      "games": [
+        "Wandor, Adam vs Iwan, Patryk 2026 (B90)",
+        "Sadhwani, Raunak vs Lu, Shanglei 2026 (B90)",
+        "Folin, Giorgio vs Picone Chiodo, Luigi 2026 (B70)",
+        "Nail, Christopher vs Voronkov, Andrii 2026 (B70)"
+      ],
+      "themes": [
+        "Scheveningen",
+        "small center"
+      ],
+      "source_books": [
+        "Chess Structures: A Grandmaster Guide",
+        "FCO: Fundamental Chess Openings"
+      ],
+      "specificity": 1,
+      "features": [
+        "compact center",
+        "space advantage"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "structure.scheveningen#1",
+      "key_id": "structure.scheveningen",
+      "key_type": "structure",
+      "label": "Scheveningen / Small Centre",
+      "principle": "Identify Scheveningen plans by structure",
+      "phase": "middlegame",
+      "summary": "Recognize the Scheveningen by the central pawn structure, whether reached from the Najdorf, Kan, or Taimanov. Plans depend more on the breaks and piece coordination than the move order.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Sicilian Scheveningen",
+        "Sicilian Najdorf",
+        "B90",
+        "B70"
+      ],
+      "games": [
+        "Sadhwani, Raunak vs Lu, Shanglei 2026",
+        "Wandor, Adam vs Iwan, Patryk 2026 (B90)",
+        "Sadhwani, Raunak vs Lu, Shanglei 2026 (B90)"
+      ],
+      "themes": [
+        "Scheveningen",
+        "pawn structures",
+        "transposition"
+      ],
+      "source_books": [
+        "Chess Structures: A Grandmaster Guide",
+        "FCO: Fundamental Chess Openings"
+      ],
+      "specificity": 3,
+      "features": [
+        "central pawns",
+        "pawn breaks"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "structure.scheveningen#2",
+      "key_id": "structure.scheveningen",
+      "key_type": "structure",
+      "label": "Scheveningen / Small Centre",
+      "principle": "Coordinate attack and counterbreak in the small center",
+      "phase": "middlegame",
+      "summary": "Before the Scheveningen f-pawn break, ensure the e-pawn remains defended and the dark squares around the king do not collapse. White should coordinate bishop, queen, and rook against e6 while preventing the central counterbreak that would release Black's position.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Sicilian Scheveningen",
+        "B90",
+        "B70"
+      ],
+      "games": [
+        "Wandor, Adam vs Iwan, Patryk 2026",
+        "Wandor, Adam vs Iwan, Patryk 2026 (B90)",
+        "Sadhwani, Raunak vs Lu, Shanglei 2026 (B90)"
+      ],
+      "themes": [
+        "Scheveningen",
+        "pawn break",
+        "king safety"
+      ],
+      "source_books": [
+        "Chess Structures: A Grandmaster Guide",
+        "FCO: Fundamental Chess Openings"
+      ],
+      "specificity": 5,
+      "features": [
+        "e6 target",
+        "dark squares",
+        "central counterbreak"
+      ],
+      "slots": {},
+      "conditions": []
+    }
+  ]
+}

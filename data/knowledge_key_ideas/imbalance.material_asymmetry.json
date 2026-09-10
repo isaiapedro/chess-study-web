@@ -1,0 +1,137 @@
+{
+  "key_id": "imbalance.material_asymmetry",
+  "key_type": "imbalance",
+  "label": "Material Asymmetry",
+  "idea_count": 3,
+  "ideas": [
+    {
+      "idea_id": "imbalance.material_asymmetry#0",
+      "key_id": "imbalance.material_asymmetry",
+      "key_type": "imbalance",
+      "label": "Material Asymmetry",
+      "principle": "Translate material differences into concrete jobs and plans.",
+      "phase": "middlegame",
+      "summary": "Unequal material must be evaluated by function, not points alone. Compare king safety, piece activity, pawn structure, and the number of targets each side can attack.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "E60",
+        "E90",
+        "D26",
+        "D42"
+      ],
+      "games": [
+        "Sakline Mostafa, Sajid vs Barua, Oitijjo 2026 (E60)",
+        "Ushenina, Anna vs Fressinet, Laurent 2026 (E60)",
+        "MacDonald, Duncan vs Woozeer, Seth 2026 (E90)",
+        "Guerra Mansilla, Jorge Maximilian vs Gutierrez Gomez, Nicolas 1999 2026 (E90)"
+      ],
+      "themes": [
+        "material asymmetry",
+        "piece activity",
+        "king safety"
+      ],
+      "source_books": [
+        "Chess Structures: A Grandmaster Guide",
+        "Grandmaster Repertoire 1A: 1.d4 The Catalan",
+        "Grandmaster Repertoire 5: The English Opening - Volume Three",
+        "King's Indian Warfare",
+        "Maneuvering: The Art of Piece Play"
+      ],
+      "specificity": 1,
+      "features": [
+        "unequal material",
+        "dynamic compensation",
+        "structural targets"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "imbalance.material_asymmetry#1",
+      "key_id": "imbalance.material_asymmetry",
+      "key_type": "imbalance",
+      "label": "Material Asymmetry",
+      "principle": "The material side reduces activity; the compensating side preserves it.",
+      "phase": "middlegame",
+      "summary": "When you have the material advantage, exchange the opponent's most active pieces and preserve the pawns that can become passers. When you have compensation, avoid passive trades and create immediate threats against the king or weak pawns.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "E60",
+        "E90",
+        "D26",
+        "D42"
+      ],
+      "games": [
+        "Sakline Mostafa, Sajid vs Barua, Oitijjo 2026 (E60)",
+        "Ushenina, Anna vs Fressinet, Laurent 2026 (E60)",
+        "MacDonald, Duncan vs Woozeer, Seth 2026 (E90)",
+        "Guerra Mansilla, Jorge Maximilian vs Gutierrez Gomez, Nicolas 1999 2026 (E90)"
+      ],
+      "themes": [
+        "material advantage",
+        "compensation",
+        "simplification"
+      ],
+      "source_books": [
+        "Chess Structures: A Grandmaster Guide",
+        "Grandmaster Repertoire 1A: 1.d4 The Catalan",
+        "Grandmaster Repertoire 5: The English Opening - Volume Three",
+        "King's Indian Warfare",
+        "Maneuvering: The Art of Piece Play"
+      ],
+      "specificity": 2,
+      "features": [
+        "extra material",
+        "active enemy pieces",
+        "passed-pawn potential"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "imbalance.material_asymmetry#2",
+      "key_id": "imbalance.material_asymmetry",
+      "key_type": "imbalance",
+      "label": "Material Asymmetry",
+      "principle": "Demand durable square control before accepting long-term material deficit.",
+      "phase": "middlegame",
+      "summary": "An exchange sacrifice is justified when the minor piece gains a stable blockade, key-square control, and durable targets that the rook cannot attack. If control of a square such as e5 disappears after one pawn break, the compensation is temporary rather than positional.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "King's Indian structures",
+        "Catalan",
+        "E60",
+        "E90"
+      ],
+      "games": [
+        "Sakline Mostafa, Sajid vs Barua, Oitijjo 2026 (E60)",
+        "Ushenina, Anna vs Fressinet, Laurent 2026 (E60)",
+        "MacDonald, Duncan vs Woozeer, Seth 2026 (E90)",
+        "Guerra Mansilla, Jorge Maximilian vs Gutierrez Gomez, Nicolas 1999 2026 (E90)"
+      ],
+      "themes": [
+        "exchange sacrifice",
+        "restriction",
+        "blockade"
+      ],
+      "source_books": [
+        "Chess Structures: A Grandmaster Guide",
+        "Grandmaster Repertoire 1A: 1.d4 The Catalan",
+        "Grandmaster Repertoire 5: The English Opening - Volume Three",
+        "King's Indian Warfare",
+        "Maneuvering: The Art of Piece Play"
+      ],
+      "specificity": 4,
+      "features": [
+        "rook versus minor piece",
+        "e5 outpost",
+        "stable pawn structure"
+      ],
+      "slots": {},
+      "conditions": []
+    }
+  ]
+}

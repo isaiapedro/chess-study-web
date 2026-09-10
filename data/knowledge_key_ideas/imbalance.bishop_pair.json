@@ -1,0 +1,112 @@
+{
+  "key_id": "imbalance.bishop_pair",
+  "key_type": "imbalance",
+  "label": "Bishop Pair",
+  "idea_count": 3,
+  "ideas": [
+    {
+      "idea_id": "imbalance.bishop_pair#0",
+      "key_id": "imbalance.bishop_pair",
+      "key_type": "imbalance",
+      "label": "Bishop Pair",
+      "principle": "Evaluate the bishop pair by its access to open diagonals.",
+      "phase": "middlegame",
+      "summary": "The bishop pair matters most in open positions with targets on both colors. Preserve both bishops when pawn breaks can open lines, but do not value the pair more than king safety, development, or pawn structure.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Sandro Mareco vs Jorge Cori 2009 (E37) [bookwalk]",
+        "Delmouly, Manon vs Bellahcene, Jenna 2026 (D30)"
+      ],
+      "themes": [
+        "bishop pair",
+        "open position",
+        "king safety"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings"
+      ],
+      "specificity": 1,
+      "features": [
+        "two bishops",
+        "open diagonals",
+        "targets on both wings"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "imbalance.bishop_pair#1",
+      "key_id": "imbalance.bishop_pair",
+      "key_type": "imbalance",
+      "label": "Bishop Pair",
+      "principle": "Open the position and create targets on both color complexes.",
+      "phase": "middlegame",
+      "summary": "With the bishop pair, use pawn breaks to remove central blockades and create play on both wings. Avoid fixing all pawns on one color, because that can leave one bishop without useful work.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Carlsbad structure"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Sandro Mareco vs Jorge Cori 2009 (E37) [bookwalk]",
+        "Delmouly, Manon vs Bellahcene, Jenna 2026 (D30)"
+      ],
+      "themes": [
+        "bishop pair",
+        "pawn break",
+        "color complexes"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings"
+      ],
+      "specificity": 3,
+      "features": [
+        "central tension",
+        "play on both wings",
+        "mobile pawns"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "imbalance.bishop_pair#2",
+      "key_id": "imbalance.bishop_pair",
+      "key_type": "imbalance",
+      "label": "Bishop Pair",
+      "principle": "Use the outside majority to make the knight defend two distant fronts.",
+      "phase": "endgame",
+      "summary": "In an endgame with bishops against a knight and bishop, an outside pawn majority increases the power of the bishop pair. Stretch the knight with threats on both wings, improve the king, and only then create the outside passer.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Sandro Mareco vs Jorge Cori 2009 (E37) [bookwalk]",
+        "Delmouly, Manon vs Bellahcene, Jenna 2026 (D30)"
+      ],
+      "themes": [
+        "bishop pair",
+        "outside majority",
+        "two weaknesses"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings"
+      ],
+      "specificity": 4,
+      "features": [
+        "bishop pair versus bishop and knight",
+        "outside pawn majority",
+        "active king"
+      ],
+      "slots": {},
+      "conditions": []
+    }
+  ]
+}

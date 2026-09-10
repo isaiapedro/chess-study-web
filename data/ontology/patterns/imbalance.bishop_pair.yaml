@@ -1,6 +1,6 @@
 id: imbalance.bishop_pair
 label: Bishop Pair
-phase: any
+phase: middlegame
 family: imbalance
 aliases:
 - bishop pair
@@ -8,16 +8,12 @@ aliases:
 keywords:
 - bishop pair
 - two bishops
-- open position bishops
+- bishop pair advantage
 rules_of_thumb:
-- Bishop pair thrives in open positions; avoid locking the centre.
-- Side without the pair seeks closed structures or knight outposts.
+- Open the position; control adjacent diagonals.
 plans:
-- Open lines, trade into endgames where bishops rake both wings.
+- Open lines, avoid unnecessary trades of bishops.
 related:
-- structure.iqp
-- structure.hanging_pawns
+- imbalance.knight_vs_bishop
+- imbalance.good_vs_bad_bishop
 detect: board_bishop_pair
-exemplars:
-- Fischer vs Petrosian, Buenos Aires 1971
-- Open-position two-bishop conversions

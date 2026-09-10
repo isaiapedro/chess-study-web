@@ -1,0 +1,19 @@
+id: endgame.theoretical.philidor
+label: Philidor Defence (Rook Ending)
+phase: endgame
+family: endgame_theoretical
+aliases:
+- philidor defence
+- philidor defense
+- 3rd rank defense
+keywords:
+- philidor
+- third-rank defense
+- 3rd-rank
+- cutoff
+rules_of_thumb:
+- 3rd-rank defense and cutoff techniques.
+plans:
+- 3rd-rank defense and cutoff techniques.
+related:
+- endgame.strategic.active_king

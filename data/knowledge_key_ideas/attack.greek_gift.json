@@ -1,0 +1,156 @@
+{
+  "key_id": "attack.greek_gift",
+  "key_type": "attack",
+  "label": "Greek Gift",
+  "idea_count": 4,
+  "ideas": [
+    {
+      "idea_id": "attack.greek_gift#0",
+      "key_id": "attack.greek_gift",
+      "key_type": "attack",
+      "label": "Greek Gift",
+      "principle": "Greek Gift pattern",
+      "phase": "middlegame",
+      "summary": "The Greek Gift is a bishop sacrifice on h7 or h2 designed to drag the castled king out and bring the queen and knight into a mating attack. Its soundness depends on access routes, not on the sacrifice alone.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Schrader, Gordon vs Johns, Daniel P 2026 (C21)",
+        "Cabrera Marmol, Manuel vs Garcia Garrido, Enric 2026 (C21)"
+      ],
+      "themes": [
+        "bishop sacrifice",
+        "king attack",
+        "mating net"
+      ],
+      "source_books": [
+        "Dvoretsky's Endgame Manual",
+        "Everyones First Chess Workbook Fundamental Tactics and Checkmates for Improvers - 738 Practical Exercises",
+        "How to Reassess Your Chess"
+      ],
+      "specificity": 2,
+      "features": [
+        "castled-kingside",
+        "hanging-h7",
+        "hanging-h2",
+        "queen-knight-coordination"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "attack.greek_gift#1",
+      "key_id": "attack.greek_gift",
+      "key_type": "attack",
+      "label": "Greek Gift",
+      "principle": "Entry-square checklist",
+      "phase": "middlegame",
+      "summary": "Before sacrificing on h7, verify that the knight can reach g5 with tempo, the queen can enter on h5 or the h-file, and the defending king cannot escape comfortably through g6, f6, or g8.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Schrader, Gordon vs Johns, Daniel P 2026 (C21)",
+        "Cabrera Marmol, Manuel vs Garcia Garrido, Enric 2026 (C21)"
+      ],
+      "themes": [
+        "calculation",
+        "checks",
+        "escape squares"
+      ],
+      "source_books": [
+        "Dvoretsky's Endgame Manual",
+        "Everyones First Chess Workbook Fundamental Tactics and Checkmates for Improvers - 738 Practical Exercises",
+        "How to Reassess Your Chess"
+      ],
+      "specificity": 4,
+      "features": [
+        "bishop-on-d3",
+        "knight-near-g5",
+        "queen-access-h5",
+        "castled-kingside"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "attack.greek_gift#2",
+      "key_id": "attack.greek_gift",
+      "key_type": "attack",
+      "label": "Greek Gift",
+      "principle": "Defender and center test",
+      "phase": "middlegame",
+      "summary": "The sacrifice is stronger when the defender on f6 is absent, pinned, or unable to control h7 and g4, while the attacking side has a stable center. If the center can be opened against your own king, the combination may be too slow.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Schrader, Gordon vs Johns, Daniel P 2026 (C21)",
+        "Cabrera Marmol, Manuel vs Garcia Garrido, Enric 2026 (C21)"
+      ],
+      "themes": [
+        "removing the defender",
+        "central stability",
+        "king safety"
+      ],
+      "source_books": [
+        "Dvoretsky's Endgame Manual",
+        "Everyones First Chess Workbook Fundamental Tactics and Checkmates for Improvers - 738 Practical Exercises",
+        "How to Reassess Your Chess"
+      ],
+      "specificity": 3,
+      "features": [
+        "missing-f6-knight",
+        "pinned-f6-knight",
+        "closed-center",
+        "bishop-on-c1-h6-diagonal"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "attack.greek_gift#3",
+      "key_id": "attack.greek_gift",
+      "key_type": "attack",
+      "label": "Greek Gift",
+      "principle": "Forcing continuation",
+      "phase": "middlegame",
+      "summary": "After the king accepts the Greek Gift, calculate forcing moves in order: knight checks, queen checks, and captures that remove flight squares. A quiet move is justified only if it creates an unavoidable threat and the king has no simplifying defense.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Schrader, Gordon vs Johns, Daniel P 2026 (C21)",
+        "Cabrera Marmol, Manuel vs Garcia Garrido, Enric 2026 (C21)"
+      ],
+      "themes": [
+        "checks",
+        "captures",
+        "mating attack"
+      ],
+      "source_books": [
+        "Dvoretsky's Endgame Manual",
+        "Everyones First Chess Workbook Fundamental Tactics and Checkmates for Improvers - 738 Practical Exercises",
+        "How to Reassess Your Chess"
+      ],
+      "specificity": 5,
+      "features": [
+        "king-on-h7",
+        "king-on-h2",
+        "knight-on-g5",
+        "queen-on-h-file"
+      ],
+      "slots": {},
+      "conditions": []
+    }
+  ]
+}

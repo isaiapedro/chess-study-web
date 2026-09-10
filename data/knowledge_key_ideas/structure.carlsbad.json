@@ -1,0 +1,114 @@
+{
+  "key_id": "structure.carlsbad",
+  "key_type": "structure",
+  "label": "Carlsbad Structure",
+  "idea_count": 3,
+  "ideas": [
+    {
+      "idea_id": "structure.carlsbad#0",
+      "key_id": "structure.carlsbad",
+      "key_type": "structure",
+      "label": "Carlsbad Structure",
+      "principle": "Let the Carlsbad structure choose the wing",
+      "phase": "middlegame",
+      "summary": "In the Carlsbad structure, plans come from the fixed central pawn skeleton: a queenside minority attack, central expansion, or a kingside initiative.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Queen's Gambit Exchange"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Aravindhan, Achyuth vs Chua, Ethan 2026 (C50)",
+        "Lewtak, Damian vs Rzap, Filip 2026 (C50)"
+      ],
+      "themes": [
+        "Carlsbad",
+        "pawn structures"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide"
+      ],
+      "specificity": 1,
+      "features": [
+        "fixed center"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "structure.carlsbad#1",
+      "key_id": "structure.carlsbad",
+      "key_type": "structure",
+      "label": "Carlsbad Structure",
+      "principle": "Create a queenside target with the minority",
+      "phase": "middlegame",
+      "summary": "The minority attack uses fewer queenside pawns to provoke a backward or isolated pawn. Its value depends on open files and piece coordination, not on mechanically pushing pawns.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Queen's Gambit Exchange"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927",
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]"
+      ],
+      "themes": [
+        "Carlsbad",
+        "minority attack"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide"
+      ],
+      "specificity": 3,
+      "features": [
+        "queenside majority",
+        "backward pawn",
+        "open file"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "structure.carlsbad#2",
+      "key_id": "structure.carlsbad",
+      "key_type": "structure",
+      "label": "Carlsbad Structure",
+      "principle": "Coordinate pieces before the minority break",
+      "phase": "middlegame",
+      "summary": "Before the Carlsbad b-pawn break, place rooks on the files likely to open and ensure a knight can occupy the weakened c5 or c6 square. If the opponent starts a kingside attack, compare speed rather than assuming the minority attack remains correct.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Queen's Gambit Exchange"
+      ],
+      "games": [
+        "Baryshpolets vs Turov 2012",
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]"
+      ],
+      "themes": [
+        "Carlsbad",
+        "minority attack",
+        "piece coordination"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide"
+      ],
+      "specificity": 5,
+      "features": [
+        "b-pawn lever",
+        "c-file",
+        "outpost",
+        "opposite-wing play"
+      ],
+      "slots": {},
+      "conditions": []
+    }
+  ]
+}

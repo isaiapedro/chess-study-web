@@ -1,0 +1,130 @@
+{
+  "key_id": "structure.caro_slav",
+  "key_type": "structure",
+  "label": "Caro-Slav Structure",
+  "idea_count": 3,
+  "ideas": [
+    {
+      "idea_id": "structure.caro_slav#0",
+      "key_id": "structure.caro_slav",
+      "key_type": "structure",
+      "label": "Caro-Slav Structure",
+      "principle": "Challenge the advanced d-pawn",
+      "phase": "middlegame",
+      "summary": "The Caro-Slav family is defined by one side's advanced d-pawn against a restrained opposing center. Plans revolve around challenging that pawn and freeing the cramped pieces behind it.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Caro-Kann Defense",
+        "Slav Defense",
+        "B12",
+        "B18"
+      ],
+      "games": [
+        "Volodin, Alexandr E. vs Riazantsev, Alexander 2026 (B12)",
+        "Maltsevskaya, Aleksandra vs Subelj, Jan 2026 (B12)",
+        "Aizenberg, Benny vs Nguyen Van Huy 2026 (B18)",
+        "Drissi, Anis vs Macon, Arthur 2026 (B18)"
+      ],
+      "themes": [
+        "Caro-Slav",
+        "pawn structures"
+      ],
+      "source_books": [
+        "Chess Structures: A Grandmaster Guide",
+        "Dvoretsky's Endgame Manual",
+        "How to Reassess Your Chess",
+        "Maneuvering: The Art of Piece Play"
+      ],
+      "specificity": 1,
+      "features": [
+        "advanced d-pawn",
+        "cramped pieces"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "structure.caro_slav#1",
+      "key_id": "structure.caro_slav",
+      "key_type": "structure",
+      "label": "Caro-Slav Structure",
+      "principle": "Choose the correct structural lever",
+      "phase": "middlegame",
+      "summary": "In Caro-Slav structures, compare breaks against the front of the chain with breaks against its base. Piece placement decides whether the position opens favorably or leaves a permanent weak pawn.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Caro-Kann Defense",
+        "Slav Defense",
+        "B12",
+        "B18"
+      ],
+      "games": [
+        "Volodin, Alexandr E. vs Riazantsev, Alexander 2026",
+        "Volodin, Alexandr E. vs Riazantsev, Alexander 2026 (B12)",
+        "Maltsevskaya, Aleksandra vs Subelj, Jan 2026 (B12)"
+      ],
+      "themes": [
+        "Caro-Slav",
+        "pawn break",
+        "piece coordination"
+      ],
+      "source_books": [
+        "Chess Structures: A Grandmaster Guide",
+        "Dvoretsky's Endgame Manual",
+        "How to Reassess Your Chess",
+        "Maneuvering: The Art of Piece Play"
+      ],
+      "specificity": 3,
+      "features": [
+        "chain head",
+        "chain base",
+        "weak pawn"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "structure.caro_slav#2",
+      "key_id": "structure.caro_slav",
+      "key_type": "structure",
+      "label": "Caro-Slav Structure",
+      "principle": "Release pieces trapped by your own pawn",
+      "phase": "middlegame",
+      "summary": "If an advanced e-pawn merely blocks your bishop and rook, returning or sacrificing it can restore coordination. Do not attack a distant pawn while the opponent has a protected passer or a forcing kingside advance.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Slav Defense",
+        "B12",
+        "B18"
+      ],
+      "games": [
+        "Maltsevskaya, Aleksandra vs Subelj, Jan 2026",
+        "Volodin, Alexandr E. vs Riazantsev, Alexander 2026 (B12)",
+        "Maltsevskaya, Aleksandra vs Subelj, Jan 2026 (B12)"
+      ],
+      "themes": [
+        "Caro-Slav",
+        "piece coordination",
+        "passed pawn"
+      ],
+      "source_books": [
+        "Chess Structures: A Grandmaster Guide",
+        "Dvoretsky's Endgame Manual",
+        "How to Reassess Your Chess",
+        "Maneuvering: The Art of Piece Play"
+      ],
+      "specificity": 5,
+      "features": [
+        "advanced e-pawn",
+        "blocked bishop",
+        "rook activity",
+        "protected passer"
+      ],
+      "slots": {},
+      "conditions": []
+    }
+  ]
+}

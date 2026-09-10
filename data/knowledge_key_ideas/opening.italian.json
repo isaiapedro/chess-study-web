@@ -1,0 +1,168 @@
+{
+  "key_id": "opening.italian",
+  "key_type": "opening",
+  "label": "Italian",
+  "idea_count": 4,
+  "ideas": [
+    {
+      "idea_id": "opening.italian#0",
+      "key_id": "opening.italian",
+      "key_type": "opening",
+      "label": "Italian",
+      "principle": "Complete development before opening the center.",
+      "phase": "opening",
+      "summary": "The Italian Game develops rapidly toward the center and kingside. In quieter lines, White builds with c3 and d3, prepares d4, and improves pieces before attacking; Black seeks equal central control and active breaks with ...d5 or ...b5.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Italian Game",
+        "C50-C59",
+        "C50",
+        "C54"
+      ],
+      "games": [
+        "Aravindhan, Achyuth vs Chua, Ethan 2026 (C50)",
+        "Lewtak, Damian vs Rzap, Filip 2026 (C50)",
+        "Sooraj M R vs Cook, Philip 2026 (C54)",
+        "Ozturk, Efe vs Guzel, Mehmet Alp 2026 (C54)"
+      ],
+      "themes": [
+        "development",
+        "central break",
+        "king safety"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide",
+        "FCO: Fundamental Chess Openings"
+      ],
+      "specificity": 1,
+      "features": [
+        "bishop on c4",
+        "c3-d3 center"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "opening.italian#1",
+      "key_id": "opening.italian",
+      "key_type": "opening",
+      "label": "Italian",
+      "principle": "Improve the least active piece while preserving the central break.",
+      "phase": "opening",
+      "summary": "Quiet Italian positions reward patient maneuvering. White often reroutes the queenside knight toward g3, places a rook on e1, and prepares d4 or kingside expansion; Black uses ...a6, ...Ba7, ...Re8, and ...d5 to prevent a lasting space disadvantage.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Italian Game",
+        "Giuoco Pianissimo",
+        "C50-C54",
+        "C50"
+      ],
+      "games": [
+        "Aravindhan, Achyuth vs Chua, Ethan 2026 (C50)",
+        "Lewtak, Damian vs Rzap, Filip 2026 (C50)",
+        "Sooraj M R vs Cook, Philip 2026 (C54)",
+        "Ozturk, Efe vs Guzel, Mehmet Alp 2026 (C54)"
+      ],
+      "themes": [
+        "maneuvering",
+        "piece improvement",
+        "central tension"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide",
+        "FCO: Fundamental Chess Openings"
+      ],
+      "specificity": 2,
+      "features": [
+        "closed italian center",
+        "d4 break",
+        "d5 break"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "opening.italian#2",
+      "key_id": "opening.italian",
+      "key_type": "opening",
+      "label": "Italian",
+      "principle": "Retain attacking pieces when the opponent lacks counterplay.",
+      "phase": "middlegame",
+      "summary": "In Italian middlegames with tension on d4, White often keeps pieces on the board and aims them at Black's king rather than simplifying into equality. Black should contest the center and use the c-file or queenside expansion before White's h-pawn and g-pawn gain momentum.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Italian Game",
+        "C50-C54",
+        "C50",
+        "C54"
+      ],
+      "games": [
+        "Sooraj M R vs Cook, Philip 2026",
+        "Aravindhan, Achyuth vs Chua, Ethan 2026 (C50)",
+        "Lewtak, Damian vs Rzap, Filip 2026 (C50)"
+      ],
+      "themes": [
+        "kingside expansion",
+        "central tension",
+        "piece retention"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide",
+        "FCO: Fundamental Chess Openings"
+      ],
+      "specificity": 4,
+      "features": [
+        "d4 tension",
+        "kingside pawn storm"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "opening.italian#3",
+      "key_id": "opening.italian",
+      "key_type": "opening",
+      "label": "Italian",
+      "principle": "Improve every piece before converting an extra pawn.",
+      "phase": "middlegame",
+      "summary": "In Italian positions where White gains a queenside pawn, conversion depends on restraining counterplay rather than rushing to exchange. Knights can blockade and attack fixed pawns, while the king and rooks should activate before the extra pawn advances.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Italian Game",
+        "C50-C54",
+        "C50",
+        "C54"
+      ],
+      "games": [
+        "Aravindhan, Achyuth vs Chua, Ethan 2026 (C50)",
+        "Lewtak, Damian vs Rzap, Filip 2026 (C50)",
+        "Sooraj M R vs Cook, Philip 2026 (C54)",
+        "Ozturk, Efe vs Guzel, Mehmet Alp 2026 (C54)"
+      ],
+      "themes": [
+        "conversion",
+        "blockade",
+        "simplification"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide",
+        "FCO: Fundamental Chess Openings"
+      ],
+      "specificity": 5,
+      "features": [
+        "queenside pawn majority",
+        "knight blockade"
+      ],
+      "slots": {},
+      "conditions": []
+    }
+  ]
+}

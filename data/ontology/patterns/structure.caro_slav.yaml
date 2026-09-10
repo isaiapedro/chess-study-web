@@ -1,0 +1,21 @@
+id: structure.caro_slav
+label: Caro-Slav Structure
+phase: middlegame
+family: chess_structures
+aliases:
+- caro slav
+- slav structure
+- c6 d5 structure
+keywords:
+- caro-slav
+- slav structure
+- c6 d5
+- light-square bishop
+rules_of_thumb:
+- Solid c6-d5; liberate light-square bishop.
+plans:
+- '...Bf5/...Bg4 liberation, ...c5 or ...e5 breaks.'
+- White space and minority ideas.
+related:
+- opening.caro_kann
+- opening.queens_gambit

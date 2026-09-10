@@ -1,0 +1,17 @@
+id: piece.coordination
+label: Coordination
+phase: middlegame
+family: piece
+aliases:
+- coordination
+- harmony
+keywords:
+- coordination
+- harmonious
+- pieces work together
+rules_of_thumb:
+- Harmonious synergy without blocking friendly pawns/lines.
+plans:
+- Harmonious synergy without blocking friendly pawns/lines.
+related:
+- piece.centralization

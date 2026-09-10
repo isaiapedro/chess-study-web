@@ -1,0 +1,19 @@
+id: positional.color_complexes
+label: Color Complexes
+phase: middlegame
+family: positional
+aliases:
+- dark-square weakness
+- light-square weakness
+- color complex
+keywords:
+- dark squares
+- light squares
+- color complex
+- weak complex
+rules_of_thumb:
+- Exploit dark-square or light-square weaknesses.
+plans:
+- Exploit dark-square or light-square weaknesses.
+related:
+- imbalance.good_vs_bad_bishop

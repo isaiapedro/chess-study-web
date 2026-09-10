@@ -1,0 +1,105 @@
+{
+  "key_id": "piece.rerouting",
+  "key_type": "piece",
+  "label": "Piece Rerouting",
+  "idea_count": 3,
+  "ideas": [
+    {
+      "idea_id": "piece.rerouting#0",
+      "key_id": "piece.rerouting",
+      "key_type": "piece",
+      "label": "Piece Rerouting",
+      "principle": "Improve the least useful piece",
+      "phase": "middlegame",
+      "summary": "When a piece has no useful targets, reroute it toward a stable square that supports the position's main break or restrains the opponent's plan.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]"
+      ],
+      "themes": [
+        "piece rerouting",
+        "piece activity"
+      ],
+      "source_books": [
+        "Playing the Petroff",
+        "Think Like a Super-GM"
+      ],
+      "specificity": 1,
+      "features": [],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "piece.rerouting#1",
+      "key_id": "piece.rerouting",
+      "key_type": "piece",
+      "label": "Piece Rerouting",
+      "principle": "Prefer maneuvering over needless pawn moves",
+      "phase": "middlegame",
+      "summary": "In symmetrical structures, patient rerouting is often stronger than creating unnecessary pawn weaknesses. Judge the route by destination, tempi, and tactical safety.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Petroff Defense"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]"
+      ],
+      "themes": [
+        "piece rerouting",
+        "symmetrical pawn structures"
+      ],
+      "source_books": [
+        "Playing the Petroff",
+        "Think Like a Super-GM"
+      ],
+      "specificity": 3,
+      "features": [
+        "weak squares",
+        "tempi"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "piece.rerouting#2",
+      "key_id": "piece.rerouting",
+      "key_type": "piece",
+      "label": "Piece Rerouting",
+      "principle": "Reroute without abandoning tactical duties",
+      "phase": "middlegame",
+      "summary": "A knight stranded on the flank or tied to a pawn can often return through the back rank to a central support square. Verify that moving it does not release a capture or remove control of a key recapture square.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Petroff Defense"
+      ],
+      "games": [
+        "Baryshpolets vs Turov 2012",
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]"
+      ],
+      "themes": [
+        "piece rerouting",
+        "knight maneuvering",
+        "calculation"
+      ],
+      "source_books": [
+        "Playing the Petroff",
+        "Think Like a Super-GM"
+      ],
+      "specificity": 5,
+      "features": [
+        "back-rank route",
+        "recapture square",
+        "pawn tension"
+      ],
+      "slots": {},
+      "conditions": []
+    }
+  ]
+}

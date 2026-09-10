@@ -1,0 +1,158 @@
+{
+  "key_id": "attack.initiative",
+  "key_type": "attack",
+  "label": "Initiative",
+  "idea_count": 4,
+  "ideas": [
+    {
+      "idea_id": "attack.initiative#0",
+      "key_id": "attack.initiative",
+      "key_type": "attack",
+      "label": "Initiative",
+      "principle": "Threat with development",
+      "phase": "any",
+      "summary": "The initiative belongs to the side making threats that demand answers. Preserve it by choosing moves that improve a piece while creating a check, capture, or concrete threat.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "C00",
+        "C11"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Naidon, Pietro Weber vs Born, Ary 2026 (C00)",
+        "Eslava Cordoba, Salome vs Rodriguez Patino, Santiago 2026 (C00)",
+        "Surkeev, Shumkar vs Fakhriddinxujaev, Umarxon 2026 (C11)"
+      ],
+      "themes": [
+        "initiative",
+        "tempo",
+        "forcing play"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings"
+      ],
+      "specificity": 1,
+      "features": [
+        "active-pieces",
+        "tempo-gain",
+        "opponent-on-defense"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "attack.initiative#1",
+      "key_id": "attack.initiative",
+      "key_type": "attack",
+      "label": "Initiative",
+      "principle": "Queenless initiative",
+      "phase": "endgame",
+      "summary": "An initiative can survive a queen trade when active rooks, advanced pawns, or exposed pieces continue to force defensive moves. Do not assume simplification ends the attack; reassess king activity and tactical threats.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "C00",
+        "C11"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Naidon, Pietro Weber vs Born, Ary 2026 (C00)",
+        "Eslava Cordoba, Salome vs Rodriguez Patino, Santiago 2026 (C00)",
+        "Surkeev, Shumkar vs Fakhriddinxujaev, Umarxon 2026 (C11)"
+      ],
+      "themes": [
+        "piece activity",
+        "simplification",
+        "tempo"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings"
+      ],
+      "specificity": 3,
+      "features": [
+        "queens-off",
+        "active-rook",
+        "advanced-passed-pawn",
+        "exposed-piece"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "attack.initiative#2",
+      "key_id": "attack.initiative",
+      "key_type": "attack",
+      "label": "Initiative",
+      "principle": "Attack as defense",
+      "phase": "middlegame",
+      "summary": "When both kings are vulnerable, the player who attacks first often becomes safer because the opponent's pieces are tied to defense. Favor forcing moves that deny the enemy time to organize counterplay.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "C00",
+        "C11"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Naidon, Pietro Weber vs Born, Ary 2026 (C00)",
+        "Eslava Cordoba, Salome vs Rodriguez Patino, Santiago 2026 (C00)",
+        "Surkeev, Shumkar vs Fakhriddinxujaev, Umarxon 2026 (C11)"
+      ],
+      "themes": [
+        "king safety",
+        "counterplay",
+        "forcing play"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings"
+      ],
+      "specificity": 2,
+      "features": [
+        "both-kings-exposed",
+        "uncoordinated-defense",
+        "active-queen"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "attack.initiative#3",
+      "key_id": "attack.initiative",
+      "key_type": "attack",
+      "label": "Initiative",
+      "principle": "Pawn-driven tempo net",
+      "phase": "endgame",
+      "summary": "An advanced pawn can maintain the initiative by attacking a rook's squares while a knight threatens a fork or mating net. Calculate the pawn push before routine king centralization, especially when every rook retreat loses coordination.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "C00",
+        "C11"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Naidon, Pietro Weber vs Born, Ary 2026 (C00)",
+        "Eslava Cordoba, Salome vs Rodriguez Patino, Santiago 2026 (C00)",
+        "Surkeev, Shumkar vs Fakhriddinxujaev, Umarxon 2026 (C11)"
+      ],
+      "themes": [
+        "advanced pawn",
+        "fork",
+        "piece restriction"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings"
+      ],
+      "specificity": 5,
+      "features": [
+        "advanced-passed-pawn",
+        "restricted-rook",
+        "knight-fork",
+        "active-king"
+      ],
+      "slots": {},
+      "conditions": []
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+id: endgame.strategic.pawn_break
+label: Endgame Pawn Break
+phase: endgame
+family: endgame_strategic
+aliases:
+- breakthrough
+- endgame pawn break
+keywords:
+- breakthrough
+- create a passer
+- pawn break endgame
+rules_of_thumb:
+- Create passed pawns or breakthrough runs in late stages.
+plans:
+- Create passed pawns or breakthrough runs in late stages.
+related:
+- structure.passed_pawn

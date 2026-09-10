@@ -12,7 +12,7 @@
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" />
   <style>
-    /* Chess Wrapped tokens — design/identity/chess-wrapped/README.md */
+    /* Chess Wrapped tokens — design/personal/chess-wrapped/shared/identity/README.md */
     :root {
       --bg: #000000;
       --charcoal: #0d0d0d;
@@ -130,6 +130,7 @@
     }
     .top-actions .chip.is-busy { opacity: 0.55; pointer-events: none; }
     .top-actions .chip.is-ok { color: var(--sage); border-color: var(--sage); }
+    .top-actions .chip:disabled { opacity: 0.4; cursor: not-allowed; }
 
     .shell {
       display: grid; grid-template-columns: minmax(0, 1fr);
@@ -428,6 +429,12 @@
     }
     .note .para { display: block; margin: 0 0 0.65em; }
     .note .para:last-child { margin-bottom: 0; }
+    .note.book .para:first-of-type {
+      font-weight: 600;
+      color: var(--cream);
+      letter-spacing: 0.01em;
+      margin-bottom: 0.75em;
+    }
     .note .move-seq {
       display: inline;
       padding: 0.12em 0.4em;
@@ -556,6 +563,11 @@
     .moves button.explore-move:hover { color: var(--text); }
     .moves button.explore-move.active { background: var(--sage); color: #05210f; }
     .moves .explore-mark { color: var(--sage); font-size: 0.8em; font-weight: 700; padding: 0 0.05rem; }
+    .moves button.explore-del {
+      background: transparent; border: none; color: var(--sage);
+      opacity: 0.55; padding: 0 0.15rem 0 0.05rem; font: inherit; font-weight: 700; cursor: pointer; line-height: 1;
+    }
+    .moves button.explore-del:hover { opacity: 1; color: #D32531; }
 
     .move-legend {
       display: flex; flex-wrap: wrap; align-items: center; gap: 0.7rem;
@@ -855,6 +867,33 @@
   let suppressBoardClick = false;
   const MULTIPV = 3;
   const userVariantsByGame = {};
+  const USER_VARIANTS_STORAGE_KEY = "chess-coach.userVariants::" + location.pathname;
+  function gameKey(i) {
+    const g = GAMES[i];
+    return (g && (g.sourcePgn || (g.matchup + "|" + (g.chapter || "")))) || ("game-" + i);
+  }
+  function persistAllVariants() {
+    try {
+      const byKey = {};
+      Object.keys(userVariantsByGame).forEach((i) => {
+        const list = userVariantsByGame[i];
+        if (list && list.length) byKey[gameKey(Number(i))] = list;
+      });
+      localStorage.setItem(USER_VARIANTS_STORAGE_KEY, JSON.stringify(byKey));
+    } catch (e) {}
+  }
+  function loadAllVariants() {
+    try {
+      const raw = localStorage.getItem(USER_VARIANTS_STORAGE_KEY);
+      if (!raw) return;
+      const byKey = JSON.parse(raw);
+      GAMES.forEach((g, i) => {
+        const list = byKey[gameKey(i)];
+        if (list && list.length) userVariantsByGame[i] = list;
+      });
+    } catch (e) {}
+  }
+  loadAllVariants();
 
   const PIECE_THEME = "https://chessboardjs.com/img/chesspieces/wikipedia/{piece}.png";
   function canDragPiece(piece) {
@@ -1068,8 +1107,8 @@
   const elBookScroll = document.getElementById("bookScroll");
   const elNotesEyebrow = document.getElementById("notesEyebrow");
   function bookKindLabel(kind) {
-    if (kind === "curated") return "Book note (curated)";
-    if (kind === "draft") return "Book note (draft)";
+    if (kind === "curated") return "Lesson";
+    if (kind === "draft") return "Draft note";
     if (kind === "legacy") return "Book note";
     return "Book note";
   }
@@ -1159,6 +1198,18 @@
     explore.id = record.id;
     if (i >= 0) list[i] = record;
     else list.push(record);
+    persistAllVariants();
+  }
+  function deleteUserVariant(id) {
+    const list = sessionVariants();
+    const i = list.findIndex((v) => v.id === id);
+    if (i < 0) return;
+    list.splice(i, 1);
+    if (explore && explore.id === id) explore = null;
+    persistAllVariants();
+    board.position(fenNow(), false);
+    renderNotes(); renderMoveList(); setButtons(); updateBookHint(); requestEval();
+    queueArrows();
   }
   function enterUserVariant(id, depth) {
     const v = sessionVariants().find((x) => x.id === id);
@@ -1707,14 +1758,17 @@
     }
     return bad ? out.slice(m.index).trim() : out;
   }
-  function formatNoteHtml(raw) {
-    let text = stripLeadingDiagramSalad(ocrCleanClient(stripTag(raw)));
+  function formatNoteHtml(raw, opts) {
+    const skipOcr = !!(opts && opts.skipOcr);
+    let text = stripTag(raw);
+    if (!skipOcr) text = stripLeadingDiagramSalad(ocrCleanClient(text));
+    else text = String(text || "").replace(/\u00a0/g, " ").trim();
     if (!text) return "";
     text = text.replace(/\r\n?/g, "\n").replace(/[ \t]+\n/g, "\n").replace(/\n[ \t]+/g, "\n");
     text = text.replace(/\b(Final\s+remarks)\s+(?=\d+\.\s)/gi, "$1\n\n");
     if (!/\n/.test(text)) {
       text = text.replace(
-        /(?:\.(?!\.)|(?<=[a-z]{2})[!?]+)\s+(?=(?:The |This |White |Black |Better |Threatening |Followed |An interesting |A better |Not |Once |Again |His |In |After |Precision |Learning |Something |Creating |Preparing |Ignoring |Covering |Aiming |We |It |And as |For example|If ))/g,
+        /(?:\.(?!\.)|(?<=[a-z]{2})[!?]+)\s+(?=(?:The |This |White |Black |Better |Threatening |Followed |An interesting |A better |Not |Once |Again |His |In |After |Precision |Learning |Something |Creating |Preparing |Ignoring |Covering |Aiming |We |It |And as |For example|If |What |Pause |Choice |Simple |Do not |Keep |Prefer |Owning |Teaching |Lesson |Assess |Structure |Opening |Knight |Bishop |Takeaways |How ))/g,
         function (m) { return m.replace(/\s+$/, "") + "\n\n"; }
       );
     }
@@ -2116,6 +2170,14 @@
       const noted = plies().filter((p) => p && p.book).length;
       elTreeBadge.textContent = miss ? "—" : (Math.ceil(total / 2) + " moves · " + noted + " noted");
     }
+    const elLichessBtn = document.getElementById("btnLichessStudy");
+    if (elLichessBtn) {
+      const hasPgn = !miss && !!(g.pgn && String(g.pgn).indexOf("[") >= 0);
+      elLichessBtn.disabled = !hasPgn;
+      elLichessBtn.title = hasPgn
+        ? "Push this game (PGN + comments + variations) to a Lichess study via local server"
+        : (miss ? "No PGN for missing game" : "No embedded PGN — rebuild chapter book");
+    }
     board.position(fenNow(), false);
     try { board.resize(); } catch (e) {}
     fitBoardToScreen();
@@ -2224,8 +2286,10 @@
       let html = "";
       const startKind = game().startBookKind || "legacy";
       if (game().startBook) {
-        html += '<div class="note book"><span class="tag">' + escapeHtml(bookKindLabel(startKind))
-          + "</span>" + formatNoteHtml(game().startBook) + "</div>";
+        const startOpts = { skipOcr: startKind === "curated" };
+        html += '<div class="note book">'
+          + (startKind === "curated" ? "" : ('<span class="tag">' + escapeHtml(bookKindLabel(startKind)) + "</span>"))
+          + formatNoteHtml(game().startBook, startOpts) + "</div>";
         setNotesEyebrow(startKind, true, false);
       } else {
         html = '<p class="empty">Drag a piece or tap square → square. Deviating starts your own line (kept for this session).</p>';
@@ -2239,8 +2303,10 @@
     let html = "";
     const kind = p.bookKind || "legacy";
     if (p.book) {
-      html += '<div class="note book"><span class="tag">' + escapeHtml(bookKindLabel(kind))
-        + "</span>" + formatNoteHtml(p.book) + "</div>";
+      const bookOpts = { skipOcr: kind === "curated" };
+      html += '<div class="note book">'
+        + (kind === "curated" ? "" : ('<span class="tag">' + escapeHtml(bookKindLabel(kind)) + "</span>"))
+        + formatNoteHtml(p.book, bookOpts) + "</div>";
     }
     // When no ply book note, surface Engine/RAG as honest "Book ideas" (not printed transcript).
     if (!p.book && p.engine) {
@@ -2275,7 +2341,8 @@
   }
   function pinnedBookHtml(anchor) {
     if (!anchor || !anchor.book) return "";
-    return '<div class="note book">' + formatNoteHtml(anchor.book) + "</div>";
+    const k = anchor.bookKind || "legacy";
+    return '<div class="note book">' + formatNoteHtml(anchor.book, { skipOcr: k === "curated" }) + "</div>";
   }
 
   function renderMoveList() {
@@ -2305,7 +2372,8 @@
         html += '<button type="button" class="explore-move" data-uv="' + escapeHtml(v.id) + '" data-d="' + di + '">'
           + escapeHtml(m.san) + "</button>";
       });
-      html += '<span class="explore-mark">]</span></span> ';
+      html += '<span class="explore-mark">]</span>'
+        + '<button type="button" class="explore-del" data-del-uv="' + escapeHtml(v.id) + '" title="Delete this line">×</button></span> ';
     }
     function appendSessionVariantsAt(plyIdx) {
       sessionVariants().forEach((v) => {
@@ -2395,6 +2463,10 @@
       explore.depth = Number(btn.dataset.d);
       board.position(fenNow(), false);
       renderNotes(); renderMoveList(); setButtons(); updateBookHint(); requestEval();
+    }));
+    elList.querySelectorAll("button.explore-del").forEach((btn) => btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      deleteUserVariant(btn.dataset.delUv);
     }));
     keepActiveMoveVisible();
   }
@@ -2747,9 +2819,90 @@
     const g = game();
     return (g.matchup || g.subtitle || g.sourcePgn || ("Game " + (gIdx + 1))).trim();
   }
+  function variantPgnText(v) {
+    return "({Your line} " + v.moves.map((m, j) => {
+      if (m.side === "white") return m.fullmove + "." + m.san;
+      if (j === 0) return m.fullmove + "..." + m.san;
+      return m.san;
+    }).join(" ") + ")";
+  }
+  // Walk mainline movetext (skipping {comments} and (variations), which may
+  // nest) so the Nth mainline move token lines up with plies()[N] — lets us
+  // splice a user-explored line in as a PGN sub-variation after that move.
+  function insertVariantsIntoPgn(rawPgn, variants) {
+    // A RAV attaches right after the mainline move it replaces — so a variant
+    // branching off plies()[baseIdx] (i.e. replacing plies()[baseIdx + 1])
+    // must be flushed once mainline token (baseIdx + 1) has been printed.
+    const byIdx = {};
+    variants.forEach((v) => {
+      const key = v.baseIdx + 1;
+      (byIdx[key] = byIdx[key] || []).push(v);
+    });
+    const splitAt = rawPgn.indexOf("\n\n");
+    const headers = splitAt >= 0 ? rawPgn.slice(0, splitAt + 2) : "";
+    const movetext = splitAt >= 0 ? rawPgn.slice(splitAt + 2) : rawPgn;
+    let out = "";
+    let i = 0;
+    let mainlineIdx = -1;
+    function flushAt(idx) {
+      const list = byIdx[idx];
+      if (!list) return;
+      out += list.map(variantPgnText).join(" ") + " ";
+    }
+    while (i < movetext.length) {
+      const c = movetext[i];
+      if (c === "{") {
+        const j = movetext.indexOf("}", i);
+        const end = j < 0 ? movetext.length : j + 1;
+        out += movetext.slice(i, end);
+        i = end;
+        continue;
+      }
+      if (c === "(") {
+        let depth = 1;
+        let j = i + 1;
+        while (j < movetext.length && depth > 0) {
+          if (movetext[j] === "(") depth++;
+          else if (movetext[j] === ")") depth--;
+          j++;
+        }
+        out += movetext.slice(i, j);
+        i = j;
+        continue;
+      }
+      if (/\s/.test(c)) { out += c; i++; continue; }
+      const m = /^[^\s{(]+/.exec(movetext.slice(i));
+      const token = m[0];
+      out += token;
+      i += token.length;
+      if (!/^\d+\.+$/.test(token) && !/^(1-0|0-1|1\/2-1\/2|\*)$/.test(token) && !/^\$\d+$/.test(token)) {
+        mainlineIdx++;
+        out += " ";
+        flushAt(mainlineIdx);
+        continue;
+      }
+      out += " ";
+    }
+    // Variant branching off the very last mainline move has no "next move"
+    // token to flush after — splice it in just before the result token.
+    const leftoverKeys = Object.keys(byIdx).map(Number).filter((k) => k > mainlineIdx);
+    if (leftoverKeys.length) {
+      const leftoverText = leftoverKeys.map((k) => byIdx[k].map(variantPgnText).join(" ")).join(" ");
+      const withResult = out.replace(/(1-0|0-1|1\/2-1\/2|\*)\s*$/, leftoverText + " $1");
+      out = withResult === out ? out + " " + leftoverText : withResult;
+    }
+    return headers + out.replace(/\s+/g, " ").replace(/ \)/g, ")").trim() + "\n";
+  }
   function currentPgnText() {
     const g = game();
-    return ((g && g.pgn) || "").trim();
+    const raw = ((g && g.pgn) || "").trim();
+    const variants = (userVariantsByGame[gIdx] || []).filter((v) => !v.stem && (v.moves || []).length);
+    if (!raw || !variants.length) return raw;
+    try {
+      return insertVariantsIntoPgn(raw, variants);
+    } catch (e) {
+      return raw;
+    }
   }
   function downloadPgnFallback(pgn, reason) {
     const name = (game().sourcePgn || ("game-" + (gIdx + 1) + ".pgn")).replace(/[^\w.\-]+/g, "_");
@@ -2767,6 +2920,23 @@
       window.alert(msg);
     }
   }
+  function parseStudyId(raw) {
+    const s = (raw || "").trim();
+    if (!s) return "";
+    const m = s.match(/study\/([A-Za-z0-9]{6,12})/);
+    return (m ? m[1] : s).trim();
+  }
+  function promptStudyTarget() {
+    let saved = "";
+    try { saved = localStorage.getItem(STUDY_ID_KEY) || ""; } catch (e) {}
+    const answer = window.prompt(
+      "Lichess study ID or URL to add this chapter to.\n" +
+        "Leave blank to create a brand-new study.",
+      saved
+    );
+    if (answer === null) return { cancelled: true };
+    return { cancelled: false, studyId: parseStudyId(answer) };
+  }
   async function pushToLichessStudy() {
     if (!elLichess || isMissing()) return;
     const pgn = currentPgnText();
@@ -2774,6 +2944,8 @@
       window.alert("No annotated PGN embedded for this game. Rebuild chapter book from *_bookwalk.pgn.");
       return;
     }
+    const target = promptStudyTarget();
+    if (target.cancelled) return;
     elLichess.classList.add("is-busy");
     elLichess.classList.remove("is-ok");
     elLichess.textContent = "…";
@@ -2783,10 +2955,7 @@
       visibility: "unlisted",
       orientation: orientation,
     };
-    try {
-      const saved = localStorage.getItem(STUDY_ID_KEY);
-      if (saved) body.studyId = saved;
-    } catch (e) {}
+    if (target.studyId) body.studyId = target.studyId;
     try {
       const res = await fetch("/api/lichess-study", {
         method: "POST",

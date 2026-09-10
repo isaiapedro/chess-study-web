@@ -1,0 +1,21 @@
+id: imbalance.material_asymmetry
+label: Material Asymmetry
+phase: any
+family: imbalance
+aliases:
+- material imbalance
+- exchange sacrifice
+- quality vs pawns
+keywords:
+- exchange sacrifice
+- material imbalance
+- piece for pawns
+- quality
+rules_of_thumb:
+- Exchange sacs, quality vs pawns, piece for pawns.
+plans:
+- Compensate material with activity, structure, or attack.
+related:
+- motif.sacrifice
+- attack.initiative
+detect: board_material

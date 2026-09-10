@@ -1,0 +1,174 @@
+{
+  "key_id": "motif.discovered_attack",
+  "key_type": "motif",
+  "label": "Discovered Attack",
+  "idea_count": 4,
+  "ideas": [
+    {
+      "idea_id": "motif.discovered_attack#0",
+      "key_id": "motif.discovered_attack",
+      "key_type": "motif",
+      "label": "Discovered Attack",
+      "principle": "Unmask the line piece",
+      "phase": "any",
+      "summary": "A discovered attack occurs when one piece moves away and uncovers an attack by a piece behind it. Search for moving pieces that can leave a rook, bishop, or queen aimed at a valuable target.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "E60",
+        "E90",
+        "D26",
+        "D42"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Sakline Mostafa, Sajid vs Barua, Oitijjo 2026 (E60)",
+        "Ushenina, Anna vs Fressinet, Laurent 2026 (E60)"
+      ],
+      "themes": [
+        "discovered attack",
+        "line piece",
+        "tempo"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide",
+        "Dvoretsky's Endgame Manual"
+      ],
+      "specificity": 1,
+      "features": [
+        "aligned-pieces",
+        "blocked-line",
+        "loose-target"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "motif.discovered_attack#1",
+      "key_id": "motif.discovered_attack",
+      "key_type": "motif",
+      "label": "Discovered Attack",
+      "principle": "Double threat discovery",
+      "phase": "any",
+      "summary": "The strongest discoveries make the moving piece create a second threat, especially check. The opponent must answer the new threat while the uncovered rook, bishop, or queen attacks material behind it.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "E60",
+        "E90",
+        "D26",
+        "D42"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Sakline Mostafa, Sajid vs Barua, Oitijjo 2026 (E60)",
+        "Ushenina, Anna vs Fressinet, Laurent 2026 (E60)"
+      ],
+      "themes": [
+        "double attack",
+        "discovered check",
+        "forcing play"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide",
+        "Dvoretsky's Endgame Manual"
+      ],
+      "specificity": 3,
+      "features": [
+        "line-piece-battery",
+        "moving-blocker",
+        "exposed-king"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "motif.discovered_attack#2",
+      "key_id": "motif.discovered_attack",
+      "key_type": "motif",
+      "label": "Discovered Attack",
+      "principle": "Checking discovery",
+      "phase": "any",
+      "summary": "When a queen and king or queen and rook lie on the same line, look for a check by the blocking piece that reveals an attack on the rear target. Answering the check may leave the valuable piece undefended.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "E60",
+        "E90",
+        "D26",
+        "D42"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Sakline Mostafa, Sajid vs Barua, Oitijjo 2026 (E60)",
+        "Ushenina, Anna vs Fressinet, Laurent 2026 (E60)"
+      ],
+      "themes": [
+        "discovered check",
+        "queen attack",
+        "material gain"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide",
+        "Dvoretsky's Endgame Manual"
+      ],
+      "specificity": 4,
+      "features": [
+        "aligned-queen",
+        "line-piece-battery",
+        "checking-blocker"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "motif.discovered_attack#3",
+      "key_id": "motif.discovered_attack",
+      "key_type": "motif",
+      "label": "Discovered Attack",
+      "principle": "Sacrificial discovery",
+      "phase": "middlegame",
+      "summary": "A bishop sacrifice on h2 or h7 can function as a discovery when accepting it opens a queen or rook attack on a distant loose piece. Calculate both the king attack and the newly opened line before deciding whether the sacrifice is sound.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "E60",
+        "E90",
+        "D26",
+        "D42"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Sakline Mostafa, Sajid vs Barua, Oitijjo 2026 (E60)",
+        "Ushenina, Anna vs Fressinet, Laurent 2026 (E60)"
+      ],
+      "themes": [
+        "bishop sacrifice",
+        "discovered attack",
+        "deflection"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide",
+        "Dvoretsky's Endgame Manual"
+      ],
+      "specificity": 5,
+      "features": [
+        "bishop-on-d6",
+        "bishop-on-d3",
+        "hanging-h2",
+        "hanging-h7",
+        "loose-piece-on-open-line"
+      ],
+      "slots": {},
+      "conditions": []
+    }
+  ]
+}

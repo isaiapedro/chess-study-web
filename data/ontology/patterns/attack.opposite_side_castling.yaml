@@ -1,0 +1,18 @@
+id: attack.opposite_side_castling
+label: Opposite-Side Castling
+phase: middlegame
+family: attack
+aliases:
+- opposite-side castling
+- opposite side castling
+keywords:
+- opposite-side
+- opposite side castling
+- pawn storm
+rules_of_thumb:
+- Races with pawn storms and heavy-piece batteries.
+plans:
+- Races with pawn storms and heavy-piece batteries.
+related:
+- motif.sacrifice
+- attack.king_safety

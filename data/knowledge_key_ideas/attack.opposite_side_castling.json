@@ -1,0 +1,185 @@
+{
+  "key_id": "attack.opposite_side_castling",
+  "key_type": "attack",
+  "label": "Opposite-Side Castling",
+  "idea_count": 4,
+  "ideas": [
+    {
+      "idea_id": "attack.opposite_side_castling#0",
+      "key_id": "attack.opposite_side_castling",
+      "key_type": "attack",
+      "label": "Opposite-Side Castling",
+      "principle": "Race of attacks",
+      "phase": "middlegame",
+      "summary": "With opposite-side castling, speed usually matters more than pawn weaknesses because each side can advance pawns toward the enemy king. Count tempi and compare which attack opens lines first.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "B90",
+        "B70",
+        "B80",
+        "E60"
+      ],
+      "games": [
+        "Wandor, Adam vs Iwan, Patryk 2026 (B90)",
+        "Sadhwani, Raunak vs Lu, Shanglei 2026 (B90)",
+        "Folin, Giorgio vs Picone Chiodo, Luigi 2026 (B70)",
+        "Nail, Christopher vs Voronkov, Andrii 2026 (B70)"
+      ],
+      "themes": [
+        "opposite-side castling",
+        "pawn storm",
+        "tempo"
+      ],
+      "source_books": [
+        "Chess Structures: A Grandmaster Guide",
+        "Maneuvering: The Art of Piece Play",
+        "Pawn structure chess",
+        "Pump Up Your Rating",
+        "Secrets of Positional Play",
+        "Small Steps to Giant Improvement: Master Pawn Play in Chess"
+      ],
+      "specificity": 1,
+      "features": [
+        "opposite-side-castling",
+        "pawn-storm",
+        "unclear-center"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "attack.opposite_side_castling#1",
+      "key_id": "attack.opposite_side_castling",
+      "key_type": "attack",
+      "label": "Opposite-Side Castling",
+      "principle": "Sicilian wing race",
+      "phase": "middlegame",
+      "summary": "In many Sicilian Defense structures with opposite-side castling, White attacks with kingside pawns while Black expands with queenside pawns. Each pawn push should either open a file, dislodge a defender, or gain a tempo on a piece.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Sicilian Defense",
+        "Najdorf Variation",
+        "Scheveningen Variation",
+        "B90"
+      ],
+      "games": [
+        "Wandor, Adam vs Iwan, Patryk 2026 (B90)",
+        "Sadhwani, Raunak vs Lu, Shanglei 2026 (B90)",
+        "Folin, Giorgio vs Picone Chiodo, Luigi 2026 (B70)",
+        "Nail, Christopher vs Voronkov, Andrii 2026 (B70)"
+      ],
+      "themes": [
+        "Sicilian Defense",
+        "pawn storm",
+        "wing attack"
+      ],
+      "source_books": [
+        "Chess Structures: A Grandmaster Guide",
+        "Maneuvering: The Art of Piece Play",
+        "Pawn structure chess",
+        "Pump Up Your Rating",
+        "Secrets of Positional Play",
+        "Small Steps to Giant Improvement: Master Pawn Play in Chess"
+      ],
+      "specificity": 3,
+      "features": [
+        "opposite-side-castling",
+        "scheveningen-structure",
+        "kingside-pawn-storm",
+        "queenside-pawn-majority"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "attack.opposite_side_castling#2",
+      "key_id": "attack.opposite_side_castling",
+      "key_type": "attack",
+      "label": "Opposite-Side Castling",
+      "principle": "Dislodge the c3 knight",
+      "phase": "middlegame",
+      "summary": "A queenside pawn thrust that drives a knight from c3 can gain a crucial attacking tempo and reduce control of d5. Time it before the knight occupies d5 or the opened files become more useful to the castled king's defender.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Sicilian Defense",
+        "B90",
+        "B70"
+      ],
+      "games": [
+        "Wandor, Adam vs Iwan, Patryk 2026 (B90)",
+        "Sadhwani, Raunak vs Lu, Shanglei 2026 (B90)",
+        "Folin, Giorgio vs Picone Chiodo, Luigi 2026 (B70)",
+        "Nail, Christopher vs Voronkov, Andrii 2026 (B70)"
+      ],
+      "themes": [
+        "tempo",
+        "piece displacement",
+        "queenside attack"
+      ],
+      "source_books": [
+        "Chess Structures: A Grandmaster Guide",
+        "Maneuvering: The Art of Piece Play",
+        "Pawn structure chess",
+        "Pump Up Your Rating",
+        "Secrets of Positional Play",
+        "Small Steps to Giant Improvement: Master Pawn Play in Chess"
+      ],
+      "specificity": 5,
+      "features": [
+        "knight-on-c3",
+        "b-pawn-advance",
+        "weak-d5",
+        "queenside-castled-king"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "attack.opposite_side_castling#3",
+      "key_id": "attack.opposite_side_castling",
+      "key_type": "attack",
+      "label": "Opposite-Side Castling",
+      "principle": "Center before wing",
+      "phase": "middlegame",
+      "summary": "Do not attack on autopilot when the center can open. A central break with check or tempo may be faster than either wing attack, and an exposed king can make further pawn advances impossible.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "B90",
+        "B70",
+        "B80",
+        "E60"
+      ],
+      "games": [
+        "Wandor, Adam vs Iwan, Patryk 2026 (B90)",
+        "Sadhwani, Raunak vs Lu, Shanglei 2026 (B90)",
+        "Folin, Giorgio vs Picone Chiodo, Luigi 2026 (B70)",
+        "Nail, Christopher vs Voronkov, Andrii 2026 (B70)"
+      ],
+      "themes": [
+        "central break",
+        "king safety",
+        "counterplay"
+      ],
+      "source_books": [
+        "Chess Structures: A Grandmaster Guide",
+        "Maneuvering: The Art of Piece Play",
+        "Pawn structure chess",
+        "Pump Up Your Rating",
+        "Secrets of Positional Play",
+        "Small Steps to Giant Improvement: Master Pawn Play in Chess"
+      ],
+      "specificity": 2,
+      "features": [
+        "opposite-side-castling",
+        "unresolved-center",
+        "central-pawn-break"
+      ],
+      "slots": {},
+      "conditions": []
+    }
+  ]
+}

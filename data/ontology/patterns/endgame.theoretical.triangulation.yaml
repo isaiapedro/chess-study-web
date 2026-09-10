@@ -1,0 +1,17 @@
+id: endgame.theoretical.triangulation
+label: Triangulation
+phase: endgame
+family: endgame_theoretical
+aliases:
+- triangulation
+- opposition
+keywords:
+- triangulation
+- lose a tempo
+- opposition
+rules_of_thumb:
+- Lose a move to gain opposition in king & pawn endings.
+plans:
+- Lose a move to gain opposition in king & pawn endings.
+related:
+- endgame.strategic.active_king

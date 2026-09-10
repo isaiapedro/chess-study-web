@@ -1,0 +1,122 @@
+{
+  "key_id": "structure.iqp",
+  "key_type": "structure",
+  "label": "Isolated Queen's Pawn",
+  "idea_count": 3,
+  "ideas": [
+    {
+      "idea_id": "structure.iqp#0",
+      "key_id": "structure.iqp",
+      "key_type": "structure",
+      "label": "Isolated Queen's Pawn",
+      "principle": "Use IQP activity before simplification",
+      "phase": "middlegame",
+      "summary": "An IQP grants space, open lines, and active piece play, but becomes a long-term target if its advance is stopped and pieces are exchanged.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "D26",
+        "D42",
+        "B90",
+        "B70"
+      ],
+      "games": [
+        "Diak, Hryhorii vs Kovalenko, Daniil D. 2026 (D26)",
+        "Dardha, Daniel vs Sumets, Andrey 2026 (D26)",
+        "Karaokcu, Erkin vs Afanasiev, Nikita 2026 (D42)",
+        "Malek, Jan vs Shimanov, Aleksandr 2026 (D42)"
+      ],
+      "themes": [
+        "IQP",
+        "pawn structures"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide"
+      ],
+      "specificity": 1,
+      "features": [
+        "isolated d-pawn",
+        "open lines"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "structure.iqp#1",
+      "key_id": "structure.iqp",
+      "key_type": "structure",
+      "label": "Isolated Queen's Pawn",
+      "principle": "Advance the IQP or build the blockade",
+      "phase": "middlegame",
+      "summary": "The IQP side should coordinate pieces for the liberating advance or a kingside attack. The defender should blockade the pawn, exchange active pieces, and pressure the pawn from front and side.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Queen's Gambit Accepted",
+        "D26",
+        "D42"
+      ],
+      "games": [
+        "Diak, Hryhorii vs Kovalenko, Daniil D. 2026",
+        "Diak, Hryhorii vs Kovalenko, Daniil D. 2026 (D26)",
+        "Dardha, Daniel vs Sumets, Andrey 2026 (D26)"
+      ],
+      "themes": [
+        "IQP",
+        "blockade",
+        "simplification"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide"
+      ],
+      "specificity": 3,
+      "features": [
+        "liberating advance",
+        "kingside attack",
+        "isolated d-pawn"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "structure.iqp#2",
+      "key_id": "structure.iqp",
+      "key_type": "structure",
+      "label": "Isolated Queen's Pawn",
+      "principle": "Prepare the IQP break tactically",
+      "phase": "middlegame",
+      "summary": "Before advancing an IQP, unpin the supporting knight and prevent the opponent's favorable bishop development or blockade. The push is strongest when it opens diagonals with tempo and leaves no weak pawn behind.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Queen's Gambit Accepted",
+        "D26",
+        "D42"
+      ],
+      "games": [
+        "Dardha, Daniel vs Sumets, Andrey 2026",
+        "Diak, Hryhorii vs Kovalenko, Daniil D. 2026 (D26)",
+        "Dardha, Daniel vs Sumets, Andrey 2026 (D26)"
+      ],
+      "themes": [
+        "IQP",
+        "piece coordination",
+        "pawn break"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide"
+      ],
+      "specificity": 5,
+      "features": [
+        "pinned knight",
+        "bishop development",
+        "open diagonal"
+      ],
+      "slots": {},
+      "conditions": []
+    }
+  ]
+}

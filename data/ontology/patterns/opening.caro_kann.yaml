@@ -1,15 +1,16 @@
 id: opening.caro_kann
 label: Caro-Kann Defence
 phase: opening
-family: caro_kann
+family: opening
 aliases:
 - caro-kann
 - caro kann
 keywords:
 - Caro-Kann
-- Caro Kann
-- Advance Caro
-- Classical Caro
+- Advance
+- Classical
+- Exchange
+- Modern
 eco_prefixes:
 - B10
 - B11
@@ -22,18 +23,12 @@ eco_prefixes:
 - B18
 - B19
 opening_tokens:
-- caro-kann
-- caro kann
-rules_of_thumb:
-- Solid ...c6/...d5 structure; Black often develops the light-squared bishop outside the chain.
-- Endgames can favour Black's structure if White overpresses.
-plans:
-- Black — solid development, timely ...c5, good bishop.
-- White — space, piece activity, attack before the position simplifies.
-related:
-- structure.pawn_chain
-- structure.iqp
+- caro
 detect: eco_or_opening
-exemplars:
-- Capablanca vs Alekhine, Buenos Aires 1927
-- Karpov Caro-Kann repertoire games
+rules_of_thumb:
+- Advance, Classical, Exchange, Modern.
+plans:
+- Solid ...c6/...d5; liberate Bc8.
+related:
+- structure.caro_slav
+- structure.pawn_chain

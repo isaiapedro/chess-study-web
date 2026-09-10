@@ -1,0 +1,240 @@
+{
+  "key_id": "attack.king_safety",
+  "key_type": "attack",
+  "label": "King Safety / Attack",
+  "idea_count": 4,
+  "ideas": [
+    {
+      "idea_id": "attack.king_safety#0",
+      "key_id": "attack.king_safety",
+      "key_type": "attack",
+      "label": "King Safety / Attack",
+      "principle": "Relative king safety",
+      "phase": "any",
+      "summary": "- Compare open lines, defenders, and flight squares before committing to an attack. - Castle or close files before the centre opens if your king is still exposed.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "E60",
+        "E90",
+        "D26",
+        "D42"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Sakline Mostafa, Sajid vs Barua, Oitijjo 2026 (E60)",
+        "Ushenina, Anna vs Fressinet, Laurent 2026 (E60)"
+      ],
+      "themes": [
+        "attack.king_safety",
+        "piece.coordination"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide"
+      ],
+      "specificity": 1,
+      "features": [
+        "open-file-near-king",
+        "weak-color-complex",
+        "limited-flight-squares",
+        "uncastled-king"
+      ],
+      "slots": {
+        "worked": "your king stayed safer than the opposing one behind a useful shield",
+        "attention": "open lines and thin defenders still expose the king",
+        "lesson": "compare open lines, defenders, and flight squares before committing material",
+        "plan": "castle or close the dangerous files before opening the centre"
+      },
+      "conditions": [
+        {
+          "softKey": "attack.king_safety",
+          "polarity": "any"
+        },
+        {
+          "metric": "king_attackers_pct",
+          "polarity": "bad"
+        },
+        {
+          "metric": "opp_king_uncastled",
+          "polarity": "good"
+        },
+        {
+          "feature": "uncastled-king",
+          "polarity": "bad"
+        }
+      ]
+    },
+    {
+      "idea_id": "attack.king_safety#1",
+      "key_id": "attack.king_safety",
+      "key_type": "attack",
+      "label": "King Safety / Attack",
+      "principle": "Open the attacking wing",
+      "phase": "middlegame",
+      "summary": "- Storm with the pawn beside the chain head so heavy pieces gain open files. - Do not push if the defender can seal the wing and counterattack the abandoned pawns.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "E60",
+        "E90",
+        "D26",
+        "D42"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Sakline Mostafa, Sajid vs Barua, Oitijjo 2026 (E60)",
+        "Ushenina, Anna vs Fressinet, Laurent 2026 (E60)"
+      ],
+      "themes": [
+        "attack.king_safety",
+        "attack.opposite_side_castling",
+        "imbalance.space"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide"
+      ],
+      "specificity": 3,
+      "features": [
+        "castled-kingside",
+        "locked-pawn-chain",
+        "adjacent-pawn-break",
+        "rook-behind-pawn"
+      ],
+      "slots": {
+        "worked": "the pawn storm began opening useful attacking files",
+        "attention": "the wing advance still needs entry squares before it creates only weaknesses",
+        "lesson": "push the pawn beside the chain head to open files without stranding your own king",
+        "plan": "bring heavy pieces behind the storm once a file opens"
+      },
+      "conditions": [
+        {
+          "softKey": "attack.king_safety",
+          "polarity": "good"
+        },
+        {
+          "softKey": "attack.opposite_side_castling",
+          "polarity": "any"
+        },
+        {
+          "situation": "pawn_storm",
+          "polarity": "any"
+        },
+        {
+          "feature": "castled-kingside",
+          "polarity": "any"
+        }
+      ]
+    },
+    {
+      "idea_id": "attack.king_safety#2",
+      "key_id": "attack.king_safety",
+      "key_type": "attack",
+      "label": "King Safety / Attack",
+      "principle": "Remove the key defender",
+      "phase": "middlegame",
+      "summary": "- Identify the key defender of the castled king before calculating sacrifices. - Pin, exchange, or deflect that piece so checks become forcing.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "E60",
+        "E90",
+        "D26",
+        "D42"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Sakline Mostafa, Sajid vs Barua, Oitijjo 2026 (E60)",
+        "Ushenina, Anna vs Fressinet, Laurent 2026 (E60)"
+      ],
+      "themes": [
+        "attack.king_safety",
+        "motif.pin_and_skewer",
+        "attack.initiative"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide"
+      ],
+      "specificity": 2,
+      "features": [
+        "castled-king",
+        "overloaded-defender",
+        "queen-rook-battery"
+      ],
+      "slots": {
+        "worked": "pressure already fixed a key defender near the king",
+        "attention": "the key defender still holds the position together",
+        "lesson": "remove or overload the key defender before the sacrifice lands",
+        "plan": "pin or exchange the defender, then force with checks"
+      },
+      "conditions": [
+        {
+          "softKey": "attack.king_safety",
+          "polarity": "bad"
+        },
+        {
+          "feature": "overloaded-defender",
+          "polarity": "any"
+        }
+      ]
+    },
+    {
+      "idea_id": "attack.king_safety#3",
+      "key_id": "attack.king_safety",
+      "key_type": "attack",
+      "label": "King Safety / Attack",
+      "principle": "Pawn-storm commitment",
+      "phase": "middlegame",
+      "summary": "- A kingside pawn advance only compensates when it creates entry squares now. - If the wing can be closed, stop and fix the abandoned queenside instead.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "E60",
+        "E90",
+        "D26",
+        "D42"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Sakline Mostafa, Sajid vs Barua, Oitijjo 2026 (E60)",
+        "Ushenina, Anna vs Fressinet, Laurent 2026 (E60)"
+      ],
+      "themes": [
+        "attack.king_safety",
+        "imbalance.space"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide"
+      ],
+      "specificity": 4,
+      "features": [
+        "advanced-g-pawn",
+        "queenside-weakness",
+        "closed-kingside",
+        "open-g-file"
+      ],
+      "slots": {
+        "worked": "the kingside advance created real entry pressure",
+        "attention": "the storm risks leaving queenside holes without entry squares",
+        "lesson": "commit to the storm only when entry squares appear immediately"
+      },
+      "conditions": [
+        {
+          "softKey": "attack.king_safety",
+          "polarity": "bad"
+        },
+        {
+          "feature": "queenside-weakness",
+          "polarity": "bad"
+        }
+      ]
+    }
+  ]
+}

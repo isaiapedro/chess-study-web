@@ -1,0 +1,19 @@
+id: motif.discovered_attack
+label: Discovered Attack
+phase: any
+family: tactics
+aliases:
+- discovered attack
+- discovered check
+- battery
+keywords:
+- discovered attack
+- discovered check
+- battery
+- unmask
+rules_of_thumb:
+- Unmask threats via battery shifts.
+plans:
+- Unmask threats via battery shifts.
+related:
+- attack.initiative

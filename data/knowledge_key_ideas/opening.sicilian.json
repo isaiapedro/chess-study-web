@@ -1,0 +1,158 @@
+{
+  "key_id": "opening.sicilian",
+  "key_type": "opening",
+  "label": "Sicilian Defence",
+  "idea_count": 4,
+  "ideas": [
+    {
+      "idea_id": "opening.sicilian#0",
+      "key_id": "opening.sicilian",
+      "key_type": "opening",
+      "label": "Sicilian Defence",
+      "principle": "Use structural imbalance to create counterplay.",
+      "phase": "opening",
+      "summary": "The Sicilian Defence creates an asymmetrical fight: Black exchanges the c-pawn for White's d-pawn and gains a central pawn majority, while White receives space and faster kingside development. Both sides must seek active play because the structure rarely rewards passivity.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Sicilian Defence",
+        "B20-B99"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Wandor, Adam vs Iwan, Patryk 2026 (B90)",
+        "Sadhwani, Raunak vs Lu, Shanglei 2026 (B90)"
+      ],
+      "themes": [
+        "asymmetry",
+        "counterplay",
+        "central majority"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings"
+      ],
+      "specificity": 1,
+      "features": [
+        "semi-open c-file",
+        "black central pawn majority"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "opening.sicilian#1",
+      "key_id": "opening.sicilian",
+      "key_type": "opening",
+      "label": "Sicilian Defence",
+      "principle": "Attack where your open files and pawn levers point.",
+      "phase": "middlegame",
+      "summary": "Open Sicilian middlegames often feature opposite-wing attacks. White uses the f-pawn, g-pawn, and pieces against Black's king, while Black presses along the c-file and expands with ...b5-b4; development speed and forcing moves matter more than collecting loose pawns.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Sicilian Defence",
+        "Open Sicilian",
+        "B30-B99"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Wandor, Adam vs Iwan, Patryk 2026 (B90)",
+        "Sadhwani, Raunak vs Lu, Shanglei 2026 (B90)"
+      ],
+      "themes": [
+        "opposite-wing attacks",
+        "open file",
+        "initiative"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings"
+      ],
+      "specificity": 2,
+      "features": [
+        "open c-file",
+        "queenside pawn storm",
+        "kingside pawn storm"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "opening.sicilian#2",
+      "key_id": "opening.sicilian",
+      "key_type": "opening",
+      "label": "Sicilian Defence",
+      "principle": "Choose recaptures by king safety and square control, not pawn shape alone.",
+      "phase": "middlegame",
+      "summary": "In Najdorf English Attack structures, White often castles queenside and advances f3, g4, and h4, while Black counters with ...b5-b4 and pressure on c3. Recapturing on b3 with the a-pawn can protect the castled king and deny Black a c4 outpost, even at the cost of doubled pawns.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Sicilian Defence",
+        "Najdorf English Attack",
+        "B90"
+      ],
+      "games": [
+        "Wandor, Adam vs Iwan, Patryk 2026",
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]"
+      ],
+      "themes": [
+        "english attack",
+        "opposite-side castling",
+        "recapture choice"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings"
+      ],
+      "specificity": 4,
+      "features": [
+        "najdorf structure",
+        "a-file reinforcement",
+        "c4 square"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "opening.sicilian#3",
+      "key_id": "opening.sicilian",
+      "key_type": "opening",
+      "label": "Sicilian Defence",
+      "principle": "In a cramped position, prepare one freeing break with every piece.",
+      "phase": "middlegame",
+      "summary": "Against a Maroczy Bind, Black has less space but can build a Hedgehog with pawns on a6, b6, d6, and e6. The position comes alive through ...b5 or ...d5; Black should prepare these breaks patiently, while White must improve pieces and prevent liberation without overextending.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Sicilian Defence",
+        "Maroczy Bind",
+        "B36-B38"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Wandor, Adam vs Iwan, Patryk 2026 (B90)",
+        "Sadhwani, Raunak vs Lu, Shanglei 2026 (B90)"
+      ],
+      "themes": [
+        "maroczy bind",
+        "hedgehog",
+        "freeing break"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings"
+      ],
+      "specificity": 5,
+      "features": [
+        "hedgehog structure",
+        "white c4-e4 bind",
+        "b5 break",
+        "d5 break"
+      ],
+      "slots": {},
+      "conditions": []
+    }
+  ]
+}

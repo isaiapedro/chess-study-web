@@ -1,6 +1,7 @@
 from chess_coach.rag.ingest import ingest_path
 from chess_coach.rag.retrieve import (
     Passage,
+    merge_retrieve_pools,
     passages_to_nuggets,
     retrieve_for_position,
     retrieve_passages,
@@ -14,6 +15,7 @@ from chess_coach.rag.synthesize_annotated import synthesize_annotated
 __all__ = [
     "Passage",
     "ingest_path",
+    "merge_retrieve_pools",
     "passages_to_nuggets",
     "retrieve_for_position",
     "retrieve_passages",

@@ -1,0 +1,128 @@
+{
+  "key_id": "endgame.theoretical.fortress",
+  "key_type": "endgame",
+  "label": "Fortress",
+  "idea_count": 3,
+  "ideas": [
+    {
+      "idea_id": "endgame.theoretical.fortress#0",
+      "key_id": "endgame.theoretical.fortress",
+      "key_type": "endgame",
+      "label": "Fortress",
+      "principle": "Test the defender's setup for zugzwang or a second weakness before assuming it c",
+      "phase": "endgame",
+      "summary": "A material advantage does not guarantee a win when the defender can build a fortress. Before simplifying, identify whether the defending king and pieces can hold fixed squares without being forced to concede.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "E60",
+        "E90",
+        "D26",
+        "D42"
+      ],
+      "games": [
+        "Sakline Mostafa, Sajid vs Barua, Oitijjo 2026 (E60)",
+        "Ushenina, Anna vs Fressinet, Laurent 2026 (E60)",
+        "MacDonald, Duncan vs Woozeer, Seth 2026 (E90)",
+        "Guerra Mansilla, Jorge Maximilian vs Gutierrez Gomez, Nicolas 1999 2026 (E90)"
+      ],
+      "themes": [
+        "fortress",
+        "defensive technique",
+        "simplification"
+      ],
+      "source_books": [
+        "Chess Structures: A Grandmaster Guide",
+        "Dvoretsky's Endgame Manual"
+      ],
+      "specificity": 1,
+      "features": [
+        "closed entry squares",
+        "stable blockade",
+        "no pawn breaks"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "endgame.theoretical.fortress#1",
+      "key_id": "endgame.theoretical.fortress",
+      "key_type": "endgame",
+      "label": "Fortress",
+      "principle": "Stretch an opposite-bishop fortress across two fronts.",
+      "phase": "endgame",
+      "summary": "Opposite-colored bishop endings often become fortresses because the defender can control the promotion color while the attacking bishop cannot challenge it. Keep pawns on squares the defending bishop must guard and seek threats on both wings.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "E60",
+        "E90",
+        "D26",
+        "D42"
+      ],
+      "games": [
+        "Sakline Mostafa, Sajid vs Barua, Oitijjo 2026 (E60)",
+        "Ushenina, Anna vs Fressinet, Laurent 2026 (E60)",
+        "MacDonald, Duncan vs Woozeer, Seth 2026 (E90)",
+        "Guerra Mansilla, Jorge Maximilian vs Gutierrez Gomez, Nicolas 1999 2026 (E90)"
+      ],
+      "themes": [
+        "fortress",
+        "opposite bishops",
+        "two weaknesses"
+      ],
+      "source_books": [
+        "Chess Structures: A Grandmaster Guide",
+        "Dvoretsky's Endgame Manual"
+      ],
+      "specificity": 3,
+      "features": [
+        "opposite-colored bishops",
+        "split pawn wings",
+        "blockade squares"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "endgame.theoretical.fortress#2",
+      "key_id": "endgame.theoretical.fortress",
+      "key_type": "endgame",
+      "label": "Fortress",
+      "principle": "Recognize the wrong-bishop rook-pawn fortress before trading into it.",
+      "phase": "endgame",
+      "summary": "Against a bishop-and-rook-pawn fortress, first verify whether the bishop controls the pawn's promotion square. If the defending king can reach the corner that the bishop cannot drive it from, the extra pawn may be useless.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "E60",
+        "E90",
+        "D26",
+        "D42"
+      ],
+      "games": [
+        "Sakline Mostafa, Sajid vs Barua, Oitijjo 2026 (E60)",
+        "Ushenina, Anna vs Fressinet, Laurent 2026 (E60)",
+        "MacDonald, Duncan vs Woozeer, Seth 2026 (E90)",
+        "Guerra Mansilla, Jorge Maximilian vs Gutierrez Gomez, Nicolas 1999 2026 (E90)"
+      ],
+      "themes": [
+        "fortress",
+        "wrong bishop",
+        "rook pawn"
+      ],
+      "source_books": [
+        "Chess Structures: A Grandmaster Guide",
+        "Dvoretsky's Endgame Manual"
+      ],
+      "specificity": 5,
+      "features": [
+        "rook pawn",
+        "wrong-colored bishop",
+        "king in promotion corner"
+      ],
+      "slots": {},
+      "conditions": []
+    }
+  ]
+}

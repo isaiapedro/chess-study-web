@@ -4,7 +4,7 @@ import re
 from dataclasses import dataclass
 from typing import Any, Literal
 
-from chess_coach.features import PositionFeatures, extract_features
+from chess_coach.features import PositionFeatures, extract_features, narrative_seed_for_key
 from chess_coach.ontology.cards import pattern_keyword_set
 from chess_coach.ontology.load import expand_related
 from chess_coach.rag.embeddings import get_embedder
@@ -288,6 +288,41 @@ def retrieve_passages(
     )[:top_k]
 
 
+def merge_retrieve_pools(
+    *,
+    annotated: list[Passage],
+    summaries: list[Passage],
+    books: list[Passage],
+    top_k: int,
+    allow_books: bool,
+) -> list[Passage]:
+    merged: list[Passage] = []
+    seen_text: set[str] = set()
+
+    def _add(pool: list[Passage]) -> None:
+        for p in pool:
+            if p.source == "knowledge_summary" and not summary_is_teachable(p.text):
+                continue
+            key = re.sub(r"\s+", " ", p.text.lower())[:80]
+            if key in seen_text:
+                continue
+            seen_text.add(key)
+            merged.append(p)
+            if len(merged) >= top_k:
+                return
+
+    curated = [p for p in annotated if p.quality == "curated"]
+    other_ann = [p for p in annotated if p.quality != "curated"]
+    _add(curated)
+    if len(merged) < top_k:
+        _add(other_ann)
+    if len(merged) < top_k:
+        _add(summaries)
+    if len(merged) < top_k and allow_books:
+        _add(books)
+    return merged[:top_k]
+
+
 def retrieve_for_position(
     fen: str,
     config: dict[str, Any],
@@ -300,10 +335,15 @@ def retrieve_for_position(
     opening: str = "",
     want_count: int = 2,
     narrative: str = "",
+    tactical_kind: str = "",
+    tactical_head: str = "",
+    trap_square: str = "",
+    piece_label: str = "",
+    drop_cp: int | None = None,
 ) -> list[Passage]:
     """
-    Knowledge summaries (PDF→summary→PGN links) first, then annotated bookwalk,
-    then raw book chunks.
+    Annotated bookwalk first, then knowledge summaries, then raw book chunks
+    only for unresolved opening/ECO theory.
     """
     rag = config.get("rag") or {}
     ont_dir = (config.get("ontology") or {}).get("dir")
@@ -313,11 +353,16 @@ def retrieve_for_position(
         opening=opening,
         played_san=san,
         best_san=best_san,
+        delta_cp=drop_cp,
         ontology_dir=ont_dir,
+        tactical_kind=tactical_kind,
+        tactical_head=tactical_head,
+        trap_square=trap_square,
+        piece_label=piece_label,
     )
     if themes:
-        merged = list(dict.fromkeys([*themes, *features.themes]))
-        features.themes = merged
+        merged_themes = list(dict.fromkeys([*themes, *features.themes]))
+        features.themes = merged_themes
     if phase:
         features.phase = phase
     if narrative:
@@ -342,10 +387,12 @@ def retrieve_for_position(
     )
     keywords = pattern_keyword_set(pattern_ids, ontology_dir=ont_dir)
     query = features.query_text()
-    if themes:
-        query = f"{query}. Themes: {', '.join(themes)}"
-    if san or best_san:
-        query = f"{query}. Move played {san or ''}. Best {best_san or ''}".strip()
+    if not narrative and not san and themes:
+        keyish = next((t for t in themes if "." in t), "")
+        if keyish:
+            query = narrative_seed_for_key(
+                keyish, opening=opening, eco=eco
+            )
 
     try:
         embedder = get_embedder(
@@ -431,31 +478,14 @@ def retrieve_for_position(
     except Exception:
         books = []
 
-    merged: list[Passage] = []
-    seen_text: set[str] = set()
-
-    def _add(pool: list[Passage]) -> None:
-        for p in pool:
-            if p.source == "knowledge_summary" and not summary_is_teachable(p.text):
-                continue
-            key = re.sub(r"\s+", " ", p.text.lower())[:80]
-            if key in seen_text:
-                continue
-            seen_text.add(key)
-            merged.append(p)
-            if len(merged) >= top_k:
-                return
-
-    _add(summaries)
-    if len(merged) < top_k:
-        curated = [p for p in annotated if p.quality == "curated"]
-        _add(curated)
-    if len(merged) < top_k:
-        other_ann = [p for p in annotated if p.quality != "curated"]
-        _add(other_ann)
-    if len(merged) < top_k:
-        _add(books)
-    return merged[:top_k]
+    allow_books = want_opening and not tactical_kind and features.phase == "opening"
+    return merge_retrieve_pools(
+        annotated=annotated,
+        summaries=summaries,
+        books=books,
+        top_k=top_k,
+        allow_books=allow_books,
+    )
 
 
 def passages_to_nuggets(passages: list[Passage]) -> list[dict[str, Any]]:

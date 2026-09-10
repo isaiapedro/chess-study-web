@@ -7,19 +7,15 @@ aliases:
 - passer
 keywords:
 - passed pawn
-- outside passed pawn
-- protected passed pawn
-- candidate passed pawn
+- passer
+- outside passer
+- connected passers
 rules_of_thumb:
-- Passed pawns must be pushed; blockade them with a piece when defending.
-- Outside passers distract the enemy king in endgames.
+- Outside, connected, protected, or blockaded passed pawns.
 plans:
-- Owner — escort with king/rook; create a second weakness.
-- Defender — blockade, trade the passer, or create counterplay elsewhere.
+- Push with support; blockade with knight.
+- Rooks behind passers (Tarrasch).
 related:
-- endgame.lucena
-- endgame.philidor
-detect: board_passed_pawn
-exemplars:
-- Capablanca vs Tartakower, New York 1924
-- Carlsen vs McShane, London 2009 (passer conversion)
+- piece.blockade
+- endgame.strategic.tarrasch_rule
+detect: board_passed

@@ -1,0 +1,118 @@
+{
+  "key_id": "piece.centralization",
+  "key_type": "piece",
+  "label": "Centralization",
+  "idea_count": 3,
+  "ideas": [
+    {
+      "idea_id": "piece.centralization#0",
+      "key_id": "piece.centralization",
+      "key_type": "piece",
+      "label": "Centralization",
+      "principle": "Use the center to increase reach",
+      "phase": "any",
+      "summary": "Centralized pieces influence both wings and can switch tasks quickly. In endgames, the king should usually join the center as soon as tactics permit.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "B41",
+        "A20",
+        "A25"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Fishbein, Alexander vs Cordova, Edrian 2026 (B41)",
+        "Sivuk, Vitaly vs Toktomushev, Teimur 2026 (B41)"
+      ],
+      "themes": [
+        "centralization",
+        "piece activity"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Grandmaster Repertoire 5: The English Opening - Volume Three"
+      ],
+      "specificity": 1,
+      "features": [
+        "central squares"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "piece.centralization#1",
+      "key_id": "piece.centralization",
+      "key_type": "piece",
+      "label": "Centralization",
+      "principle": "Centralize with a concrete function",
+      "phase": "middlegame",
+      "summary": "Centralization is valuable when it supports a pawn break, attacks a weakness, or escorts a passer. Do not centralize mechanically if the destination can be driven away with tempo.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "English Opening"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Fishbein, Alexander vs Cordova, Edrian 2026 (B41)",
+        "Sivuk, Vitaly vs Toktomushev, Teimur 2026 (B41)"
+      ],
+      "themes": [
+        "centralization",
+        "pawn break",
+        "passed pawn"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Grandmaster Repertoire 5: The English Opening - Volume Three"
+      ],
+      "specificity": 3,
+      "features": [
+        "tempo",
+        "weakness"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "piece.centralization#2",
+      "key_id": "piece.centralization",
+      "key_type": "piece",
+      "label": "Centralization",
+      "principle": "Centralize king and rook around the passer",
+      "phase": "endgame",
+      "summary": "In a rook-and-pawn ending, place the king diagonally ahead of the passer when possible, support the pawn with the rook after it is attacked, and advance only when both pieces remain coordinated.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "B41",
+        "A20",
+        "A25"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927",
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]"
+      ],
+      "themes": [
+        "centralization",
+        "rook ending",
+        "passed pawn"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Grandmaster Repertoire 5: The English Opening - Volume Three"
+      ],
+      "specificity": 5,
+      "features": [
+        "active king",
+        "rook support",
+        "passed pawn"
+      ],
+      "slots": {},
+      "conditions": []
+    }
+  ]
+}

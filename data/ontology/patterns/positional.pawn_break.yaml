@@ -1,0 +1,19 @@
+id: positional.pawn_break
+label: Pawn Break
+phase: middlegame
+family: positional
+aliases:
+- pawn break
+- pawn lever
+keywords:
+- pawn break
+- break with
+- undermining
+- lever
+rules_of_thumb:
+- Leverage pawns to open files/diagonals or transform structures.
+plans:
+- Leverage pawns to open files/diagonals or transform structures.
+related:
+- structure.pawn_chain
+- motif.sacrifice

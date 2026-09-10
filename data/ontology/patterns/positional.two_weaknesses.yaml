@@ -1,0 +1,18 @@
+id: positional.two_weaknesses
+label: Two Weaknesses
+phase: middlegame
+family: positional
+aliases:
+- two weaknesses
+- principle of two weaknesses
+keywords:
+- two weaknesses
+- second weakness
+- alternate attack
+rules_of_thumb:
+- Create and alternate attack between two targets.
+plans:
+- Create and alternate attack between two targets.
+related:
+- structure.symmetrical_center
+- attack.initiative

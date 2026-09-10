@@ -1,0 +1,129 @@
+{
+  "key_id": "methodology.comparison_and_elimination",
+  "key_type": "methodology",
+  "label": "Comparison and Elimination",
+  "idea_count": 3,
+  "ideas": [
+    {
+      "idea_id": "methodology.comparison_and_elimination#0",
+      "key_id": "methodology.comparison_and_elimination",
+      "key_type": "methodology",
+      "label": "Comparison and Elimination",
+      "principle": "Compare outcomes, not appearances",
+      "phase": "any",
+      "summary": "Do not choose the first acceptable move. Compare candidates by the resulting position, then eliminate those that fail tactically or worsen the key imbalance.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "B90",
+        "B70",
+        "B80",
+        "E60"
+      ],
+      "games": [
+        "Wandor, Adam vs Iwan, Patryk 2026 (B90)",
+        "Sadhwani, Raunak vs Lu, Shanglei 2026 (B90)",
+        "Folin, Giorgio vs Picone Chiodo, Luigi 2026 (B70)",
+        "Nail, Christopher vs Voronkov, Andrii 2026 (B70)"
+      ],
+      "themes": [
+        "comparison",
+        "decision making"
+      ],
+      "source_books": [
+        "Chess Structures: A Grandmaster Guide",
+        "FCO: Fundamental Chess Openings",
+        "Grandmaster Repertoire 5: The English Opening - Volume Three",
+        "How to Reassess Your Chess",
+        "Maneuvering: The Art of Piece Play"
+      ],
+      "specificity": 1,
+      "features": [],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "methodology.comparison_and_elimination#1",
+      "key_id": "methodology.comparison_and_elimination",
+      "key_type": "methodology",
+      "label": "Comparison and Elimination",
+      "principle": "Adjust analogies for concrete differences",
+      "phase": "middlegame",
+      "summary": "Use a familiar pawn structure as a reference, but identify what changed: piece placement, available breaks, king safety, and tempi can reverse the usual plan.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Sicilian Defense",
+        "B90",
+        "B70"
+      ],
+      "games": [
+        "Wandor, Adam vs Iwan, Patryk 2026 (B90)",
+        "Sadhwani, Raunak vs Lu, Shanglei 2026 (B90)",
+        "Folin, Giorgio vs Picone Chiodo, Luigi 2026 (B70)",
+        "Nail, Christopher vs Voronkov, Andrii 2026 (B70)"
+      ],
+      "themes": [
+        "comparison",
+        "pawn structures",
+        "strategic planning"
+      ],
+      "source_books": [
+        "Chess Structures: A Grandmaster Guide",
+        "FCO: Fundamental Chess Openings",
+        "Grandmaster Repertoire 5: The English Opening - Volume Three",
+        "How to Reassess Your Chess",
+        "Maneuvering: The Art of Piece Play"
+      ],
+      "specificity": 3,
+      "features": [
+        "piece placement",
+        "pawn breaks",
+        "king safety"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "methodology.comparison_and_elimination#2",
+      "key_id": "methodology.comparison_and_elimination",
+      "key_type": "methodology",
+      "label": "Comparison and Elimination",
+      "principle": "Eliminate by counterplay and coordination",
+      "phase": "middlegame",
+      "summary": "When comparing an attack with a positional regrouping, ask whether the pawn storm is still risk-free, whether the blockader can attack as well as restrain, and which candidate leaves the opponent least counterplay.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "King's Indian Defense",
+        "B90",
+        "B70"
+      ],
+      "games": [
+        "Radoslaw Wojtaszek vs Alexei Fedorov 2012",
+        "Wandor, Adam vs Iwan, Patryk 2026 (B90)",
+        "Sadhwani, Raunak vs Lu, Shanglei 2026 (B90)"
+      ],
+      "themes": [
+        "comparison",
+        "blockade",
+        "piece coordination"
+      ],
+      "source_books": [
+        "Chess Structures: A Grandmaster Guide",
+        "FCO: Fundamental Chess Openings",
+        "Grandmaster Repertoire 5: The English Opening - Volume Three",
+        "How to Reassess Your Chess",
+        "Maneuvering: The Art of Piece Play"
+      ],
+      "specificity": 5,
+      "features": [
+        "pawn storm",
+        "blockader",
+        "counterplay"
+      ],
+      "slots": {},
+      "conditions": []
+    }
+  ]
+}

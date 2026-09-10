@@ -1,0 +1,22 @@
+id: structure.carlsbad
+label: Carlsbad Structure
+phase: middlegame
+family: chess_structures
+aliases:
+- carlsbad
+- minority attack
+- exchange queen's gambit structure
+keywords:
+- carlsbad
+- minority attack
+- b4-b5
+- exchange variation
+rules_of_thumb:
+- 'Exchange QG structure: minority attack b4-b5; central break e4.'
+plans:
+- 'Minority side: b4-b5 fix c6 and open b/c files.'
+- 'Defender: ...c5 or piece play vs queenside pressure.'
+related:
+- opening.queens_gambit
+- structure.pawn_chain
+detect: board_carlsbad

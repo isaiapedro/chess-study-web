@@ -5,19 +5,14 @@ family: chess_structures
 aliases:
 - hedgehog
 keywords:
-- Hedgehog
+- hedgehog
 - a6 b6 d6 e6
-- coiled spring
 rules_of_thumb:
-- Black sits behind the 6th-rank pawns and waits for ...b5/...d5 breaks.
-- White must not overextend; watch tactical shots on the long diagonals.
+- Flexible a6-b6-d6-e6 setup preparing d5 or b5 breaks.
 plans:
-- Black — patience, then explosive ...b5 or ...d5.
-- White — restrain breaks, probe weaknesses, avoid loose pieces.
+- Wait, improve pieces, time ...d5/...b5.
+- White prevent breaks and use space.
 related:
 - structure.maroczy_bind
-- opening.sicilian_scheveningen
+- structure.scheveningen
 detect: board_hedgehog
-exemplars:
-- Ljubojevic vs Andersson, Wijk aan Zee 1976
-- Meier vs Feller, 2011 (chapter)

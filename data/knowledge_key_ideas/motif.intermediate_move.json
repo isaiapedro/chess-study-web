@@ -1,0 +1,185 @@
+{
+  "key_id": "motif.intermediate_move",
+  "key_type": "motif",
+  "label": "Intermediate Move (Zwischenzug)",
+  "idea_count": 4,
+  "ideas": [
+    {
+      "idea_id": "motif.intermediate_move#0",
+      "key_id": "motif.intermediate_move",
+      "key_type": "motif",
+      "label": "Intermediate Move (Zwischenzug)",
+      "principle": "Delay the recapture",
+      "phase": "any",
+      "summary": "Before making an expected recapture, check whether a forcing move can be inserted first. A check, capture, or direct threat may improve the final exchange or change which piece survives.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "E60",
+        "E90",
+        "D26",
+        "D42"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Sakline Mostafa, Sajid vs Barua, Oitijjo 2026 (E60)",
+        "Ushenina, Anna vs Fressinet, Laurent 2026 (E60)",
+        "MacDonald, Duncan vs Woozeer, Seth 2026 (E90)"
+      ],
+      "themes": [
+        "zwischenzug",
+        "move order",
+        "forcing play"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide",
+        "Dvoretsky's Endgame Manual",
+        "Everyones First Chess Workbook Fundamental Tactics and Checkmates for Improvers - 738 Practical Exercises",
+        "FCO: Fundamental Chess Openings",
+        "Grandmaster Repertoire 1A: 1.d4 The Catalan"
+      ],
+      "specificity": 1,
+      "features": [
+        "pending-recapture",
+        "forcing-check",
+        "loose-piece"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "motif.intermediate_move#1",
+      "key_id": "motif.intermediate_move",
+      "key_type": "motif",
+      "label": "Intermediate Move (Zwischenzug)",
+      "principle": "Intermediate check",
+      "phase": "any",
+      "summary": "An intermediate check is especially powerful because the opponent must respond before restoring material balance. Recalculate the resulting king position, pins, and overloaded defenders rather than returning automatically to the original exchange.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "E60",
+        "E90",
+        "D26",
+        "D42"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Sakline Mostafa, Sajid vs Barua, Oitijjo 2026 (E60)",
+        "Ushenina, Anna vs Fressinet, Laurent 2026 (E60)",
+        "MacDonald, Duncan vs Woozeer, Seth 2026 (E90)"
+      ],
+      "themes": [
+        "zwischenzug",
+        "check",
+        "overload"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide",
+        "Dvoretsky's Endgame Manual",
+        "Everyones First Chess Workbook Fundamental Tactics and Checkmates for Improvers - 738 Practical Exercises",
+        "FCO: Fundamental Chess Openings",
+        "Grandmaster Repertoire 1A: 1.d4 The Catalan"
+      ],
+      "specificity": 3,
+      "features": [
+        "exposed-king",
+        "pending-recapture",
+        "pinned-defender"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "motif.intermediate_move#2",
+      "key_id": "motif.intermediate_move",
+      "key_type": "motif",
+      "label": "Intermediate Move (Zwischenzug)",
+      "principle": "Rook-check zwischenzug",
+      "phase": "middlegame",
+      "summary": "When a piece is expected to recapture in the center, a rook check on an open file can force the king to an awkward square before the exchange continues. The changed king placement may make the recapture tactically impossible.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "E60",
+        "E90",
+        "D26",
+        "D42"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Sakline Mostafa, Sajid vs Barua, Oitijjo 2026 (E60)",
+        "Ushenina, Anna vs Fressinet, Laurent 2026 (E60)",
+        "MacDonald, Duncan vs Woozeer, Seth 2026 (E90)"
+      ],
+      "themes": [
+        "zwischenzug",
+        "rook check",
+        "central exchange"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide",
+        "Dvoretsky's Endgame Manual",
+        "Everyones First Chess Workbook Fundamental Tactics and Checkmates for Improvers - 738 Practical Exercises",
+        "FCO: Fundamental Chess Openings",
+        "Grandmaster Repertoire 1A: 1.d4 The Catalan"
+      ],
+      "specificity": 5,
+      "features": [
+        "open-e-file",
+        "central-king",
+        "pending-knight-recapture",
+        "rook-on-open-file"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "motif.intermediate_move#3",
+      "key_id": "motif.intermediate_move",
+      "key_type": "motif",
+      "label": "Intermediate Move (Zwischenzug)",
+      "principle": "Threat between exchanges",
+      "phase": "any",
+      "summary": "A quiet intermediate threat can be stronger than a check when it traps a piece or attacks a more valuable target. Confirm that the opponent cannot answer with a stronger forcing move before postponing the recapture.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "E60",
+        "E90",
+        "D26",
+        "D42"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Sakline Mostafa, Sajid vs Barua, Oitijjo 2026 (E60)",
+        "Ushenina, Anna vs Fressinet, Laurent 2026 (E60)",
+        "MacDonald, Duncan vs Woozeer, Seth 2026 (E90)"
+      ],
+      "themes": [
+        "zwischenzug",
+        "piece trap",
+        "threat"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide",
+        "Dvoretsky's Endgame Manual",
+        "Everyones First Chess Workbook Fundamental Tactics and Checkmates for Improvers - 738 Practical Exercises",
+        "FCO: Fundamental Chess Openings",
+        "Grandmaster Repertoire 1A: 1.d4 The Catalan"
+      ],
+      "specificity": 4,
+      "features": [
+        "restricted-piece",
+        "pending-recapture",
+        "higher-value-target"
+      ],
+      "slots": {},
+      "conditions": []
+    }
+  ]
+}

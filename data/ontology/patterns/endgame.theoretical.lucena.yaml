@@ -1,0 +1,17 @@
+id: endgame.theoretical.lucena
+label: Lucena Position
+phase: endgame
+family: endgame_theoretical
+aliases:
+- lucena
+- bridge building
+keywords:
+- lucena
+- building a bridge
+- bridge
+rules_of_thumb:
+- Bridge-building method for rook endgames.
+plans:
+- Bridge-building method for rook endgames.
+related:
+- endgame.strategic.active_king

@@ -1,0 +1,16 @@
+id: endgame.theoretical.vancura
+label: Vancura Position
+phase: endgame
+family: endgame_theoretical
+aliases:
+- vancura
+keywords:
+- vancura
+- side checks
+- knight pawn
+rules_of_thumb:
+- Side-checking defense against a knight pawn.
+plans:
+- Side-checking defense against a knight pawn.
+related:
+- endgame.strategic.active_king

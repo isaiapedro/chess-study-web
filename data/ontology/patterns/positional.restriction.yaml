@@ -1,0 +1,20 @@
+id: positional.restriction
+label: Restriction / Domination
+phase: middlegame
+family: positional
+aliases:
+- restriction
+- domination
+- dominate
+keywords:
+- restriction
+- domination
+- deprive mobility
+- dominated
+rules_of_thumb:
+- Deprive key enemy pieces of mobility.
+plans:
+- Deprive key enemy pieces of mobility.
+related:
+- positional.prophylaxis
+- imbalance.space

@@ -1,0 +1,169 @@
+{
+  "key_id": "piece.coordination",
+  "key_type": "piece",
+  "label": "Coordination",
+  "idea_count": 3,
+  "ideas": [
+    {
+      "idea_id": "piece.coordination#0",
+      "key_id": "piece.coordination",
+      "key_type": "piece",
+      "label": "Coordination",
+      "principle": "Make every piece serve the plan",
+      "phase": "any",
+      "summary": "- Coordinate pieces so they cover one another and share one plan. - Improve the piece that cannot yet change roles without losing key squares.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "E60",
+        "E90",
+        "D26",
+        "D42"
+      ],
+      "games": [
+        "Sakline Mostafa, Sajid vs Barua, Oitijjo 2026 (E60)",
+        "Ushenina, Anna vs Fressinet, Laurent 2026 (E60)",
+        "MacDonald, Duncan vs Woozeer, Seth 2026 (E90)",
+        "Guerra Mansilla, Jorge Maximilian vs Gutierrez Gomez, Nicolas 1999 2026 (E90)"
+      ],
+      "themes": [
+        "piece.coordination",
+        "piece.centralization"
+      ],
+      "source_books": [
+        "Chess Structures: A Grandmaster Guide",
+        "Everyones First Chess Workbook Fundamental Tactics and Checkmates for Improvers - 738 Practical Exercises"
+      ],
+      "specificity": 1,
+      "features": [
+        "shared-plan",
+        "mutual-coverage",
+        "key-squares"
+      ],
+      "slots": {
+        "worked": "your pieces already support one shared plan",
+        "attention": "at least one piece still fails to cover the others or the plan",
+        "lesson": "make every piece serve the same plan and cover the others",
+        "plan": "improve the least useful piece before inventing a new attack"
+      },
+      "conditions": [
+        {
+          "softKey": "piece.coordination",
+          "polarity": "any"
+        },
+        {
+          "metric": "mobility",
+          "polarity": "any"
+        },
+        {
+          "metric": "open_file_utilization",
+          "polarity": "any"
+        }
+      ]
+    },
+    {
+      "idea_id": "piece.coordination#1",
+      "key_id": "piece.coordination",
+      "key_type": "piece",
+      "label": "Coordination",
+      "principle": "Coordinate pieces around the passer",
+      "phase": "endgame",
+      "summary": "- Escort a passer while controlling its blockade square. - Material matters less than whether the army can advance without counterplay.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "E60",
+        "E90",
+        "D26",
+        "D42"
+      ],
+      "games": [
+        "Sakline Mostafa, Sajid vs Barua, Oitijjo 2026 (E60)",
+        "Ushenina, Anna vs Fressinet, Laurent 2026 (E60)",
+        "MacDonald, Duncan vs Woozeer, Seth 2026 (E90)",
+        "Guerra Mansilla, Jorge Maximilian vs Gutierrez Gomez, Nicolas 1999 2026 (E90)"
+      ],
+      "themes": [
+        "piece.coordination",
+        "structure.passed_pawn"
+      ],
+      "source_books": [
+        "Chess Structures: A Grandmaster Guide",
+        "Everyones First Chess Workbook Fundamental Tactics and Checkmates for Improvers - 738 Practical Exercises"
+      ],
+      "specificity": 3,
+      "features": [
+        "blockade-squares",
+        "counterplay",
+        "passed-pawn"
+      ],
+      "slots": {
+        "worked": "pieces already escort the passer productively",
+        "attention": "the passer still lacks coordinated escort and blockade control",
+        "lesson": "coordinate pieces around the passer before pushing it"
+      },
+      "conditions": [
+        {
+          "softKey": "piece.coordination",
+          "polarity": "good"
+        },
+        {
+          "softKey": "structure.passed_pawn",
+          "polarity": "any"
+        }
+      ]
+    },
+    {
+      "idea_id": "piece.coordination#2",
+      "key_id": "piece.coordination",
+      "key_type": "piece",
+      "label": "Coordination",
+      "principle": "Assign complementary escorting roles",
+      "phase": "endgame",
+      "summary": "- Give each piece a task before pushing connected passers. - One covers the blockader, one stops checks, one attacks the defender.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "E60",
+        "E90",
+        "D26",
+        "D42"
+      ],
+      "games": [
+        "Sakline Mostafa, Sajid vs Barua, Oitijjo 2026 (E60)",
+        "Ushenina, Anna vs Fressinet, Laurent 2026 (E60)",
+        "MacDonald, Duncan vs Woozeer, Seth 2026 (E90)",
+        "Guerra Mansilla, Jorge Maximilian vs Gutierrez Gomez, Nicolas 1999 2026 (E90)"
+      ],
+      "themes": [
+        "piece.coordination",
+        "structure.passed_pawn"
+      ],
+      "source_books": [
+        "Chess Structures: A Grandmaster Guide",
+        "Everyones First Chess Workbook Fundamental Tactics and Checkmates for Improvers - 738 Practical Exercises"
+      ],
+      "specificity": 5,
+      "features": [
+        "blockading-square",
+        "checks",
+        "minor-piece-placement"
+      ],
+      "slots": {
+        "worked": "roles around the passers are already clear",
+        "attention": "connected passers still need complementary escorting roles",
+        "lesson": "assign each piece a task before advancing connected passers"
+      },
+      "conditions": [
+        {
+          "softKey": "piece.coordination",
+          "polarity": "bad"
+        },
+        {
+          "feature": "blockading-square",
+          "polarity": "any"
+        }
+      ]
+    }
+  ]
+}

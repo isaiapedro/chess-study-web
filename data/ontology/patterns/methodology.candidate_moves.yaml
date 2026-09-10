@@ -1,0 +1,16 @@
+id: methodology.candidate_moves
+label: Candidate Moves
+phase: any
+family: methodology
+aliases:
+- candidate moves
+keywords:
+- candidate moves
+- forcing moves
+- logical candidates
+rules_of_thumb:
+- Systematic identification of forcing/logical candidate moves.
+plans:
+- Systematic identification of forcing/logical candidate moves.
+related:
+- positional.prophylaxis

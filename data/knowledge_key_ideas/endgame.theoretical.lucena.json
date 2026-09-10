@@ -1,0 +1,107 @@
+{
+  "key_id": "endgame.theoretical.lucena",
+  "key_type": "endgame",
+  "label": "Lucena Position",
+  "idea_count": 3,
+  "ideas": [
+    {
+      "idea_id": "endgame.theoretical.lucena#0",
+      "key_id": "endgame.theoretical.lucena",
+      "key_type": "endgame",
+      "label": "Lucena Position",
+      "principle": "Use the rook as shelter for the advancing king.",
+      "phase": "endgame",
+      "summary": "In winning rook endings, place the rook where it can shield the king from checks while the king escorts the passed pawn. Coordination matters more than checking at random.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]"
+      ],
+      "themes": [
+        "rook ending",
+        "passed pawn",
+        "king shelter"
+      ],
+      "source_books": [
+        "Mastering Endgame Strategy",
+        "Pump Up Your Rating"
+      ],
+      "specificity": 2,
+      "features": [
+        "advanced passed pawn",
+        "checking distance",
+        "rook coordination"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "endgame.theoretical.lucena#1",
+      "key_id": "endgame.theoretical.lucena",
+      "key_type": "endgame",
+      "label": "Lucena Position",
+      "principle": "Create room for the rook to interpose against side checks.",
+      "phase": "endgame",
+      "summary": "The Lucena method applies when the stronger king stands in front of a pawn on the seventh rank and the enemy king is cut off. Move the rook away, force side checks, and prepare to build a bridge.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]"
+      ],
+      "themes": [
+        "Lucena",
+        "rook ending",
+        "bridge building"
+      ],
+      "source_books": [
+        "Mastering Endgame Strategy",
+        "Pump Up Your Rating"
+      ],
+      "specificity": 4,
+      "features": [
+        "pawn on seventh rank",
+        "king in front of pawn",
+        "cut-off king"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "endgame.theoretical.lucena#2",
+      "key_id": "endgame.theoretical.lucena",
+      "key_type": "endgame",
+      "label": "Lucena Position",
+      "principle": "Build the fourth-rank bridge to stop lateral checks.",
+      "phase": "endgame",
+      "summary": "In the Lucena position, build the bridge by placing the rook on the fourth rank, stepping the king out under checks, and interposing the rook when the defender checks from the side. This ends the checking mechanism and permits promotion.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]"
+      ],
+      "themes": [
+        "Lucena",
+        "bridge building",
+        "theoretical rook ending"
+      ],
+      "source_books": [
+        "Mastering Endgame Strategy",
+        "Pump Up Your Rating"
+      ],
+      "specificity": 5,
+      "features": [
+        "rook on fourth rank",
+        "side checks",
+        "interposition"
+      ],
+      "slots": {},
+      "conditions": []
+    }
+  ]
+}

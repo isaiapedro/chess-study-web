@@ -1,0 +1,109 @@
+{
+  "key_id": "piece.simplification",
+  "key_type": "piece",
+  "label": "Simplification",
+  "idea_count": 3,
+  "ideas": [
+    {
+      "idea_id": "piece.simplification#0",
+      "key_id": "piece.simplification",
+      "key_type": "piece",
+      "label": "Simplification",
+      "principle": "Exchange activity, not merely material",
+      "phase": "any",
+      "summary": "Simplify when exchanges preserve your advantage and remove the opponent's active resources. Trading pieces is not automatically good just because you are ahead.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Mark Taimanov vs Miguel Najdorf 1953 (E99) [bookwalk]",
+        "Wandor, Adam vs Iwan, Patryk 2026 (B90)"
+      ],
+      "themes": [
+        "simplification",
+        "decision making"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "How to Reassess Your Chess",
+        "Maneuvering: The Art of Piece Play"
+      ],
+      "specificity": 1,
+      "features": [],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "piece.simplification#1",
+      "key_id": "piece.simplification",
+      "key_type": "piece",
+      "label": "Simplification",
+      "principle": "Preserve the favorable piece matchup",
+      "phase": "middlegame",
+      "summary": "Trade your bad minor piece for the opponent's good one, or exchange attackers when defending. Keep the pieces that can exploit the remaining pawn structure.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [],
+      "games": [
+        "Mark Taimanov vs Miguel Najdorf 1953",
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]"
+      ],
+      "themes": [
+        "simplification",
+        "good bishop",
+        "bad bishop"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "How to Reassess Your Chess",
+        "Maneuvering: The Art of Piece Play"
+      ],
+      "specificity": 3,
+      "features": [
+        "minor-piece trade",
+        "pawn structure"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "piece.simplification#2",
+      "key_id": "piece.simplification",
+      "key_type": "piece",
+      "label": "Simplification",
+      "principle": "Evaluate the exact ending before exchanging",
+      "phase": "endgame",
+      "summary": "Before entering a pawn ending, verify king access, reserve tempi, and pawn breaks. A favorable-looking exchange can fail if the resulting isolated pawn is fixed or the opponent creates a distant passer.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927",
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]"
+      ],
+      "themes": [
+        "simplification",
+        "pawn ending",
+        "calculation"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "How to Reassess Your Chess",
+        "Maneuvering: The Art of Piece Play"
+      ],
+      "specificity": 5,
+      "features": [
+        "king access",
+        "reserve tempi",
+        "isolated pawn",
+        "distant passer"
+      ],
+      "slots": {},
+      "conditions": []
+    }
+  ]
+}

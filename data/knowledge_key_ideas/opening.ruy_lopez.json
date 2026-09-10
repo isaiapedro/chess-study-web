@@ -1,0 +1,169 @@
+{
+  "key_id": "opening.ruy_lopez",
+  "key_type": "opening",
+  "label": "Ruy Lopez",
+  "idea_count": 4,
+  "ideas": [
+    {
+      "idea_id": "opening.ruy_lopez#0",
+      "key_id": "opening.ruy_lopez",
+      "key_type": "opening",
+      "label": "Ruy Lopez",
+      "principle": "Create central pressure while keeping development flexible.",
+      "phase": "opening",
+      "summary": "The Ruy Lopez increases pressure on Black's e5-pawn while preserving flexible central play. White often builds slowly with c3 and d4; Black seeks active development, queenside space, and a timely ...d5 break rather than merely defending e5.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Ruy Lopez",
+        "C60-C99",
+        "B90",
+        "B70"
+      ],
+      "games": [
+        "Wandor, Adam vs Iwan, Patryk 2026 (B90)",
+        "Sadhwani, Raunak vs Lu, Shanglei 2026 (B90)",
+        "Folin, Giorgio vs Picone Chiodo, Luigi 2026 (B70)",
+        "Nail, Christopher vs Voronkov, Andrii 2026 (B70)"
+      ],
+      "themes": [
+        "central pressure",
+        "development",
+        "pawn break"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide",
+        "FCO: Fundamental Chess Openings"
+      ],
+      "specificity": 1,
+      "features": [
+        "bishop on b5",
+        "e5 pawn",
+        "c3-d4 plan"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "opening.ruy_lopez#1",
+      "key_id": "opening.ruy_lopez",
+      "key_type": "opening",
+      "label": "Ruy Lopez",
+      "principle": "Use closed centers to reroute pieces toward their best squares.",
+      "phase": "middlegame",
+      "summary": "Closed Ruy Lopez positions reward long maneuvers because the center restricts immediate tactics. White may reroute the queenside knight through d2-f1-g3 and prepare d4 or a kingside attack; Black expands with ...a6 and ...b5 and searches for ...d5 or queenside counterplay.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Ruy Lopez",
+        "Closed Spanish",
+        "C84-C99",
+        "B90"
+      ],
+      "games": [
+        "Slim Bouaziz vs Alexander Beliavsky 1987",
+        "Wandor, Adam vs Iwan, Patryk 2026 (B90)",
+        "Sadhwani, Raunak vs Lu, Shanglei 2026 (B90)"
+      ],
+      "themes": [
+        "maneuvering",
+        "piece placement",
+        "queenside expansion"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide",
+        "FCO: Fundamental Chess Openings"
+      ],
+      "specificity": 2,
+      "features": [
+        "closed spanish center",
+        "knight maneuver",
+        "b5 pawn"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "opening.ruy_lopez#2",
+      "key_id": "opening.ruy_lopez",
+      "key_type": "opening",
+      "label": "Ruy Lopez",
+      "principle": "Evaluate exchanges by the resulting pawn ending and piece activity.",
+      "phase": "middlegame",
+      "summary": "In the Exchange Ruy Lopez, White can accept the bishop pair to damage Black's queenside pawns and aim for a favorable king-and-pawn ending. Black's compensation is active bishops and open lines, so White should not exchange automatically before restraining that activity.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Ruy Lopez",
+        "Exchange Variation",
+        "C68-C69",
+        "B90"
+      ],
+      "games": [
+        "Wandor, Adam vs Iwan, Patryk 2026 (B90)",
+        "Sadhwani, Raunak vs Lu, Shanglei 2026 (B90)",
+        "Folin, Giorgio vs Picone Chiodo, Luigi 2026 (B70)",
+        "Nail, Christopher vs Voronkov, Andrii 2026 (B70)"
+      ],
+      "themes": [
+        "bishop pair",
+        "pawn majority",
+        "endgame transition"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide",
+        "FCO: Fundamental Chess Openings"
+      ],
+      "specificity": 4,
+      "features": [
+        "doubled c-pawns",
+        "kingside pawn majority"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "opening.ruy_lopez#3",
+      "key_id": "opening.ruy_lopez",
+      "key_type": "opening",
+      "label": "Ruy Lopez",
+      "principle": "When defending a gambit, reduce coordination before consolidating material.",
+      "phase": "middlegame",
+      "summary": "In Marshall-style Ruy Lopez positions, Black sacrifices a pawn to accelerate development and attack the white king. White's defensive task is to neutralize coordinated queen, bishop, and rook threats; material matters only after escape squares are secured and the attacking pieces are exchanged.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Ruy Lopez",
+        "Marshall Attack",
+        "C89",
+        "B90"
+      ],
+      "games": [
+        "Wandor, Adam vs Iwan, Patryk 2026 (B90)",
+        "Sadhwani, Raunak vs Lu, Shanglei 2026 (B90)",
+        "Folin, Giorgio vs Picone Chiodo, Luigi 2026 (B70)",
+        "Nail, Christopher vs Voronkov, Andrii 2026 (B70)"
+      ],
+      "themes": [
+        "gambit attack",
+        "king safety",
+        "defensive simplification"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide",
+        "FCO: Fundamental Chess Openings"
+      ],
+      "specificity": 5,
+      "features": [
+        "open e-file",
+        "black attacking initiative"
+      ],
+      "slots": {},
+      "conditions": []
+    }
+  ]
+}

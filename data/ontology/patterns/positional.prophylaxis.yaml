@@ -1,0 +1,18 @@
+id: positional.prophylaxis
+label: Prophylaxis
+phase: middlegame
+family: positional
+aliases:
+- prophylaxis
+- prophylactic
+keywords:
+- prophylaxis
+- preventive
+- what does opponent want
+rules_of_thumb:
+- Anticipate, restrict, and neutralize opponent plans.
+plans:
+- Anticipate, restrict, and neutralize opponent plans.
+related:
+- methodology.prophylactic_thinking
+- positional.restriction

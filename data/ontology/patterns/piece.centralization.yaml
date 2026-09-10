@@ -1,0 +1,19 @@
+id: piece.centralization
+label: Centralization
+phase: middlegame
+family: piece
+aliases:
+- centralization
+- centralise
+- centralize
+keywords:
+- centralization
+- centralize
+- centralise
+- piece activity
+rules_of_thumb:
+- Maximize piece scope and force concentration.
+plans:
+- Maximize piece scope and force concentration.
+related:
+- piece.coordination

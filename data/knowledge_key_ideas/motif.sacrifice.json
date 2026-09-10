@@ -1,0 +1,157 @@
+{
+  "key_id": "motif.sacrifice",
+  "key_type": "motif",
+  "label": "Sacrifice",
+  "idea_count": 4,
+  "ideas": [
+    {
+      "idea_id": "motif.sacrifice#0",
+      "key_id": "motif.sacrifice",
+      "key_type": "motif",
+      "label": "Sacrifice",
+      "principle": "Concrete compensation",
+      "phase": "any",
+      "summary": "A sacrifice exchanges material for concrete compensation such as king exposure, rapid development, a passed pawn, or a forcing attack. Judge it by the resulting position, not by the material count alone.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "D30",
+        "D37"
+      ],
+      "games": [
+        "Delmouly, Manon vs Bellahcene, Jenna 2026 (D30)",
+        "Iturrizaga Bonelli, Eduardo vs Sivanandan, Bodhana 2026 (D30)",
+        "Acosta, Pablo Ismael vs Arias Gaviria, Mario Alexis 2026 (D37)",
+        "Duque Pinzon, Manuel Santiago vs Torres Millan, Kevin Gilberto 2026 (D37)"
+      ],
+      "themes": [
+        "sacrifice",
+        "compensation",
+        "initiative"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings"
+      ],
+      "specificity": 1,
+      "features": [
+        "material-imbalance",
+        "active-pieces",
+        "exposed-king"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "motif.sacrifice#1",
+      "key_id": "motif.sacrifice",
+      "key_type": "motif",
+      "label": "Sacrifice",
+      "principle": "Forcing-line validation",
+      "phase": "middlegame",
+      "summary": "For an attacking sacrifice, calculate checks, captures, and threats until the defender reaches a stable position. If the attack ends without recovered material, a perpetual check, or a decisive positional gain, the sacrifice is probably unsound.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "D30",
+        "D37"
+      ],
+      "games": [
+        "Delmouly, Manon vs Bellahcene, Jenna 2026 (D30)",
+        "Iturrizaga Bonelli, Eduardo vs Sivanandan, Bodhana 2026 (D30)",
+        "Acosta, Pablo Ismael vs Arias Gaviria, Mario Alexis 2026 (D37)",
+        "Duque Pinzon, Manuel Santiago vs Torres Millan, Kevin Gilberto 2026 (D37)"
+      ],
+      "themes": [
+        "calculation",
+        "king attack",
+        "forcing play"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings"
+      ],
+      "specificity": 3,
+      "features": [
+        "exposed-king",
+        "attacking-piece-majority",
+        "limited-flight-squares"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "motif.sacrifice#2",
+      "key_id": "motif.sacrifice",
+      "key_type": "motif",
+      "label": "Sacrifice",
+      "principle": "Pawn for access",
+      "phase": "middlegame",
+      "summary": "A pawn sacrifice can open a file, clear an entry square, or distract a defender from the main wing. The best version gains tempi because accepting the pawn leaves the opponent unable to complete development or coordinate defense.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "D30",
+        "D37"
+      ],
+      "games": [
+        "Delmouly, Manon vs Bellahcene, Jenna 2026 (D30)",
+        "Iturrizaga Bonelli, Eduardo vs Sivanandan, Bodhana 2026 (D30)",
+        "Acosta, Pablo Ismael vs Arias Gaviria, Mario Alexis 2026 (D37)",
+        "Duque Pinzon, Manuel Santiago vs Torres Millan, Kevin Gilberto 2026 (D37)"
+      ],
+      "themes": [
+        "pawn sacrifice",
+        "open lines",
+        "deflection"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings"
+      ],
+      "specificity": 2,
+      "features": [
+        "closed-file",
+        "overloaded-defender",
+        "development-lead"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "motif.sacrifice#3",
+      "key_id": "motif.sacrifice",
+      "key_type": "motif",
+      "label": "Sacrifice",
+      "principle": "Exchange for passer",
+      "phase": "endgame",
+      "summary": "In a rook ending, sacrificing the rook for a dangerous passed pawn can be correct when the remaining pawns and king win the resulting pawn race. Calculate promotion squares, checking tempi, and whether the enemy king can stop your farthest passer.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "D30",
+        "D37"
+      ],
+      "games": [
+        "Delmouly, Manon vs Bellahcene, Jenna 2026 (D30)",
+        "Iturrizaga Bonelli, Eduardo vs Sivanandan, Bodhana 2026 (D30)",
+        "Acosta, Pablo Ismael vs Arias Gaviria, Mario Alexis 2026 (D37)",
+        "Duque Pinzon, Manuel Santiago vs Torres Millan, Kevin Gilberto 2026 (D37)"
+      ],
+      "themes": [
+        "rook sacrifice",
+        "passed pawn",
+        "pawn race"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings"
+      ],
+      "specificity": 5,
+      "features": [
+        "rook-versus-passed-pawn",
+        "outside-passed-pawn",
+        "active-king",
+        "promotion-race"
+      ],
+      "slots": {},
+      "conditions": []
+    }
+  ]
+}

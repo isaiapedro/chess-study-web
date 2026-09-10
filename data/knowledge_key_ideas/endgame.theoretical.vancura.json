@@ -1,0 +1,104 @@
+{
+  "key_id": "endgame.theoretical.vancura",
+  "key_type": "endgame",
+  "label": "Vancura Position",
+  "idea_count": 3,
+  "ideas": [
+    {
+      "idea_id": "endgame.theoretical.vancura#0",
+      "key_id": "endgame.theoretical.vancura",
+      "key_type": "endgame",
+      "label": "Vancura Position",
+      "principle": "Attack the rook pawn laterally instead of waiting passively behind it.",
+      "phase": "endgame",
+      "summary": "A rook can often draw against a rook pawn by attacking it from the side while the king remains near the opposite wing. Side activity prevents the stronger king from finding shelter.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]"
+      ],
+      "themes": [
+        "rook ending",
+        "side checks",
+        "defensive activity"
+      ],
+      "source_books": [
+        "Dvoretsky's Endgame Manual"
+      ],
+      "specificity": 2,
+      "features": [
+        "rook pawn",
+        "lateral rook activity",
+        "exposed king"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "endgame.theoretical.vancura#1",
+      "key_id": "endgame.theoretical.vancura",
+      "key_type": "endgame",
+      "label": "Vancura Position",
+      "principle": "Combine lateral pawn attacks with flank checks.",
+      "phase": "endgame",
+      "summary": "The Vancura defense works against a rook pawn on the sixth rank when the stronger rook protects it from behind. Keep the defending rook active from the side and check as soon as the king approaches the pawn.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]"
+      ],
+      "themes": [
+        "Vancura",
+        "rook ending",
+        "rook pawn"
+      ],
+      "source_books": [
+        "Dvoretsky's Endgame Manual"
+      ],
+      "specificity": 4,
+      "features": [
+        "rook pawn on sixth rank",
+        "attacking rook behind pawn",
+        "side checks"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "endgame.theoretical.vancura#2",
+      "key_id": "endgame.theoretical.vancura",
+      "key_type": "endgame",
+      "label": "Vancura Position",
+      "principle": "Maintain side distance and preserve the switch to rear checks.",
+      "phase": "endgame",
+      "summary": "In the Vancura position, place the rook far enough along the fourth rank to attack the pawn laterally without being chased by the king. Keep the defending king away from mating nets and switch to rear checks if the pawn advances.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]"
+      ],
+      "themes": [
+        "Vancura",
+        "theoretical rook ending",
+        "lateral defense"
+      ],
+      "source_books": [
+        "Dvoretsky's Endgame Manual"
+      ],
+      "specificity": 5,
+      "features": [
+        "defending rook on fourth rank",
+        "rook pawn on sixth rank",
+        "checking transition"
+      ],
+      "slots": {},
+      "conditions": []
+    }
+  ]
+}

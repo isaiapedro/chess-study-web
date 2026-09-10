@@ -1,0 +1,168 @@
+{
+  "key_id": "imbalance.space",
+  "key_type": "imbalance",
+  "label": "Space Advantage",
+  "idea_count": 3,
+  "ideas": [
+    {
+      "idea_id": "imbalance.space#0",
+      "key_id": "imbalance.space",
+      "key_type": "imbalance",
+      "label": "Space Advantage",
+      "principle": "Use space to improve pieces, not merely to claim territory.",
+      "phase": "middlegame",
+      "summary": "- Use extra room to improve pieces and restrict the opponent. - Support the base of the advanced chain so space does not become a target.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "E60",
+        "E90",
+        "D26",
+        "D42"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Sakline Mostafa, Sajid vs Barua, Oitijjo 2026 (E60)",
+        "Ushenina, Anna vs Fressinet, Laurent 2026 (E60)"
+      ],
+      "themes": [
+        "imbalance.space",
+        "positional.restriction",
+        "piece.coordination"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide"
+      ],
+      "specificity": 1,
+      "features": [
+        "advanced-pawn-chain",
+        "restricted-enemy-pieces",
+        "pawn-chain-base"
+      ],
+      "slots": {
+        "worked": "you claimed useful space that restricts their pieces",
+        "attention": "the space edge still needs piece support at the chain base",
+        "lesson": "use space to improve pieces, not merely to claim empty territory",
+        "plan": "reinforce the base, then improve the worst-placed piece"
+      },
+      "conditions": [
+        {
+          "softKey": "imbalance.space",
+          "polarity": "any"
+        },
+        {
+          "metric": "space_advantage_pct",
+          "polarity": "any"
+        }
+      ]
+    },
+    {
+      "idea_id": "imbalance.space#1",
+      "key_id": "imbalance.space",
+      "key_type": "imbalance",
+      "label": "Space Advantage",
+      "principle": "Convert space by restricting counterplay before opening lines.",
+      "phase": "middlegame",
+      "summary": "- Prevent the freeing break before releasing central tension. - Prepare the lever on the side your chain points toward.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "E60",
+        "E90",
+        "D26",
+        "D42"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Sakline Mostafa, Sajid vs Barua, Oitijjo 2026 (E60)",
+        "Ushenina, Anna vs Fressinet, Laurent 2026 (E60)"
+      ],
+      "themes": [
+        "imbalance.space",
+        "positional.pawn_break",
+        "methodology.prophylactic_thinking"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide"
+      ],
+      "specificity": 3,
+      "features": [
+        "central-tension",
+        "freeing-break",
+        "wing-pawn-lever"
+      ],
+      "slots": {
+        "worked": "space already limits their freeing ideas",
+        "attention": "their freeing break still needs restraining before you open lines",
+        "lesson": "convert space by stopping counterplay before releasing the centre",
+        "plan": "prepare the wing lever only after the freeing break is under control"
+      },
+      "conditions": [
+        {
+          "softKey": "imbalance.space",
+          "polarity": "good"
+        },
+        {
+          "softKey": "positional.pawn_break",
+          "polarity": "bad"
+        }
+      ]
+    },
+    {
+      "idea_id": "imbalance.space#2",
+      "key_id": "imbalance.space",
+      "key_type": "imbalance",
+      "label": "Space Advantage",
+      "principle": "Break beside the head of the pawn chain only after completing development.",
+      "phase": "middlegame",
+      "summary": "- Support the lever with pieces before expanding beside the chain head. - Pushing without control trades space for their activity.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "E60",
+        "E90",
+        "D26",
+        "D42"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Sakline Mostafa, Sajid vs Barua, Oitijjo 2026 (E60)",
+        "Ushenina, Anna vs Fressinet, Laurent 2026 (E60)"
+      ],
+      "themes": [
+        "imbalance.space",
+        "positional.pawn_break"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide"
+      ],
+      "specificity": 4,
+      "features": [
+        "pawn-on-d5",
+        "c-pawn-lever",
+        "queenside-expansion"
+      ],
+      "slots": {
+        "worked": "development is ready to support a space-gaining lever",
+        "attention": "the lever beside the chain head still lacks piece support",
+        "lesson": "break beside the chain head only after pieces cover the resulting files"
+      },
+      "conditions": [
+        {
+          "softKey": "imbalance.space",
+          "polarity": "bad"
+        },
+        {
+          "feature": "c-pawn-lever",
+          "polarity": "any"
+        }
+      ]
+    }
+  ]
+}

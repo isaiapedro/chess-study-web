@@ -1,0 +1,20 @@
+id: attack.king_safety
+label: King Safety / Attack
+phase: middlegame
+family: attack
+aliases:
+- king safety
+- attack on the king
+- kingside attack
+keywords:
+- king safety
+- uncastled
+- pawn cover
+- attack the king
+rules_of_thumb:
+- Attack the uncastled king or weaken pawn covers.
+plans:
+- Attack the uncastled king or weaken pawn covers.
+related:
+- motif.sacrifice
+- attack.king_safety

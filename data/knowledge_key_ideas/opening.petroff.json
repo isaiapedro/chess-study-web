@@ -1,0 +1,171 @@
+{
+  "key_id": "opening.petroff",
+  "key_type": "opening",
+  "label": "Petroff Defence",
+  "idea_count": 4,
+  "ideas": [
+    {
+      "idea_id": "opening.petroff#0",
+      "key_id": "opening.petroff",
+      "key_type": "opening",
+      "label": "Petroff Defence",
+      "principle": "Use symmetry to equalize development, not to copy moves blindly.",
+      "phase": "opening",
+      "summary": "The Petroff Defence meets White's central play symmetrically and aims for rapid development rather than passive defense. Early exchanges may reduce tactical danger, but both sides still compete for central activity and useful piece placement.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Petroff Defence",
+        "C42-C43"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Okhotnik, Vladimir vs Marta, Dominik 2026 (C42)",
+        "Debayan Ray vs Bhadra, Anibrata 2026 (C42)"
+      ],
+      "themes": [
+        "symmetry",
+        "development",
+        "central control"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "FCO: Fundamental Chess Openings",
+        "Mastering Opening Strategy",
+        "My Best Games of Chess 1908-1937",
+        "My Great Predecessors - Volume 3",
+        "My Great Predecessors - Volume 4"
+      ],
+      "specificity": 1,
+      "features": [
+        "open e-file",
+        "symmetrical center"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "opening.petroff#1",
+      "key_id": "opening.petroff",
+      "key_type": "opening",
+      "label": "Petroff Defence",
+      "principle": "Preserve active pieces and earn equality with central play.",
+      "phase": "middlegame",
+      "summary": "Petroff positions often simplify into balanced middlegames, so small improvements matter. Centralize rooks, avoid exchanging an active developed piece for an undeveloped one without a reason, and use ...c6 and ...d5 to claim space when White's center permits it.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Petroff Defence",
+        "C42-C43"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Okhotnik, Vladimir vs Marta, Dominik 2026 (C42)",
+        "Debayan Ray vs Bhadra, Anibrata 2026 (C42)"
+      ],
+      "themes": [
+        "simplification",
+        "piece activity",
+        "central expansion"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "FCO: Fundamental Chess Openings",
+        "Mastering Opening Strategy",
+        "My Best Games of Chess 1908-1937",
+        "My Great Predecessors - Volume 3",
+        "My Great Predecessors - Volume 4"
+      ],
+      "specificity": 2,
+      "features": [
+        "open files",
+        "c6-d5 setup"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "opening.petroff#2",
+      "key_id": "opening.petroff",
+      "key_type": "opening",
+      "label": "Petroff Defence",
+      "principle": "Prioritize initiative and king exposure over immediate material recovery.",
+      "phase": "opening",
+      "summary": "When White keeps the king in the center in a sharp Petroff branch, Black can use active bishop development and forcing rook pressure instead of rushing to recover material. A temporary pawn deficit is acceptable if ...c6 and ...d5 drive White's pieces back and open lines.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Petroff Defence",
+        "C42"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Okhotnik, Vladimir vs Marta, Dominik 2026 (C42)",
+        "Debayan Ray vs Bhadra, Anibrata 2026 (C42)"
+      ],
+      "themes": [
+        "initiative",
+        "king in center",
+        "development tempo"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "FCO: Fundamental Chess Openings",
+        "Mastering Opening Strategy",
+        "My Best Games of Chess 1908-1937",
+        "My Great Predecessors - Volume 3",
+        "My Great Predecessors - Volume 4"
+      ],
+      "specificity": 4,
+      "features": [
+        "temporary material imbalance",
+        "c6-d5 pawn advance"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "opening.petroff#3",
+      "key_id": "opening.petroff",
+      "key_type": "opening",
+      "label": "Petroff Defence",
+      "principle": "Meet a sideline with development that creates a concrete problem.",
+      "phase": "opening",
+      "summary": "Against Petroff move-order sidelines, Black should preserve the defence's character without forcing a dubious imitation. A setup with ...Bb4 can pin the c3-knight and keep pressure on e4, while castling quickly ensures that tactical central play does not catch Black's king.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Petroff Defence",
+        "C42"
+      ],
+      "games": [
+        "Okhotnik, Vladimir vs Marta, Dominik 2026",
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]"
+      ],
+      "themes": [
+        "move order",
+        "pin",
+        "king safety"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "FCO: Fundamental Chess Openings",
+        "Mastering Opening Strategy",
+        "My Best Games of Chess 1908-1937",
+        "My Great Predecessors - Volume 3",
+        "My Great Predecessors - Volume 4"
+      ],
+      "specificity": 5,
+      "features": [
+        "c3 knight pin",
+        "e4 pressure"
+      ],
+      "slots": {},
+      "conditions": []
+    }
+  ]
+}

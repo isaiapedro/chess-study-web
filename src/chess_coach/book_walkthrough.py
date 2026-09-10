@@ -49,8 +49,11 @@ class WalkthroughResult:
     attempts: list[str] = field(default_factory=list)
 
 
-def _sanitize(text: str) -> str:
-    return clean_book_note(text.replace("{", "(").replace("}", ")")).strip()
+def _sanitize(text: str, *, curated: bool = False) -> str:
+    raw = (text or "").replace("{", "(").replace("}", ")")
+    if curated:
+        return raw.strip()
+    return clean_book_note(raw).strip()
 
 
 def _var_already_in_prose(var: str, prose: str) -> bool:
@@ -189,8 +192,9 @@ def _secondary_for_moment(
 
     text = commentary.text.strip()
     if not text:
-        text = engine_grounded_note(moment)
-    return _sanitize(text)
+        text = engine_grounded_note(moment, used_fingerprints=used_fingerprints)
+    # Engine/RAG prose is already clean — OCR sanitize mangles evals like +0.58.
+    return text.replace("{", "(").replace("}", ")").strip()
 
 
 def _book_prefix(source_book: str, *, kind: str = "draft") -> str:
@@ -229,24 +233,27 @@ def apply_dual_annotations(
     if book_kind == "extract":
         book_kind = "draft"
 
-    aligned = align_notes_to_game(game, citation.notes, context=citation.context)
+    aligned = align_notes_to_game(
+        game, citation.notes, context=citation.context, curated=(book_kind == "curated")
+    )
     book_marks = collect_mainline_book_marks(
         game, citation.notes, context=citation.context
     )
     book_by_ply: dict[int, str] = {}
     variations_by_ply: dict[int, list[str]] = {}
+    curated = book_kind == "curated"
     for note in aligned:
         prefix = _book_prefix(citation.source_book, kind=book_kind)
-        chunk = _sanitize(note.text)
+        chunk = _sanitize(note.text, curated=curated)
         if not chunk:
             continue
         book_by_ply[note.ply] = prefix + chunk
         if note.variations:
             variations_by_ply[note.ply] = note.variations
             unique_vars = [
-                _sanitize(v)
+                _sanitize(v, curated=curated)
                 for v in note.variations[:4]
-                if _sanitize(v) and not _var_already_in_prose(v, chunk)
+                if _sanitize(v, curated=curated) and not _var_already_in_prose(v, chunk)
             ]
             if unique_vars:
                 book_by_ply[note.ply] += " [Vars: " + "; ".join(unique_vars) + "]"
@@ -406,14 +413,17 @@ def reapply_book_layer(
     if book_kind == "extract":
         book_kind = "draft"
 
-    aligned = align_notes_to_game(game, citation.notes, context=citation.context)
+    aligned = align_notes_to_game(
+        game, citation.notes, context=citation.context, curated=(book_kind == "curated")
+    )
     book_marks = collect_mainline_book_marks(
         game, citation.notes, context=citation.context
     )
     book_by_ply: dict[int, str] = {}
     variations_by_ply: dict[int, list[str]] = {}
+    curated = book_kind == "curated"
     for note in aligned:
-        chunk = _sanitize(note.text)
+        chunk = _sanitize(note.text, curated=curated)
         if not chunk:
             continue
         prefix = _book_prefix(citation.source_book, kind=book_kind)
@@ -421,9 +431,9 @@ def reapply_book_layer(
         if note.variations:
             variations_by_ply[note.ply] = note.variations
             unique_vars = [
-                _sanitize(v)
+                _sanitize(v, curated=curated)
                 for v in note.variations[:4]
-                if _sanitize(v) and not _var_already_in_prose(v, chunk)
+                if _sanitize(v, curated=curated) and not _var_already_in_prose(v, chunk)
             ]
             if unique_vars:
                 book_by_ply[note.ply] += " [Vars: " + "; ".join(unique_vars) + "]"

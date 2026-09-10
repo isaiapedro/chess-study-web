@@ -1,22 +1,46 @@
 id: opening.queens_gambit
-label: Queen's Gambit / QGD
+label: Queen's Gambit Family
 phase: opening
-family: queens_gambit
+family: opening
 aliases:
 - queen's gambit
-- queens gambit
 - qgd
+- qga
+- slav
+- semi-slav
+- catalan
 keywords:
 - Queen's Gambit
 - QGD
-- Orthodox Defence
-- Exchange Variation
-- Carlsbad
+- QGA
+- Slav
+- Semi-Slav
+- Catalan
 eco_prefixes:
 - D06
 - D07
 - D08
 - D09
+- D10
+- D11
+- D12
+- D13
+- D14
+- D15
+- D16
+- D17
+- D18
+- D19
+- D20
+- D21
+- D22
+- D23
+- D24
+- D25
+- D26
+- D27
+- D28
+- D29
 - D30
 - D31
 - D32
@@ -30,6 +54,13 @@ eco_prefixes:
 - D40
 - D41
 - D42
+- D43
+- D44
+- D45
+- D46
+- D47
+- D48
+- D49
 - D50
 - D51
 - D52
@@ -52,20 +83,15 @@ eco_prefixes:
 - D69
 opening_tokens:
 - queen's gambit
-- queens gambit
 - qgd
-- orthodox
-rules_of_thumb:
-- Fight for d5/c4; Exchange/Carlsbad often leads to minority-attack structures.
-- Black chooses solid (...e6) or more active systems (Tarrasch, Semi-Slav ideas).
-plans:
-- White — pressure d5, minority attack, or central break e4.
-- Black — ...c5/...e5 freeing breaks, piece activity.
-related:
-- structure.minority_attack
-- structure.iqp
-- structure.hanging_pawns
+- qga
+- slav
+- catalan
 detect: eco_or_opening
-exemplars:
-- Botvinnik vs Capablanca, AVRO 1938
-- Wojtaszek vs Swiercz, 2011 (chapter)
+rules_of_thumb:
+- QGD, QGA, Slav, Semi-Slav, Catalan.
+plans:
+- Central tension and minority/Carlsbad ideas.
+related:
+- structure.carlsbad
+- structure.caro_slav

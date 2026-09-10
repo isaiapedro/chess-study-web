@@ -1,0 +1,25 @@
+id: opening.petroff
+label: Petroff Defence
+phase: opening
+family: opening
+aliases:
+- petroff
+- russian defence
+- russian defense
+keywords:
+- Petroff
+- Russian Defence
+- Russian Defense
+eco_prefixes:
+- C42
+- C43
+opening_tokens:
+- petroff
+- russian
+detect: eco_or_opening
+rules_of_thumb:
+- Symmetrical e4-e5 with early ...Nf6.
+plans:
+- Solid equality; careful piece play.
+related:
+- structure.symmetrical_center

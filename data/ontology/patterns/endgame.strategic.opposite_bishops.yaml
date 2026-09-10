@@ -1,0 +1,17 @@
+id: endgame.strategic.opposite_bishops
+label: Opposite Bishops (Ending)
+phase: endgame
+family: endgame_strategic
+aliases:
+- opposite bishops
+- opposite-colored bishops
+keywords:
+- opposite bishops
+- opposite-colored
+- drawish
+rules_of_thumb:
+- Drawish pawn-ending tendencies vs middlegame attacking force.
+plans:
+- Drawish pawn-ending tendencies vs middlegame attacking force.
+related:
+- structure.passed_pawn

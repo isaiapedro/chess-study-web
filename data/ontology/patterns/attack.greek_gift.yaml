@@ -1,0 +1,21 @@
+id: attack.greek_gift
+label: Greek Gift
+phase: middlegame
+family: attack
+aliases:
+- greek gift
+- bxh7
+- bxh2
+keywords:
+- greek gift
+- Bxh7
+- Bxh2
+- Ng5
+- Ng4
+rules_of_thumb:
+- Classic Bxh7+/Bxh2+ with Ng5+/Ng4+ follow-ups.
+plans:
+- Classic Bxh7+/Bxh2+ with Ng5+/Ng4+ follow-ups.
+related:
+- motif.sacrifice
+- attack.king_safety

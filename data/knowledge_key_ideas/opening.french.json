@@ -1,0 +1,165 @@
+{
+  "key_id": "opening.french",
+  "key_type": "opening",
+  "label": "French Defence",
+  "idea_count": 4,
+  "ideas": [
+    {
+      "idea_id": "opening.french#0",
+      "key_id": "opening.french",
+      "key_type": "opening",
+      "label": "French Defence",
+      "principle": "Attack the base of the opposing pawn chain.",
+      "phase": "opening",
+      "summary": "The French Defence creates a locked or semi-locked center in which each side attacks a pawn chain. White usually has more kingside space; Black develops counterplay against d4 with ...c5 and later challenges e5 with ...f6.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "French Defence",
+        "C00-C19",
+        "C00",
+        "C11"
+      ],
+      "games": [
+        "Naidon, Pietro Weber vs Born, Ary 2026 (C00)",
+        "Eslava Cordoba, Salome vs Rodriguez Patino, Santiago 2026 (C00)",
+        "Surkeev, Shumkar vs Fakhriddinxujaev, Umarxon 2026 (C11)",
+        "Rozman, Levy vs Song, Julien 2026 (C11)"
+      ],
+      "themes": [
+        "pawn chain",
+        "counterplay",
+        "space advantage"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide"
+      ],
+      "specificity": 1,
+      "features": [
+        "e5-d4 chain",
+        "d5-e6 chain"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "opening.french#1",
+      "key_id": "opening.french",
+      "key_type": "opening",
+      "label": "French Defence",
+      "principle": "Improve the bad bishop while attacking the center.",
+      "phase": "middlegame",
+      "summary": "French Defence strategy revolves around Black's light-squared bishop and timely pawn breaks. Black should not accept permanent passivity: improve the bishop through d7-e8-g6, b7-a6, or a later ...b6, and coordinate this with pressure on d4.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "French Defence",
+        "C00-C19",
+        "C00",
+        "C11"
+      ],
+      "games": [
+        "Naidon, Pietro Weber vs Born, Ary 2026 (C00)",
+        "Eslava Cordoba, Salome vs Rodriguez Patino, Santiago 2026 (C00)",
+        "Surkeev, Shumkar vs Fakhriddinxujaev, Umarxon 2026 (C11)",
+        "Rozman, Levy vs Song, Julien 2026 (C11)"
+      ],
+      "themes": [
+        "bad bishop",
+        "piece maneuvering",
+        "central pressure"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide"
+      ],
+      "specificity": 2,
+      "features": [
+        "closed center",
+        "light-squared bishop behind chain"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "opening.french#2",
+      "key_id": "opening.french",
+      "key_type": "opening",
+      "label": "French Defence",
+      "principle": "Use a closed center to transfer forces toward the king.",
+      "phase": "middlegame",
+      "summary": "In the French Advance, White can support a kingside attack with f4-f5, queen pressure on h5, and rook lifts along the third rank. These attacking ideas work best while the center stays closed; if Black breaks with ...f6 at the right moment, White's advanced e5-pawn can become a target.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "French Defence",
+        "Advance Variation",
+        "C02",
+        "C00"
+      ],
+      "games": [
+        "Naidon, Pietro Weber vs Born, Ary 2026 (C00)",
+        "Eslava Cordoba, Salome vs Rodriguez Patino, Santiago 2026 (C00)",
+        "Surkeev, Shumkar vs Fakhriddinxujaev, Umarxon 2026 (C11)",
+        "Rozman, Levy vs Song, Julien 2026 (C11)"
+      ],
+      "themes": [
+        "kingside attack",
+        "rook lift",
+        "f-pawn break"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide"
+      ],
+      "specificity": 4,
+      "features": [
+        "advance french structure",
+        "closed center",
+        "e5 pawn"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "opening.french#3",
+      "key_id": "opening.french",
+      "key_type": "opening",
+      "label": "French Defence",
+      "principle": "Judge an isolated pawn by its activity, not only its weakness.",
+      "phase": "middlegame",
+      "summary": "When the French center transforms into an isolated d-pawn position, blockading d5 is not automatically enough. The defender must control the pawn's advance and the active squares behind it; exchanges favor the blockader only when they reduce the isolated pawn's dynamic support.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "French Defence",
+        "C00-C19",
+        "C00",
+        "C11"
+      ],
+      "games": [
+        "Naidon, Pietro Weber vs Born, Ary 2026 (C00)",
+        "Eslava Cordoba, Salome vs Rodriguez Patino, Santiago 2026 (C00)",
+        "Surkeev, Shumkar vs Fakhriddinxujaev, Umarxon 2026 (C11)",
+        "Rozman, Levy vs Song, Julien 2026 (C11)"
+      ],
+      "themes": [
+        "isolated pawn",
+        "blockade",
+        "simplification"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide"
+      ],
+      "specificity": 5,
+      "features": [
+        "isolated d5 pawn",
+        "e5 blockade square"
+      ],
+      "slots": {},
+      "conditions": []
+    }
+  ]
+}

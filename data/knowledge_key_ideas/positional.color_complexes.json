@@ -1,0 +1,118 @@
+{
+  "key_id": "positional.color_complexes",
+  "key_type": "positional",
+  "label": "Color Complexes",
+  "idea_count": 3,
+  "ideas": [
+    {
+      "idea_id": "positional.color_complexes#0",
+      "key_id": "positional.color_complexes",
+      "key_type": "positional",
+      "label": "Color Complexes",
+      "principle": "Exploit permanently weak colors",
+      "phase": "middlegame",
+      "summary": "Pawn moves permanently weaken squares of one color. Coordinate pieces to occupy those squares, especially when the opponent lacks the bishop that could contest them.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "E60",
+        "E90",
+        "D26",
+        "D42"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Sandro Mareco vs Jorge Cori 2009 (E37) [bookwalk]",
+        "Sakline Mostafa, Sajid vs Barua, Oitijjo 2026 (E60)"
+      ],
+      "themes": [
+        "color complexes",
+        "piece coordination"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings"
+      ],
+      "specificity": 1,
+      "features": [
+        "weak squares",
+        "missing bishop"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "positional.color_complexes#1",
+      "key_id": "positional.color_complexes",
+      "key_type": "positional",
+      "label": "Color Complexes",
+      "principle": "Read color weaknesses from structure",
+      "phase": "middlegame",
+      "summary": "Judge a color complex through the pawn structure and bishop placement, not the exact position alone. A fixed pawn can become a target when it sits on its own bishop's color.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "E60",
+        "E90",
+        "D26",
+        "D42"
+      ],
+      "games": [
+        "Sandro Mareco vs Jorge Cori 2009",
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]"
+      ],
+      "themes": [
+        "color complexes",
+        "pawn structures",
+        "good bishop",
+        "bad bishop"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings"
+      ],
+      "specificity": 3,
+      "features": [
+        "fixed pawn",
+        "bishop placement"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "positional.color_complexes#2",
+      "key_id": "positional.color_complexes",
+      "key_type": "positional",
+      "label": "Color Complexes",
+      "principle": "Coordinate an attack on the weakened complex",
+      "phase": "middlegame",
+      "summary": "When kingside pawns are fixed on dark squares and the dark-squared bishop is absent, build a queen-and-bishop or queen-and-knight attack on the entry squares. First give your own king a flight square so tactics do not reverse the attack.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "French Defense"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927",
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]"
+      ],
+      "themes": [
+        "color complexes",
+        "king safety",
+        "piece coordination"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings"
+      ],
+      "specificity": 5,
+      "features": [
+        "fixed kingside pawns",
+        "flight square",
+        "entry squares"
+      ],
+      "slots": {},
+      "conditions": []
+    }
+  ]
+}

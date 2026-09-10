@@ -1,0 +1,104 @@
+{
+  "key_id": "structure.passed_pawn",
+  "key_type": "structure",
+  "label": "Passed Pawn",
+  "idea_count": 3,
+  "ideas": [
+    {
+      "idea_id": "structure.passed_pawn#0",
+      "key_id": "structure.passed_pawn",
+      "key_type": "structure",
+      "label": "Passed Pawn",
+      "principle": "Use the passer to restrict defenders",
+      "phase": "endgame",
+      "summary": "A passed pawn is valuable because it demands a blockade and ties down pieces. Support it with active pieces rather than pushing it automatically.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Sandro Mareco vs Jorge Cori 2009 (E37) [bookwalk]",
+        "Naidon, Pietro Weber vs Born, Ary 2026 (C00)"
+      ],
+      "themes": [
+        "passed pawn",
+        "endgame technique"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings"
+      ],
+      "specificity": 1,
+      "features": [
+        "blockade"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "structure.passed_pawn#1",
+      "key_id": "structure.passed_pawn",
+      "key_type": "structure",
+      "label": "Passed Pawn",
+      "principle": "Create and escort the passer",
+      "phase": "endgame",
+      "summary": "Create a passed pawn by fixing the opposing majority, opening the correct file, or forcing a favorable exchange. The farther advanced the passer, the more urgently pieces must coordinate around it.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [],
+      "games": [
+        "Sandro Mareco vs Jorge Cori 2009",
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]"
+      ],
+      "themes": [
+        "passed pawn",
+        "piece coordination"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings"
+      ],
+      "specificity": 3,
+      "features": [
+        "pawn majority",
+        "open file",
+        "advanced passer"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "structure.passed_pawn#2",
+      "key_id": "structure.passed_pawn",
+      "key_type": "structure",
+      "label": "Passed Pawn",
+      "principle": "Coordinate blockade and diversion",
+      "phase": "endgame",
+      "summary": "Against a passed pawn, establish the blockade with the king or bishop before attacking its base. As the stronger side, prevent counterplay on the opposite wing, escort the pawn from behind or beside it, and use a second weakness to overload the blockader.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927",
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]"
+      ],
+      "themes": [
+        "passed pawn",
+        "blockade",
+        "two weaknesses"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings"
+      ],
+      "specificity": 5,
+      "features": [
+        "king blockader",
+        "bishop blockader",
+        "opposite-wing counterplay"
+      ],
+      "slots": {},
+      "conditions": []
+    }
+  ]
+}

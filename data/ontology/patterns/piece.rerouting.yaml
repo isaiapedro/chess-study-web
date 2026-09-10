@@ -1,0 +1,18 @@
+id: piece.rerouting
+label: Piece Rerouting
+phase: middlegame
+family: piece
+aliases:
+- rerouting
+- improving the worst piece
+keywords:
+- rerouting
+- worst-placed piece
+- maneuver
+- improve the piece
+rules_of_thumb:
+- Improve the worst-placed piece via multi-step maneuvers.
+plans:
+- Improve the worst-placed piece via multi-step maneuvers.
+related:
+- piece.coordination

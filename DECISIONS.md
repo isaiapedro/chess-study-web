@@ -149,9 +149,83 @@ Prefer Ollama `nomic-embed-text`. If unavailable, use a deterministic hashing em
 - CLI: `chess-coach knowledge-pipeline` orchestrates the full chain.
 - Mobile still hybrid via `/api/v1/coach/retrieve`; cache `v49`.
 
-## 2026-08-13 — App loads derived pack only
+## 2026-08-13 — Soft-key taxonomy v2 (structures → methodology)
 
-- PDF ingest + masters indexing + summarization stay CLI-only.
-- `export-mobile-pack` writes summaries + motifs + frequent SAN lines into Expo `derivedCoachPack.ts`.
-- Mobile retrieve matches themes/ECO/recent moves locally; no live Chroma/API in Games analysis.
-- Cache `game-coach:v50`.
+- Replaced thin pattern catalog with 60 soft keys across 7 families:
+  `structure.*`, `imbalance.*` / `positional.*`, `piece.*`, `motif.*` / `attack.*`,
+  `endgame.theoretical.*` / `endgame.strategic.*`, `opening.*`, `methodology.*`.
+- Sources: Flores Rios / Soltis / Kmoch / Shankland / Silman / Dvoretsky / Aagaard et al. (curated list).
+- Sicilian openings collapsed to `opening.sicilian`; Scheveningen/Dragon as **structures**.
+- Carlsbad replaces `structure.minority_attack`; king safety → `attack.king_safety`.
+- Board detectors + theme maps + `summarize-by-key` extractors updated to match.
+- Pipeline still: elect chunks → append under keys → Ollama summary per key (`summarize-by-key`).
+- `export-mobile-pack` defaults to **key** summaries (`--source auto|key|chunk`) → Expo `derivedCoachPack.ts` v2 (`keyId` / `games` / longer text). Mobile retrieve scores soft-key id overlap.
+
+
+## 2026-08-14 — Bookwalk FEN passages in mobile pack
+
+Hypothesis: theme-only notes miss positions; book commentary must lock to game sections.
+
+Outcome: `export-mobile-pack` reads `data/annotated/bookwalk/*_bookwalk.pgn` (+ sidecars), extracts per-ply book notes with `fen`/`sanLines`, assigns keys via ontology detect + chapter hints, prepends up to 4 passages per key. Pack v6 / mobile cache v64. Prefer curated sidecars; filter OCR salad.
+
+## 2026-08-14 — Proportional align for OCR-noise book notes
+
+When draft/OCR chapter notes have collapsed or out-of-range move labels, skip SAN anchoring. Split the mainline into N equal slices (N = distinct comments) and place comment *i* at the midpoint of slice *i*. Curated sidecars and PGN-embedded `[Book:]` layers still use exact ply labels.
+
+## 2026-08-14 — Prefer SAN anchors over proportional FENs for mobile pack
+
+Hypothesis: proportional midpoints invent wrong FENs → Games tab reuses the same mismatched tip.
+
+Outcome: `align_notes_to_game` always tries SAN/fullmove first; proportional only when zero notes land. Seed teaching FENs tagged `fen-seed` in `note_fen_enrich`; mobile matcher demotes them unless near-exact FEN or SAN hit. Export-book-notes promoted 8 bookwalk PGNs with dense `[Book:]` layers to curated YAML (12 sidecars total). Pack v7 / mobile cache v68.
+
+## 2026-08-14 — Richer mobile comment pool (pack v8)
+
+Grow FEN-locked commentary without dumping OCR buckets:
+
+1. Export curated YAML for every bookwalk PGN that still had `[Book:]` layers.
+2. Union sidecar notes with PGN `[Book:]` plies so gaps fill.
+3. SAN windows include prior + following moves; notes ship multiple `sanLines`.
+4. GPT seed FENs replaced by best-matching bookwalk FENs when available (`fen-bookwalk`).
+5. Caps raised (`MAX_BOOKWALK_NOTES_PER_KEY=40`, `MAX_NOTES_PER_KEY=48`). Pack v8 / mobile cache v69.
+
+## 2026-08-14 — Metrics-voiced GPT summaries (pack v9)
+
+Hypothesis: tip selection is metric-driven, but GPT compact/summary prose still read like diagram/FEN teaching.
+
+Outcome:
+
+1. `metrics_voice.adapt_*` frames each GPT note/compact with a per-key metrics hook + book principle body.
+2. `export-mobile-pack` applies voice to GPT notes (bookwalk passages stay raw book text).
+3. `summarize-key-ideas` IDEA_PROMPT rewritten for metrics-triggered commentary (no FEN-matching voice).
+4. Mobile `metricFallbackText` uses the same book-principle voice when the pack has no tip.
+5. Pack v9 / mobile cache v72.
+
+## 2026-08-15 — Metric soft-key note schedule (mobile v77)
+
+Hypothesis: quiet opening spam + theme-catalog tip browse misaligned notes with coach metrics.
+
+Outcome:
+
+1. Mobile rigid moments: eco@5, aggregate@10, MG@endgame_start, EG@advantage; live pawn-break + opp-mistake; flexible bad/praise only.
+2. Tip pool = `softKeysForNoteRequest` only (metric fields / structural kinds). `allowPhaseStructure=false`.
+3. `metrics_voice.py` documents `METRIC_FIELD_SOFT_KEYS` / `STRUCTURAL_KIND_SOFT_KEYS` mirroring mobile.
+4. `summarize-key-ideas` prompt: opening.* = general plans; metric keys didactic.
+5. Manual: run `chess-coach summarize-key-ideas` (LLM optional) + `export-mobile-pack` → copy to mobile assets.
+
+## 2026-08-15 — Directive GPT tips + critical moments (pack v10 / v78)
+
+1. GPT tips = impersonal directive lists (no metrics narrative, no game anecdotes); soft-key id is metric lookup.
+2. Coach moments exclude inaccuracy; mistake/blunder always count (win over fixed checkpoints).
+3. Opening coach input uses `formatOpeningLabel` name (OpeningPrep-style), never raw ECO.
+4. `higher_threats` counts checks; `kingAttackersScore` keeps x-ray through friendly blockers.
+5. Pack v10 / mobile cache v78.
+
+## 2026-08-15 — GPT prompts ↔ BoardMetricSnap v96
+
+Hypothesis: summarize / metrics_voice lagged hanging rename + open-file / seventh-rank snaps.
+
+Outcome:
+
+1. `metrics_voice` mirrors mobile `METRIC_FIELD_SOFT_KEYS` / `STRUCTURAL_KIND_SOFT_KEYS` / `BOARD_METRIC_SNAP_FIELDS` (`hanging_material_*`, `open_file_utilization`, `seventh_rank_infiltration`; no `hanging_own`/`hanging_opp`).
+2. `summarize-key-ideas` IDEA_PROMPT documents coach-call soft-key selection + snap fields.
+3. Mobile `scripts/dump_coach_moments.mjs` prints per-moment note-request inputs + pack tip text from annotate JSON.

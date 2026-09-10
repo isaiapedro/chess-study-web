@@ -1,0 +1,171 @@
+{
+  "key_id": "positional.pawn_break",
+  "key_type": "positional",
+  "label": "Pawn Break",
+  "idea_count": 3,
+  "ideas": [
+    {
+      "idea_id": "positional.pawn_break#0",
+      "key_id": "positional.pawn_break",
+      "key_type": "positional",
+      "label": "Pawn Break",
+      "principle": "Break with a structural purpose",
+      "phase": "middlegame",
+      "summary": "- Prepare the break with pieces before changing the structure. - The lever should open a line, challenge a chain, or gain a useful square.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "E60",
+        "E90",
+        "D26",
+        "D42"
+      ],
+      "games": [
+        "Sakline Mostafa, Sajid vs Barua, Oitijjo 2026 (E60)",
+        "Ushenina, Anna vs Fressinet, Laurent 2026 (E60)",
+        "MacDonald, Duncan vs Woozeer, Seth 2026 (E90)",
+        "Guerra Mansilla, Jorge Maximilian vs Gutierrez Gomez, Nicolas 1999 2026 (E90)"
+      ],
+      "themes": [
+        "positional.pawn_break",
+        "imbalance.space",
+        "piece.coordination"
+      ],
+      "source_books": [
+        "Chess Structures: A Grandmaster Guide",
+        "Dvoretsky's Endgame Manual"
+      ],
+      "specificity": 1,
+      "features": [
+        "pawn-lever",
+        "open-line",
+        "useful-square"
+      ],
+      "slots": {
+        "worked": "a timely pawn break already improved the structure",
+        "attention": "the freeing pawn break still needs preparation",
+        "lesson": "break only with a structural purpose and piece support",
+        "plan": "prepare the lever, then open the line your pieces can use"
+      },
+      "conditions": [
+        {
+          "softKey": "positional.pawn_break",
+          "polarity": "any"
+        },
+        {
+          "metric": "center_fluidity_index",
+          "polarity": "any"
+        },
+        {
+          "feature": "pawn-lever",
+          "polarity": "any"
+        }
+      ]
+    },
+    {
+      "idea_id": "positional.pawn_break#1",
+      "key_id": "positional.pawn_break",
+      "key_type": "positional",
+      "label": "Pawn Break",
+      "principle": "Target the vulnerable point of the chain",
+      "phase": "middlegame",
+      "summary": "- Decide whether the head or base of the chain is the real target. - Choose the lever that opens files for your better-coordinated pieces.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "E60",
+        "E90",
+        "D26",
+        "D42"
+      ],
+      "games": [
+        "Sakline Mostafa, Sajid vs Barua, Oitijjo 2026 (E60)",
+        "Ushenina, Anna vs Fressinet, Laurent 2026 (E60)",
+        "MacDonald, Duncan vs Woozeer, Seth 2026 (E90)",
+        "Guerra Mansilla, Jorge Maximilian vs Gutierrez Gomez, Nicolas 1999 2026 (E90)"
+      ],
+      "themes": [
+        "positional.pawn_break",
+        "structure.pawn_chain",
+        "piece.coordination"
+      ],
+      "source_books": [
+        "Chess Structures: A Grandmaster Guide",
+        "Dvoretsky's Endgame Manual"
+      ],
+      "specificity": 3,
+      "features": [
+        "chain-head",
+        "chain-base",
+        "open-file"
+      ],
+      "slots": {
+        "worked": "you already challenged the weak point of their chain",
+        "attention": "the chain still needs a lever at its true weak point",
+        "lesson": "attack the head or base that opens files for your pieces"
+      },
+      "conditions": [
+        {
+          "softKey": "positional.pawn_break",
+          "polarity": "bad"
+        },
+        {
+          "softKey": "structure.pawn_chain",
+          "polarity": "any"
+        }
+      ]
+    },
+    {
+      "idea_id": "positional.pawn_break#2",
+      "key_id": "positional.pawn_break",
+      "key_type": "positional",
+      "label": "Pawn Break",
+      "principle": "Time or restrain the hanging-pawn break",
+      "phase": "middlegame",
+      "summary": "- With hanging pawns, advance only while both are defended and pieces can use the lines. - Against them, restrain the advance, provoke one forward, then attack the weakness left behind.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "E60",
+        "E90",
+        "D26",
+        "D42"
+      ],
+      "games": [
+        "Sakline Mostafa, Sajid vs Barua, Oitijjo 2026 (E60)",
+        "Ushenina, Anna vs Fressinet, Laurent 2026 (E60)",
+        "MacDonald, Duncan vs Woozeer, Seth 2026 (E90)",
+        "Guerra Mansilla, Jorge Maximilian vs Gutierrez Gomez, Nicolas 1999 2026 (E90)"
+      ],
+      "themes": [
+        "positional.pawn_break",
+        "structure.hanging_pawns"
+      ],
+      "source_books": [
+        "Chess Structures: A Grandmaster Guide",
+        "Dvoretsky's Endgame Manual"
+      ],
+      "specificity": 5,
+      "features": [
+        "central-advance",
+        "opened-lines",
+        "backward-weakness"
+      ],
+      "slots": {
+        "worked": "hanging-pawn tension is already under control",
+        "attention": "the hanging-pawn advance still needs timing or restraint",
+        "lesson": "time the hanging-pawn break only with full defence and open-line follow-up"
+      },
+      "conditions": [
+        {
+          "softKey": "positional.pawn_break",
+          "polarity": "any"
+        },
+        {
+          "feature": "central-advance",
+          "polarity": "any"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,125 @@
+{
+  "key_id": "positional.restriction",
+  "key_type": "positional",
+  "label": "Restriction / Domination",
+  "idea_count": 3,
+  "ideas": [
+    {
+      "idea_id": "positional.restriction#0",
+      "key_id": "positional.restriction",
+      "key_type": "positional",
+      "label": "Restriction / Domination",
+      "principle": "Remove counterplay before converting",
+      "phase": "middlegame",
+      "summary": "Restriction reduces the opponent's useful moves before you attack. Control freeing squares and breaks, then improve your pieces without releasing their position.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "E60",
+        "E90",
+        "D26",
+        "D42"
+      ],
+      "games": [
+        "Sakline Mostafa, Sajid vs Barua, Oitijjo 2026 (E60)",
+        "Ushenina, Anna vs Fressinet, Laurent 2026 (E60)",
+        "MacDonald, Duncan vs Woozeer, Seth 2026 (E90)",
+        "Guerra Mansilla, Jorge Maximilian vs Gutierrez Gomez, Nicolas 1999 2026 (E90)"
+      ],
+      "themes": [
+        "restriction",
+        "domination"
+      ],
+      "source_books": [
+        "Chess Structures: A Grandmaster Guide",
+        "FCO: Fundamental Chess Openings",
+        "Grandmaster Repertoire 1A: 1.d4 The Catalan",
+        "Grandmaster Repertoire 5: The English Opening - Volume Three"
+      ],
+      "specificity": 1,
+      "features": [],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "positional.restriction#1",
+      "key_id": "positional.restriction",
+      "key_type": "positional",
+      "label": "Restriction / Domination",
+      "principle": "Preserve the structure that creates space",
+      "phase": "middlegame",
+      "summary": "A spatial advantage matters when the pawn structure denies good squares to enemy pieces. Avoid exchanges that free a cramped defender unless the resulting ending is clearly favorable.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Caro-Kann Defense",
+        "E60",
+        "E90"
+      ],
+      "games": [
+        "Sakline Mostafa, Sajid vs Barua, Oitijjo 2026 (E60)",
+        "Ushenina, Anna vs Fressinet, Laurent 2026 (E60)",
+        "MacDonald, Duncan vs Woozeer, Seth 2026 (E90)",
+        "Guerra Mansilla, Jorge Maximilian vs Gutierrez Gomez, Nicolas 1999 2026 (E90)"
+      ],
+      "themes": [
+        "restriction",
+        "space advantage",
+        "pawn structures"
+      ],
+      "source_books": [
+        "Chess Structures: A Grandmaster Guide",
+        "FCO: Fundamental Chess Openings",
+        "Grandmaster Repertoire 1A: 1.d4 The Catalan",
+        "Grandmaster Repertoire 5: The English Opening - Volume Three"
+      ],
+      "specificity": 3,
+      "features": [
+        "cramped pieces",
+        "piece exchanges"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "positional.restriction#2",
+      "key_id": "positional.restriction",
+      "key_type": "positional",
+      "label": "Restriction / Domination",
+      "principle": "Build domination around a key square",
+      "phase": "middlegame",
+      "summary": "If control of e5 dominates the position, reinforce that square, neutralize the defender that contests it, and stop the freeing pawn break. Then redirect the least active piece toward the fixed weakness created by the restriction.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Queen's Gambit",
+        "E60",
+        "E90"
+      ],
+      "games": [
+        "Baryshpolets vs Turov 2012",
+        "Sakline Mostafa, Sajid vs Barua, Oitijjo 2026 (E60)",
+        "Ushenina, Anna vs Fressinet, Laurent 2026 (E60)"
+      ],
+      "themes": [
+        "restriction",
+        "outpost",
+        "piece rerouting"
+      ],
+      "source_books": [
+        "Chess Structures: A Grandmaster Guide",
+        "FCO: Fundamental Chess Openings",
+        "Grandmaster Repertoire 1A: 1.d4 The Catalan",
+        "Grandmaster Repertoire 5: The English Opening - Volume Three"
+      ],
+      "specificity": 5,
+      "features": [
+        "e5 outpost",
+        "freeing break",
+        "fixed weakness"
+      ],
+      "slots": {},
+      "conditions": []
+    }
+  ]
+}

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import io
 import os
 import re
 import time
@@ -8,6 +9,7 @@ from pathlib import Path
 from typing import Any, Iterable, Sequence
 
 import httpx
+import chess.pgn
 
 from chess_coach.config import ROOT
 
@@ -60,6 +62,37 @@ def chapter_name_from_pgn(pgn: str, fallback: str = "Chapter") -> str:
         name = (headers.get("Event") or headers.get("Opening") or fallback).strip()
     name = re.sub(r"\s+", " ", name).strip() or fallback
     return name[:100]
+
+
+def normalize_pgn_for_lichess(pgn: str) -> str:
+    """Return strict, canonical PGN without dropping any valid variation node.
+
+    Lichess's study importer stops building a branch at the first move it
+    cannot parse. Sending source PGN verbatim therefore makes a harmless
+    formatting issue in a user-created variation look like the rest of the
+    game disappeared. Parsing and exporting through python-chess gives
+    Lichess standard move numbers and RAV placement. Detected parse errors
+    are rejected here so an upload cannot silently save only a tree prefix.
+    """
+    handle = io.StringIO(pgn)
+    games: list[chess.pgn.Game] = []
+    errors: list[str] = []
+    while game := chess.pgn.read_game(handle):
+        games.append(game)
+        errors.extend(str(error) for error in game.errors)
+    if not games:
+        raise ValueError("PGN contains no game")
+    if errors:
+        detail = "; ".join(dict.fromkeys(errors))
+        raise ValueError(f"PGN contains an invalid move or variation: {detail}")
+
+    exporter = chess.pgn.StringExporter(
+        headers=True,
+        variations=True,
+        comments=True,
+        columns=None,
+    )
+    return "\n\n".join(game.accept(exporter).strip() for game in games) + "\n"
 
 
 def split_pgn_games(text: str) -> list[str]:
@@ -204,8 +237,9 @@ class LichessStudyClient:
     ) -> tuple[list[StudyChapter], str | None]:
         if is_default_name is None:
             is_default_name = not bool(name and name.strip())
+        pgn = normalize_pgn_for_lichess(pgn)
         data: dict[str, str] = {
-            "pgn": pgn.strip() + "\n",
+            "pgn": pgn,
             "variant": variant,
             "initial": "true" if initial else "false",
             "sticky": "true" if sticky else "false",

@@ -1,0 +1,129 @@
+{
+  "key_id": "structure.doubled_pawns",
+  "key_type": "structure",
+  "label": "Doubled Pawns",
+  "idea_count": 3,
+  "ideas": [
+    {
+      "idea_id": "structure.doubled_pawns#0",
+      "key_id": "structure.doubled_pawns",
+      "key_type": "structure",
+      "label": "Doubled Pawns",
+      "principle": "Judge doubled pawns by function",
+      "phase": "any",
+      "summary": "Doubled pawns are weaknesses only when they can be attacked or cannot create useful control. They may open files, guard key squares, and restrain an enemy majority.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "E60",
+        "E90",
+        "C60",
+        "C90"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Sakline Mostafa, Sajid vs Barua, Oitijjo 2026 (E60)",
+        "Ushenina, Anna vs Fressinet, Laurent 2026 (E60)"
+      ],
+      "themes": [
+        "doubled pawns",
+        "pawn structures"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide",
+        "Dvoretsky's Endgame Manual",
+        "FCO: Fundamental Chess Openings",
+        "Grandmaster Repertoire 5: The English Opening - Volume Three"
+      ],
+      "specificity": 1,
+      "features": [
+        "open file",
+        "square control"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "structure.doubled_pawns#1",
+      "key_id": "structure.doubled_pawns",
+      "key_type": "structure",
+      "label": "Doubled Pawns",
+      "principle": "Fix and blockade the doubled pawns",
+      "phase": "endgame",
+      "summary": "In an ending, fix doubled pawns before attacking them. A blockade on the rank ahead can stop both pawns while active pieces target the base.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "E60",
+        "E90",
+        "C60",
+        "C90"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927",
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]"
+      ],
+      "themes": [
+        "doubled pawns",
+        "blockade",
+        "endgame technique"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide",
+        "Dvoretsky's Endgame Manual",
+        "FCO: Fundamental Chess Openings",
+        "Grandmaster Repertoire 5: The English Opening - Volume Three"
+      ],
+      "specificity": 3,
+      "features": [
+        "fixed pawns",
+        "base pawn"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "structure.doubled_pawns#2",
+      "key_id": "structure.doubled_pawns",
+      "key_type": "structure",
+      "label": "Doubled Pawns",
+      "principle": "Preserve useful doubled pawns",
+      "phase": "endgame",
+      "summary": "Do not repair doubled kingside pawns automatically if they still halt an enemy majority and remain easy for the king to defend. Exchange only when the resulting open file, passer, or king entry clearly favors you.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Ruy Lopez"
+      ],
+      "games": [
+        "Baryshpolets vs Turov 2012",
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]"
+      ],
+      "themes": [
+        "doubled pawns",
+        "king activity",
+        "passed pawn"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide",
+        "Dvoretsky's Endgame Manual",
+        "FCO: Fundamental Chess Openings",
+        "Grandmaster Repertoire 5: The English Opening - Volume Three"
+      ],
+      "specificity": 5,
+      "features": [
+        "kingside majority",
+        "open file",
+        "king entry"
+      ],
+      "slots": {},
+      "conditions": []
+    }
+  ]
+}

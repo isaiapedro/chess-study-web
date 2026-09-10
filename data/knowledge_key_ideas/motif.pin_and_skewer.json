@@ -1,0 +1,156 @@
+{
+  "key_id": "motif.pin_and_skewer",
+  "key_type": "motif",
+  "label": "Pin and Skewer",
+  "idea_count": 4,
+  "ideas": [
+    {
+      "idea_id": "motif.pin_and_skewer#0",
+      "key_id": "motif.pin_and_skewer",
+      "key_type": "motif",
+      "label": "Pin and Skewer",
+      "principle": "Aligned-piece tactics",
+      "phase": "any",
+      "summary": "A pin restrains the front piece because moving it exposes something more valuable; a skewer forces the valuable front piece away and then wins the piece behind it. Look for aligned pieces on files, ranks, and diagonals.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "D30",
+        "D37"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Delmouly, Manon vs Bellahcene, Jenna 2026 (D30)",
+        "Iturrizaga Bonelli, Eduardo vs Sivanandan, Bodhana 2026 (D30)"
+      ],
+      "themes": [
+        "pin",
+        "skewer",
+        "line tactics"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings"
+      ],
+      "specificity": 1,
+      "features": [
+        "aligned-pieces",
+        "open-file",
+        "open-diagonal"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "motif.pin_and_skewer#1",
+      "key_id": "motif.pin_and_skewer",
+      "key_type": "motif",
+      "label": "Pin and Skewer",
+      "principle": "Exploit absolute pin",
+      "phase": "any",
+      "summary": "Absolute pins against the king often allow the pinned piece to be captured or attacked again because it cannot legally move. Add pressure with the cheapest available attacker before releasing the pin.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "D30",
+        "D37"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Delmouly, Manon vs Bellahcene, Jenna 2026 (D30)",
+        "Iturrizaga Bonelli, Eduardo vs Sivanandan, Bodhana 2026 (D30)"
+      ],
+      "themes": [
+        "absolute pin",
+        "attacker buildup",
+        "material gain"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings"
+      ],
+      "specificity": 3,
+      "features": [
+        "king-behind-piece",
+        "pinned-minor-piece",
+        "line-piece"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "motif.pin_and_skewer#2",
+      "key_id": "motif.pin_and_skewer",
+      "key_type": "motif",
+      "label": "Pin and Skewer",
+      "principle": "Rank skewer",
+      "phase": "endgame",
+      "summary": "A rook check along a rank can skewer an exposed king to an undefended rook or queen behind it. Check whether the king has a square that keeps protecting the rear piece before assuming the tactic wins material.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "D30",
+        "D37"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Delmouly, Manon vs Bellahcene, Jenna 2026 (D30)",
+        "Iturrizaga Bonelli, Eduardo vs Sivanandan, Bodhana 2026 (D30)"
+      ],
+      "themes": [
+        "skewer",
+        "rook check",
+        "material gain"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings"
+      ],
+      "specificity": 4,
+      "features": [
+        "exposed-king",
+        "aligned-rooks",
+        "open-rank"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "motif.pin_and_skewer#3",
+      "key_id": "motif.pin_and_skewer",
+      "key_type": "motif",
+      "label": "Pin and Skewer",
+      "principle": "Open-file pin",
+      "phase": "any",
+      "summary": "A rook on an open file can pin a bishop or knight to the king, then capture the pinned piece after the defender runs out of interpositions. Count every possible block and king move before committing the rook.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "D30",
+        "D37"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Delmouly, Manon vs Bellahcene, Jenna 2026 (D30)",
+        "Iturrizaga Bonelli, Eduardo vs Sivanandan, Bodhana 2026 (D30)"
+      ],
+      "themes": [
+        "pin",
+        "rook tactic",
+        "deflection"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings"
+      ],
+      "specificity": 5,
+      "features": [
+        "rook-on-open-file",
+        "king-behind-minor-piece",
+        "limited-interpositions"
+      ],
+      "slots": {},
+      "conditions": []
+    }
+  ]
+}

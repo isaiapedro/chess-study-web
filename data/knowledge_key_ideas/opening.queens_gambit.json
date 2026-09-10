@@ -1,0 +1,154 @@
+{
+  "key_id": "opening.queens_gambit",
+  "key_type": "opening",
+  "label": "Queen's Gambit Family",
+  "idea_count": 4,
+  "ideas": [
+    {
+      "idea_id": "opening.queens_gambit#0",
+      "key_id": "opening.queens_gambit",
+      "key_type": "opening",
+      "label": "Queen's Gambit Family",
+      "principle": "Use a wing pawn to undermine the opponent's center.",
+      "phase": "opening",
+      "summary": "The Queen's Gambit family uses the c-pawn to challenge Black's d5-pawn and build central influence. White seeks space and active development; Black chooses between holding the center, accepting temporarily, or creating a resilient Slav or Orthodox structure.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Queen's Gambit",
+        "D20-D69"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Delmouly, Manon vs Bellahcene, Jenna 2026 (D30)",
+        "Iturrizaga Bonelli, Eduardo vs Sivanandan, Bodhana 2026 (D30)",
+        "Acosta, Pablo Ismael vs Arias Gaviria, Mario Alexis 2026 (D37)"
+      ],
+      "themes": [
+        "central pressure",
+        "development",
+        "pawn structure"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings"
+      ],
+      "specificity": 1,
+      "features": [
+        "d4-c4 center",
+        "black d5 pawn"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "opening.queens_gambit#1",
+      "key_id": "opening.queens_gambit",
+      "key_type": "opening",
+      "label": "Queen's Gambit Family",
+      "principle": "Trade dynamic pawn energy for activity before simplification.",
+      "phase": "middlegame",
+      "summary": "Queen's Gambit middlegames are defined by structure. In isolated-queen-pawn positions, the pawn grants activity and e5 access but may become weak after exchanges; in hanging-pawn positions, the side with the pawns should advance before they are blockaded.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Queen's Gambit",
+        "D20-D69"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Delmouly, Manon vs Bellahcene, Jenna 2026 (D30)",
+        "Iturrizaga Bonelli, Eduardo vs Sivanandan, Bodhana 2026 (D30)",
+        "Acosta, Pablo Ismael vs Arias Gaviria, Mario Alexis 2026 (D37)"
+      ],
+      "themes": [
+        "isolated queen pawn",
+        "hanging pawns",
+        "piece activity"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings"
+      ],
+      "specificity": 2,
+      "features": [
+        "isolated d4 pawn",
+        "c4-d4 hanging pawns"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "opening.queens_gambit#2",
+      "key_id": "opening.queens_gambit",
+      "key_type": "opening",
+      "label": "Queen's Gambit Family",
+      "principle": "Answer a flank attack with active play in the center or opposite wing.",
+      "phase": "middlegame",
+      "summary": "In the Queen's Gambit Exchange Variation, White's minority attack with b4-b5 tries to create a fixed weakness on c6. Black should generate central or kingside activity before defending passively, often using ...Ne4, ...f5, or a timely ...c5 break.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Queen's Gambit Declined",
+        "Exchange Variation",
+        "D35-D36"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Delmouly, Manon vs Bellahcene, Jenna 2026 (D30)",
+        "Iturrizaga Bonelli, Eduardo vs Sivanandan, Bodhana 2026 (D30)",
+        "Acosta, Pablo Ismael vs Arias Gaviria, Mario Alexis 2026 (D37)"
+      ],
+      "themes": [
+        "minority attack",
+        "counterplay",
+        "weak pawn creation"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings"
+      ],
+      "specificity": 4,
+      "features": [
+        "carlsbad structure",
+        "b4-b5 break",
+        "c6 target"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "opening.queens_gambit#3",
+      "key_id": "opening.queens_gambit",
+      "key_type": "opening",
+      "label": "Queen's Gambit Family",
+      "principle": "Do not defend a gambit pawn at the cost of development.",
+      "phase": "opening",
+      "summary": "In Queen's Gambit Accepted structures, Black usually returns the c4-pawn rather than spending time trying to keep it. The strategic goal is rapid development and a central ...c5 or ...e5 break; White uses the temporary lead in space to recover the pawn without allowing Black full coordination.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Queen's Gambit Accepted",
+        "D20-D29"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Delmouly, Manon vs Bellahcene, Jenna 2026 (D30)",
+        "Iturrizaga Bonelli, Eduardo vs Sivanandan, Bodhana 2026 (D30)",
+        "Acosta, Pablo Ismael vs Arias Gaviria, Mario Alexis 2026 (D37)"
+      ],
+      "themes": [
+        "gambit pawn",
+        "rapid development",
+        "central break"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings"
+      ],
+      "specificity": 5,
+      "features": [
+        "temporary c4 pawn",
+        "open center"
+      ],
+      "slots": {},
+      "conditions": []
+    }
+  ]
+}

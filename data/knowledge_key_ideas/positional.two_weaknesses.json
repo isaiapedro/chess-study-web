@@ -1,0 +1,108 @@
+{
+  "key_id": "positional.two_weaknesses",
+  "key_type": "positional",
+  "label": "Two Weaknesses",
+  "idea_count": 3,
+  "ideas": [
+    {
+      "idea_id": "positional.two_weaknesses#0",
+      "key_id": "positional.two_weaknesses",
+      "key_type": "positional",
+      "label": "Two Weaknesses",
+      "principle": "Stretch the defense across two fronts",
+      "phase": "endgame",
+      "summary": "One weakness can often be defended. Create or attack a second weakness far away so the defender cannot coordinate against both.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Mark Taimanov vs Miguel Najdorf 1953 (E99) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Radoslaw Wojtaszek vs Alexei Fedorov 2012 (E62) [bookwalk]"
+      ],
+      "themes": [
+        "two weaknesses",
+        "endgame technique"
+      ],
+      "source_books": [
+        "Maneuvering: The Art of Piece Play",
+        "Positional Decision Making in Chess",
+        "Pump Up Your Rating"
+      ],
+      "specificity": 1,
+      "features": [],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "positional.two_weaknesses#1",
+      "key_id": "positional.two_weaknesses",
+      "key_type": "positional",
+      "label": "Two Weaknesses",
+      "principle": "Fix, restrict, then switch",
+      "phase": "endgame",
+      "summary": "Fix the first target before switching wings. Calm improving moves and prophylaxis force passive defense, making the later transfer of king and pieces more effective.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [],
+      "games": [
+        "Mark Taimanov vs Miguel Najdorf 1953",
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Mark Taimanov vs Miguel Najdorf 1953 (E99) [bookwalk]"
+      ],
+      "themes": [
+        "two weaknesses",
+        "prophylaxis",
+        "piece maneuvering"
+      ],
+      "source_books": [
+        "Maneuvering: The Art of Piece Play",
+        "Positional Decision Making in Chess",
+        "Pump Up Your Rating"
+      ],
+      "specificity": 3,
+      "features": [
+        "fixed target",
+        "wing switch"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "positional.two_weaknesses#2",
+      "key_id": "positional.two_weaknesses",
+      "key_type": "positional",
+      "label": "Two Weaknesses",
+      "principle": "Preserve pressure while creating distance",
+      "phase": "endgame",
+      "summary": "When a kingside pawn is already weak, provoke a queenside pawn into becoming a second target. Keep rooks on the board if exchanging them would let the king defend both weaknesses comfortably, and centralize your king before switching fronts.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927",
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Mark Taimanov vs Miguel Najdorf 1953 (E99) [bookwalk]"
+      ],
+      "themes": [
+        "two weaknesses",
+        "rook ending",
+        "king activity"
+      ],
+      "source_books": [
+        "Maneuvering: The Art of Piece Play",
+        "Positional Decision Making in Chess",
+        "Pump Up Your Rating"
+      ],
+      "specificity": 5,
+      "features": [
+        "kingside weakness",
+        "queenside target",
+        "rook exchange"
+      ],
+      "slots": {},
+      "conditions": []
+    }
+  ]
+}

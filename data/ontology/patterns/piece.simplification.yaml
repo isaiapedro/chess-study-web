@@ -1,0 +1,18 @@
+id: piece.simplification
+label: Simplification
+phase: middlegame
+family: piece
+aliases:
+- simplification
+- trading down
+keywords:
+- simplification
+- trade down
+- exchange pieces
+- neutralize pressure
+rules_of_thumb:
+- Trade active pieces to neutralize pressure or reach favorable endgames.
+plans:
+- Trade active pieces to neutralize pressure or reach favorable endgames.
+related:
+- piece.coordination

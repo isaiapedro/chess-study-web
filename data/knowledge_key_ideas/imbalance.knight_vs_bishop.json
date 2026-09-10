@@ -1,0 +1,125 @@
+{
+  "key_id": "imbalance.knight_vs_bishop",
+  "key_type": "imbalance",
+  "label": "Knight vs Bishop",
+  "idea_count": 3,
+  "ideas": [
+    {
+      "idea_id": "imbalance.knight_vs_bishop#0",
+      "key_id": "imbalance.knight_vs_bishop",
+      "key_type": "imbalance",
+      "label": "Knight vs Bishop",
+      "principle": "Match the minor piece to the future pawn structure.",
+      "phase": "middlegame",
+      "summary": "Knights thrive in closed positions with stable outposts; bishops thrive in open positions and across both wings. Before choosing an exchange, predict whether the pawn structure will remain fixed or open.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "B12",
+        "B18"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Volodin, Alexandr E. vs Riazantsev, Alexander 2026 (B12)",
+        "Maltsevskaya, Aleksandra vs Subelj, Jan 2026 (B12)"
+      ],
+      "themes": [
+        "knight vs bishop",
+        "pawn structure",
+        "piece activity"
+      ],
+      "source_books": [
+        "Everyones First Chess Workbook Fundamental Tactics and Checkmates for Improvers - 738 Practical Exercises",
+        "FCO: Fundamental Chess Openings",
+        "The Caro-Kann Move by Move"
+      ],
+      "specificity": 1,
+      "features": [
+        "closed or open center",
+        "outpost",
+        "long diagonal"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "imbalance.knight_vs_bishop#1",
+      "key_id": "imbalance.knight_vs_bishop",
+      "key_type": "imbalance",
+      "label": "Knight vs Bishop",
+      "principle": "The bishop stretches; the knight blockades.",
+      "phase": "endgame",
+      "summary": "A bishop usually gains value when play occurs on both wings or an outside passed pawn appears. The knight should seek a blockade, avoid being stretched by distant threats, and keep enough pawns to anchor central outposts.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "B12",
+        "B18"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Volodin, Alexandr E. vs Riazantsev, Alexander 2026 (B12)",
+        "Maltsevskaya, Aleksandra vs Subelj, Jan 2026 (B12)"
+      ],
+      "themes": [
+        "knight vs bishop",
+        "outside passer",
+        "blockade"
+      ],
+      "source_books": [
+        "Everyones First Chess Workbook Fundamental Tactics and Checkmates for Improvers - 738 Practical Exercises",
+        "FCO: Fundamental Chess Openings",
+        "The Caro-Kann Move by Move"
+      ],
+      "specificity": 3,
+      "features": [
+        "play on both wings",
+        "outside pawn majority",
+        "central outpost"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "imbalance.knight_vs_bishop#2",
+      "key_id": "imbalance.knight_vs_bishop",
+      "key_type": "imbalance",
+      "label": "Knight vs Bishop",
+      "principle": "Use the king and outside majority to overload a short-range knight.",
+      "phase": "endgame",
+      "summary": "In a bishop-versus-knight ending with an outside majority and the more active king, open a second wing before creating the passer. The knight cannot switch fronts quickly, so force it into a passive holding pattern and improve the bishop's diagonal.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "B12",
+        "B18"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Volodin, Alexandr E. vs Riazantsev, Alexander 2026 (B12)",
+        "Maltsevskaya, Aleksandra vs Subelj, Jan 2026 (B12)"
+      ],
+      "themes": [
+        "bishop vs knight",
+        "outside majority",
+        "active king"
+      ],
+      "source_books": [
+        "Everyones First Chess Workbook Fundamental Tactics and Checkmates for Improvers - 738 Practical Exercises",
+        "FCO: Fundamental Chess Openings",
+        "The Caro-Kann Move by Move"
+      ],
+      "specificity": 4,
+      "features": [
+        "single bishop versus single knight",
+        "outside majority",
+        "two-wing play"
+      ],
+      "slots": {},
+      "conditions": []
+    }
+  ]
+}

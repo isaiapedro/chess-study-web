@@ -1,0 +1,175 @@
+{
+  "key_id": "opening.london_system",
+  "key_type": "opening",
+  "label": "London System",
+  "idea_count": 4,
+  "ideas": [
+    {
+      "idea_id": "opening.london_system#0",
+      "key_id": "opening.london_system",
+      "key_type": "opening",
+      "label": "London System",
+      "principle": "Develop the bishop before closing its diagonal.",
+      "phase": "opening",
+      "summary": "The London System builds a reliable dark-square setup with the bishop developed before e3. White usually supports d4 with c3, develops the kingside safely, and then chooses between a central e4 break and kingside pressure.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "London System",
+        "D02",
+        "B90",
+        "B70"
+      ],
+      "games": [
+        "Wandor, Adam vs Iwan, Patryk 2026 (B90)",
+        "Sadhwani, Raunak vs Lu, Shanglei 2026 (B90)",
+        "Folin, Giorgio vs Picone Chiodo, Luigi 2026 (B70)",
+        "Nail, Christopher vs Voronkov, Andrii 2026 (B70)"
+      ],
+      "themes": [
+        "system opening",
+        "solid development",
+        "central break"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Dvoretsky's Endgame Manual",
+        "Everyones First Chess Workbook Fundamental Tactics and Checkmates for Improvers - 738 Practical Exercises",
+        "Grandmaster Repertoire 1A: 1.d4 The Catalan"
+      ],
+      "specificity": 1,
+      "features": [
+        "d4-c3-e3 triangle",
+        "bishop on f4"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "opening.london_system#1",
+      "key_id": "opening.london_system",
+      "key_type": "opening",
+      "label": "London System",
+      "principle": "Use the system as a base, then adapt to the opponent's breaks.",
+      "phase": "opening",
+      "summary": "The London System is not only a fixed setup: White must react to Black's structure. Against ...c5 and ...Qb6, defend b2 efficiently and preserve central control; against a passive setup, use Ne5, Bd3, and e4 to gain space and attacking chances.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "London System",
+        "D02",
+        "B90",
+        "B70"
+      ],
+      "games": [
+        "Wandor, Adam vs Iwan, Patryk 2026 (B90)",
+        "Sadhwani, Raunak vs Lu, Shanglei 2026 (B90)",
+        "Folin, Giorgio vs Picone Chiodo, Luigi 2026 (B70)",
+        "Nail, Christopher vs Voronkov, Andrii 2026 (B70)"
+      ],
+      "themes": [
+        "adaptation",
+        "central control",
+        "piece placement"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Dvoretsky's Endgame Manual",
+        "Everyones First Chess Workbook Fundamental Tactics and Checkmates for Improvers - 738 Practical Exercises",
+        "Grandmaster Repertoire 1A: 1.d4 The Catalan"
+      ],
+      "specificity": 2,
+      "features": [
+        "b2 pressure",
+        "e5 outpost",
+        "e4 break"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "opening.london_system#2",
+      "key_id": "opening.london_system",
+      "key_type": "opening",
+      "label": "London System",
+      "principle": "Anchor an attack with an outpost, then bring every piece.",
+      "phase": "middlegame",
+      "summary": "In London middlegames, a knight on e5 supports direct play with Bd3, Qf3 or Qh5, and a kingside pawn advance. White should open lines only after enough pieces join the attack; Black should exchange the e5 knight or strike at d4 before the attack becomes self-sustaining.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "London System",
+        "D02",
+        "B90",
+        "B70"
+      ],
+      "games": [
+        "Wandor, Adam vs Iwan, Patryk 2026 (B90)",
+        "Sadhwani, Raunak vs Lu, Shanglei 2026 (B90)",
+        "Folin, Giorgio vs Picone Chiodo, Luigi 2026 (B70)",
+        "Nail, Christopher vs Voronkov, Andrii 2026 (B70)"
+      ],
+      "themes": [
+        "kingside attack",
+        "outpost",
+        "piece coordination"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Dvoretsky's Endgame Manual",
+        "Everyones First Chess Workbook Fundamental Tactics and Checkmates for Improvers - 738 Practical Exercises",
+        "Grandmaster Repertoire 1A: 1.d4 The Catalan"
+      ],
+      "specificity": 4,
+      "features": [
+        "e5 knight",
+        "h-file pressure",
+        "d4 pawn"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "opening.london_system#3",
+      "key_id": "opening.london_system",
+      "key_type": "opening",
+      "label": "London System",
+      "principle": "Combine a concrete threat with development and a central break.",
+      "phase": "opening",
+      "summary": "When Black plays an early ...Bf5 against the London System, White can challenge that bishop and use Qb3 to pressure b7. The point is not to hunt a pawn blindly, but to force awkward defense while preparing c4 or e4 and completing development.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "London System",
+        "D02",
+        "B90",
+        "B70"
+      ],
+      "games": [
+        "Wandor, Adam vs Iwan, Patryk 2026 (B90)",
+        "Sadhwani, Raunak vs Lu, Shanglei 2026 (B90)",
+        "Folin, Giorgio vs Picone Chiodo, Luigi 2026 (B70)",
+        "Nail, Christopher vs Voronkov, Andrii 2026 (B70)"
+      ],
+      "themes": [
+        "queen pressure",
+        "bishop challenge",
+        "central expansion"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Dvoretsky's Endgame Manual",
+        "Everyones First Chess Workbook Fundamental Tactics and Checkmates for Improvers - 738 Practical Exercises",
+        "Grandmaster Repertoire 1A: 1.d4 The Catalan"
+      ],
+      "specificity": 5,
+      "features": [
+        "pressure on b7",
+        "black bishop on f5",
+        "c4 break"
+      ],
+      "slots": {},
+      "conditions": []
+    }
+  ]
+}

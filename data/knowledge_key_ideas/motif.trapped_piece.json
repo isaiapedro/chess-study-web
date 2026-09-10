@@ -1,0 +1,165 @@
+{
+  "key_id": "motif.trapped_piece",
+  "key_type": "motif",
+  "label": "Trapped Piece",
+  "idea_count": 4,
+  "ideas": [
+    {
+      "idea_id": "motif.trapped_piece#0",
+      "key_id": "motif.trapped_piece",
+      "key_type": "motif",
+      "label": "Trapped Piece",
+      "principle": "Zero safe mobility",
+      "phase": "any",
+      "summary": "- Count every safe escape square before leaving a piece short of flight squares. - A piece with zero safe replies will be lost once attacked with tempo.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [],
+      "games": [],
+      "themes": [
+        "motif.trapped_piece",
+        "positional.restriction"
+      ],
+      "source_books": [],
+      "specificity": 1,
+      "features": [
+        "restricted-piece",
+        "zero-safe-squares",
+        "forcing-hunt"
+      ],
+      "slots": {
+        "worked": "their piece is already short of safe squares",
+        "attention": "a piece still sits with no safe escape",
+        "lesson": "count every flight square before the capture appears",
+        "plan": "remove the remaining escapes, then take with the cheapest attacker"
+      },
+      "conditions": [
+        {
+          "softKey": "motif.trapped_piece",
+          "polarity": "any"
+        },
+        {
+          "feature": "zero-safe-squares",
+          "polarity": "any"
+        }
+      ]
+    },
+    {
+      "idea_id": "motif.trapped_piece#1",
+      "key_id": "motif.trapped_piece",
+      "key_type": "motif",
+      "label": "Trapped Piece",
+      "principle": "Net before capture",
+      "phase": "middlegame",
+      "summary": "- Quiet moves that remove escapes often matter more than the final take. - Especially against rim knights and edge rooks, build the net first.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [],
+      "games": [],
+      "themes": [
+        "motif.trapped_piece",
+        "methodology.prophylactic_thinking"
+      ],
+      "source_books": [],
+      "specificity": 3,
+      "features": [
+        "edge-piece",
+        "escape-square-removal",
+        "delayed-capture"
+      ],
+      "slots": {
+        "worked": "the trapping net is already taking shape",
+        "attention": "escape squares still need removing before the capture",
+        "lesson": "calculate the trapping net before the capture appears on the board"
+      },
+      "conditions": [
+        {
+          "softKey": "motif.trapped_piece",
+          "polarity": "good"
+        },
+        {
+          "feature": "delayed-capture",
+          "polarity": "any"
+        }
+      ]
+    },
+    {
+      "idea_id": "motif.trapped_piece#2",
+      "key_id": "motif.trapped_piece",
+      "key_type": "motif",
+      "label": "Trapped Piece",
+      "principle": "Self-inflicted trap",
+      "phase": "any",
+      "summary": "- Do not push your own piece into a pocket with zero safe replies. - Seek an intermediate check or retreat before the net closes.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [],
+      "games": [],
+      "themes": [
+        "motif.trapped_piece",
+        "methodology.candidate_moves"
+      ],
+      "source_books": [],
+      "specificity": 2,
+      "features": [
+        "self-trapped-piece",
+        "hanging-after-push",
+        "forcing-reply"
+      ],
+      "slots": {
+        "worked": "you avoided leaving a piece without flight squares",
+        "attention": "your last move left a piece with no safe reply",
+        "lesson": "do not push a piece into a pocket with zero safe escapes"
+      },
+      "conditions": [
+        {
+          "softKey": "motif.trapped_piece",
+          "polarity": "bad"
+        },
+        {
+          "feature": "self-trapped-piece",
+          "polarity": "bad"
+        }
+      ]
+    },
+    {
+      "idea_id": "motif.trapped_piece#3",
+      "key_id": "motif.trapped_piece",
+      "key_type": "motif",
+      "label": "Trapped Piece",
+      "principle": "Edge and corner nets",
+      "phase": "middlegame",
+      "summary": "- Rim knights and cornered bishops are the usual victims. - Cut retreats with pawns, then take with the cheapest attacker.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [],
+      "games": [],
+      "themes": [
+        "motif.trapped_piece",
+        "imbalance.material_asymmetry"
+      ],
+      "source_books": [],
+      "specificity": 4,
+      "features": [
+        "rim-knight",
+        "cornered-bishop",
+        "pawn-net"
+      ],
+      "slots": {
+        "worked": "their rim piece is already short of retreats",
+        "attention": "the edge piece still has one escape that must be cut",
+        "lesson": "use pawns to cut retreats, then capture with the cheapest attacker"
+      },
+      "conditions": [
+        {
+          "softKey": "motif.trapped_piece",
+          "polarity": "good"
+        },
+        {
+          "feature": "rim-knight",
+          "polarity": "any"
+        }
+      ]
+    }
+  ]
+}

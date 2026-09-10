@@ -3,6 +3,8 @@ analyze_depth: 12
 critical_cp_threshold: 120
 ollama_host: http://localhost:11434
 chat_model: qwen3:8b
+ideas_chat_model: llama3.2:latest
+coach_comment_model: llama3.2:latest
 embed_model: nomic-embed-text
 masters:
   enabled: true
@@ -33,6 +35,11 @@ rag:
   summaries_collection: chess_knowledge_summaries
   summaries_dir: data/knowledge_summaries
   summaries_top_k: 4
+  key_buckets_dir: data/knowledge_key_buckets
+  key_summaries_dir: data/knowledge_key_summaries
+  key_summaries_collection: chess_knowledge_key_summaries
+  key_summaries_top_k: 4
+  key_ideas_dir: data/knowledge_key_ideas
   top_k: 4
   top_k_opening: 5
   min_score: 0.45

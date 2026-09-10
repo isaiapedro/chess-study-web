@@ -1,0 +1,53 @@
+id: opening.english
+label: English Opening
+phase: opening
+family: opening
+aliases:
+- english opening
+- english
+keywords:
+- English Opening
+- Symmetrical
+- Botvinnik System
+- Reversed Sicilian
+eco_prefixes:
+- A10
+- A11
+- A12
+- A13
+- A14
+- A15
+- A16
+- A17
+- A18
+- A19
+- A20
+- A21
+- A22
+- A23
+- A24
+- A25
+- A26
+- A27
+- A28
+- A29
+- A30
+- A31
+- A32
+- A33
+- A34
+- A35
+- A36
+- A37
+- A38
+- A39
+opening_tokens:
+- english
+detect: eco_or_opening
+rules_of_thumb:
+- Symmetrical, Botvinnik, Reversed Sicilian.
+plans:
+- c4 structures; queenside space or Botvinnik clamp.
+related:
+- structure.symmetrical_center
+- structure.maroczy_bind

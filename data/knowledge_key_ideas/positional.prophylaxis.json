@@ -1,0 +1,126 @@
+{
+  "key_id": "positional.prophylaxis",
+  "key_type": "positional",
+  "label": "Prophylaxis",
+  "idea_count": 3,
+  "ideas": [
+    {
+      "idea_id": "positional.prophylaxis#0",
+      "key_id": "positional.prophylaxis",
+      "key_type": "positional",
+      "label": "Prophylaxis",
+      "principle": "Stop plans before threats appear",
+      "phase": "any",
+      "summary": "Prophylaxis means preventing the opponent's plan before it becomes a direct threat. Look first for their intended pawn break and best improving move.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "E60",
+        "E90",
+        "D26",
+        "D42"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Sakline Mostafa, Sajid vs Barua, Oitijjo 2026 (E60)",
+        "Ushenina, Anna vs Fressinet, Laurent 2026 (E60)",
+        "MacDonald, Duncan vs Woozeer, Seth 2026 (E90)"
+      ],
+      "themes": [
+        "prophylaxis",
+        "strategic planning"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide",
+        "Grandmaster Repertoire 1A: 1.d4 The Catalan",
+        "How to Reassess Your Chess",
+        "King's Indian Warfare"
+      ],
+      "specificity": 1,
+      "features": [],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "positional.prophylaxis#1",
+      "key_id": "positional.prophylaxis",
+      "key_type": "positional",
+      "label": "Prophylaxis",
+      "principle": "Restrain the freeing lever",
+      "phase": "middlegame",
+      "summary": "In a familiar structure, identify the lever that releases the opponent's cramped pieces. Control its preparation square while improving your own worst-placed piece.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "E60",
+        "E90",
+        "D26",
+        "D42"
+      ],
+      "games": [
+        "Baryshpolets vs Turov 2012",
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Sakline Mostafa, Sajid vs Barua, Oitijjo 2026 (E60)"
+      ],
+      "themes": [
+        "prophylaxis",
+        "pawn structures",
+        "restriction"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide",
+        "Grandmaster Repertoire 1A: 1.d4 The Catalan",
+        "How to Reassess Your Chess",
+        "King's Indian Warfare"
+      ],
+      "specificity": 3,
+      "features": [
+        "pawn lever",
+        "cramped pieces"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "positional.prophylaxis#2",
+      "key_id": "positional.prophylaxis",
+      "key_type": "positional",
+      "label": "Prophylaxis",
+      "principle": "Apply structure-specific prophylaxis",
+      "phase": "middlegame",
+      "summary": "Against an IQP, prevent the liberating advance before piling up on the pawn. Against a Carlsbad minority attack, slow the b-pawn lever and keep enough coordination to meet a switch to the kingside.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Queen's Gambit"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927",
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Sakline Mostafa, Sajid vs Barua, Oitijjo 2026 (E60)"
+      ],
+      "themes": [
+        "prophylaxis",
+        "IQP",
+        "Carlsbad"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide",
+        "Grandmaster Repertoire 1A: 1.d4 The Catalan",
+        "How to Reassess Your Chess",
+        "King's Indian Warfare"
+      ],
+      "specificity": 5,
+      "features": [
+        "liberating advance",
+        "minority attack",
+        "wing switch"
+      ],
+      "slots": {},
+      "conditions": []
+    }
+  ]
+}

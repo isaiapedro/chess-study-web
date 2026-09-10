@@ -1,0 +1,22 @@
+id: structure.scheveningen
+label: Scheveningen / Small Centre
+phase: middlegame
+family: chess_structures
+aliases:
+- scheveningen
+- small centre
+- small center
+- small_center
+keywords:
+- scheveningen
+- small centre
+- small center
+- d6 e6
+rules_of_thumb:
+- Central pawn duo d6/e6 controlling key central squares.
+plans:
+- Black flexible breaks ...d5/...e5.
+- White pressure d6 and space.
+related:
+- opening.sicilian
+- structure.hedgehog

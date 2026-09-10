@@ -1,0 +1,17 @@
+id: endgame.strategic.active_king
+label: Active King
+phase: endgame
+family: endgame_strategic
+aliases:
+- active king
+- king activity
+keywords:
+- active king
+- king activity
+- king march
+rules_of_thumb:
+- King activation as a dominant attacking/defending piece.
+plans:
+- King activation as a dominant attacking/defending piece.
+related:
+- structure.passed_pawn

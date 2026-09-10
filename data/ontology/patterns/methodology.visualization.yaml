@@ -1,0 +1,18 @@
+id: methodology.visualization
+label: Visualization
+phase: any
+family: methodology
+aliases:
+- visualization
+- calculation
+keywords:
+- visualization
+- multi-ply
+- calculate
+- line validation
+rules_of_thumb:
+- Deep multi-ply calculation and line validation.
+plans:
+- Deep multi-ply calculation and line validation.
+related:
+- positional.prophylaxis

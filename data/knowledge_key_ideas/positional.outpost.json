@@ -1,0 +1,119 @@
+{
+  "key_id": "positional.outpost",
+  "key_type": "positional",
+  "label": "Outpost",
+  "idea_count": 3,
+  "ideas": [
+    {
+      "idea_id": "positional.outpost#0",
+      "key_id": "positional.outpost",
+      "key_type": "positional",
+      "label": "Outpost",
+      "principle": "Convert a stable square into activity",
+      "phase": "middlegame",
+      "summary": "An outpost is a useful square that cannot be challenged safely by an enemy pawn. Occupy it with a piece that creates concrete threats.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "E60",
+        "E90",
+        "D26",
+        "D42"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Sandro Mareco vs Jorge Cori 2009 (E37) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Sakline Mostafa, Sajid vs Barua, Oitijjo 2026 (E60)"
+      ],
+      "themes": [
+        "outpost",
+        "piece activity"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide"
+      ],
+      "specificity": 1,
+      "features": [
+        "pawn control"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "positional.outpost#1",
+      "key_id": "positional.outpost",
+      "key_type": "positional",
+      "label": "Outpost",
+      "principle": "Match the outpost to the right piece",
+      "phase": "middlegame",
+      "summary": "Pawn structure determines outposts. A supported knight is especially strong when it attacks weaknesses on both wings and cannot be exchanged by the opponent's favorable minor piece.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "E60",
+        "E90",
+        "D26",
+        "D42"
+      ],
+      "games": [
+        "Sandro Mareco vs Jorge Cori 2009",
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Sandro Mareco vs Jorge Cori 2009 (E37) [bookwalk]"
+      ],
+      "themes": [
+        "outpost",
+        "pawn structures",
+        "minor piece battles"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide"
+      ],
+      "specificity": 3,
+      "features": [
+        "supported knight",
+        "weak pawns"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "positional.outpost#2",
+      "key_id": "positional.outpost",
+      "key_type": "positional",
+      "label": "Outpost",
+      "principle": "Secure and activate the outpost",
+      "phase": "middlegame",
+      "summary": "Before installing a knight on a central outpost, prevent the pawn break that would undermine its support and compare the opponent's exchange options. If the knight also blocks an IQP, it should pressure adjacent squares rather than become a passive guard.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Queen's Gambit"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927",
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Sandro Mareco vs Jorge Cori 2009 (E37) [bookwalk]"
+      ],
+      "themes": [
+        "outpost",
+        "IQP",
+        "blockade"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide"
+      ],
+      "specificity": 5,
+      "features": [
+        "central knight",
+        "support pawn",
+        "undermining break"
+      ],
+      "slots": {},
+      "conditions": []
+    }
+  ]
+}

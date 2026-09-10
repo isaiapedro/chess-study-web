@@ -1,0 +1,119 @@
+{
+  "key_id": "structure.hedgehog",
+  "key_type": "structure",
+  "label": "Hedgehog",
+  "idea_count": 3,
+  "ideas": [
+    {
+      "idea_id": "structure.hedgehog#0",
+      "key_id": "structure.hedgehog",
+      "key_type": "structure",
+      "label": "Hedgehog",
+      "principle": "Store energy behind the Hedgehog shell",
+      "phase": "middlegame",
+      "summary": "The Hedgehog accepts less space in return for a compact pawn shell and prepared counterbreaks. Patience and piece coordination matter more than immediate activity.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Sicilian Defense",
+        "B90",
+        "B70"
+      ],
+      "games": [
+        "Wandor, Adam vs Iwan, Patryk 2026 (B90)",
+        "Sadhwani, Raunak vs Lu, Shanglei 2026 (B90)",
+        "Folin, Giorgio vs Picone Chiodo, Luigi 2026 (B70)",
+        "Nail, Christopher vs Voronkov, Andrii 2026 (B70)"
+      ],
+      "themes": [
+        "Hedgehog",
+        "pawn structures"
+      ],
+      "source_books": [
+        "Chess Structures: A Grandmaster Guide"
+      ],
+      "specificity": 1,
+      "features": [
+        "compact setup",
+        "space disadvantage"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "structure.hedgehog#1",
+      "key_id": "structure.hedgehog",
+      "key_type": "structure",
+      "label": "Hedgehog",
+      "principle": "Prepare or prevent the freeing breaks",
+      "phase": "middlegame",
+      "summary": "The Hedgehog player seeks freeing central or queenside breaks; the space-advantaged side restrains them and improves pieces without overextending.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Sicilian Defense",
+        "B90",
+        "B70"
+      ],
+      "games": [
+        "Folin, Giorgio vs Picone Chiodo, Luigi 2026",
+        "Wandor, Adam vs Iwan, Patryk 2026 (B90)",
+        "Sadhwani, Raunak vs Lu, Shanglei 2026 (B90)"
+      ],
+      "themes": [
+        "Hedgehog",
+        "prophylaxis",
+        "pawn break"
+      ],
+      "source_books": [
+        "Chess Structures: A Grandmaster Guide"
+      ],
+      "specificity": 3,
+      "features": [
+        "central break",
+        "queenside break",
+        "space advantage"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "structure.hedgehog#2",
+      "key_id": "structure.hedgehog",
+      "key_type": "structure",
+      "label": "Hedgehog",
+      "principle": "Coordinate and reassess Hedgehog counterplay",
+      "phase": "middlegame",
+      "summary": "In a Hedgehog, place rooks and queen behind the central breaks and reroute a knight toward active kingside or central squares. If the opponent controls the key break square, switch plans efficiently instead of spending more tempi on an impossible push.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Sicilian Defense",
+        "B90",
+        "B70"
+      ],
+      "games": [
+        "Wandor, Adam vs Iwan, Patryk 2026",
+        "Wandor, Adam vs Iwan, Patryk 2026 (B90)",
+        "Sadhwani, Raunak vs Lu, Shanglei 2026 (B90)"
+      ],
+      "themes": [
+        "Hedgehog",
+        "piece rerouting",
+        "candidate moves"
+      ],
+      "source_books": [
+        "Chess Structures: A Grandmaster Guide"
+      ],
+      "specificity": 5,
+      "features": [
+        "central break",
+        "rook coordination",
+        "knight route",
+        "tempi"
+      ],
+      "slots": {},
+      "conditions": []
+    }
+  ]
+}

@@ -1,0 +1,164 @@
+{
+  "key_id": "opening.english",
+  "key_type": "opening",
+  "label": "English Opening",
+  "idea_count": 4,
+  "ideas": [
+    {
+      "idea_id": "opening.english#0",
+      "key_id": "opening.english",
+      "key_type": "opening",
+      "label": "English Opening",
+      "principle": "Control the center with pieces before deciding the pawn structure.",
+      "phase": "opening",
+      "summary": "The English Opening controls the center from the flank and often delays a direct pawn occupation. White typically combines a kingside fianchetto with pressure on the long diagonal, then chooses between central expansion with d4 and queenside space with b4.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "English Opening",
+        "A10-A39"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Wandor, Adam vs Iwan, Patryk 2026 (B90)",
+        "Sadhwani, Raunak vs Lu, Shanglei 2026 (B90)"
+      ],
+      "themes": [
+        "flank opening",
+        "flexibility",
+        "long diagonal"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide",
+        "FCO: Fundamental Chess Openings"
+      ],
+      "specificity": 1,
+      "features": [
+        "c4 pawn",
+        "kingside fianchetto"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "opening.english#1",
+      "key_id": "opening.english",
+      "key_type": "opening",
+      "label": "English Opening",
+      "principle": "Choose pawn breaks from the resulting structure, not the move order.",
+      "phase": "opening",
+      "summary": "English Opening positions often transpose, so plans matter more than labels. White should compare d4, e4, and b4 expansions; Black should decide whether to copy the queenside setup, occupy the center, or build a reversed Sicilian formation.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "English Opening",
+        "A20-A29"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Wandor, Adam vs Iwan, Patryk 2026 (B90)",
+        "Sadhwani, Raunak vs Lu, Shanglei 2026 (B90)"
+      ],
+      "themes": [
+        "transposition",
+        "pawn breaks",
+        "strategic planning"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide",
+        "FCO: Fundamental Chess Openings"
+      ],
+      "specificity": 2,
+      "features": [
+        "flexible center",
+        "reversed sicilian"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "opening.english#2",
+      "key_id": "opening.english",
+      "key_type": "opening",
+      "label": "English Opening",
+      "principle": "Open the position when development and coordination favor you.",
+      "phase": "middlegame",
+      "summary": "In Symmetrical English structures, an early d4 break can open files before Black is fully coordinated, while a restrained setup may aim for b4-b5 and pressure on the queenside. A queen raid for loose pawns is dangerous when it loses time to rook lifts and discovered attacks.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "English Opening",
+        "Symmetrical English",
+        "A30-A39"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Wandor, Adam vs Iwan, Patryk 2026 (B90)",
+        "Sadhwani, Raunak vs Lu, Shanglei 2026 (B90)"
+      ],
+      "themes": [
+        "symmetry",
+        "queenside expansion",
+        "development lead"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide",
+        "FCO: Fundamental Chess Openings"
+      ],
+      "specificity": 4,
+      "features": [
+        "symmetrical c-pawns",
+        "d4 break",
+        "b4-b5 break"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "opening.english#3",
+      "key_id": "opening.english",
+      "key_type": "opening",
+      "label": "English Opening",
+      "principle": "Use space to create an attack, but guard the holes it leaves.",
+      "phase": "middlegame",
+      "summary": "In Botvinnik-style English structures with pawns on c4 and e4, White gains space but weakens d4. The usual plan is to support kingside expansion with f4-f5 while a knight uses d5; Black seeks ...f5 or ...b5 and must challenge the fixed center before White's attack becomes organized.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "English Opening",
+        "Botvinnik System",
+        "A26"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Wandor, Adam vs Iwan, Patryk 2026 (B90)",
+        "Sadhwani, Raunak vs Lu, Shanglei 2026 (B90)"
+      ],
+      "themes": [
+        "space advantage",
+        "outpost",
+        "kingside attack"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide",
+        "FCO: Fundamental Chess Openings"
+      ],
+      "specificity": 5,
+      "features": [
+        "botvinnik structure",
+        "d5 outpost",
+        "f4-f5 break"
+      ],
+      "slots": {},
+      "conditions": []
+    }
+  ]
+}

@@ -311,12 +311,8 @@ def detect_pattern_ids(
         add("structure.hanging_pawns")
     if _has_doubled(board, chess.WHITE) or _has_doubled(board, chess.BLACK):
         add("structure.doubled_pawns")
-    if _open_c_file(board):
-        add("structure.open_c_file")
-    if _open_e_file(board):
-        add("structure.open_e_file")
     if _carlsbad_minority(board):
-        add("structure.minority_attack")
+        add("structure.carlsbad")
     if _has_passed_pawn(board):
         add("structure.passed_pawn")
     if _pawn_chain(board):
@@ -327,19 +323,17 @@ def detect_pattern_ids(
         add("structure.hedgehog")
     if _bishop_pair_imbalance(board):
         add("imbalance.bishop_pair")
-    if _opposite_bishops(board):
-        add("imbalance.opposite_bishops")
-    if _opposite_bishops_endgame(board):
-        add("endgame.opposite_bishops")
+    if _opposite_bishops(board) or _opposite_bishops_endgame(board):
+        add("endgame.strategic.opposite_bishops")
     if _king_safety_signal(board):
-        add("imbalance.king_safety")
+        add("attack.king_safety")
     if abs(_material_imbalance(board)) >= 3:
-        add("imbalance.material")
+        add("imbalance.material_asymmetry")
     if _space_advantage(board):
         add("imbalance.space")
     if _rook_pawn_endgame(board):
-        add("endgame.lucena")
-        add("endgame.philidor")
+        add("endgame.theoretical.lucena")
+        add("endgame.theoretical.philidor")
 
     # ECO / opening name detectors
     for pattern in catalog.values():

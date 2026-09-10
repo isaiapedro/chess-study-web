@@ -1,0 +1,115 @@
+{
+  "key_id": "methodology.visualization",
+  "key_type": "methodology",
+  "label": "Visualization",
+  "idea_count": 3,
+  "ideas": [
+    {
+      "idea_id": "methodology.visualization#0",
+      "key_id": "methodology.visualization",
+      "key_type": "methodology",
+      "label": "Visualization",
+      "principle": "Calculate toward a complete final position",
+      "phase": "any",
+      "summary": "Visualize the final position, not merely the move sequence. Track every piece, changed line, newly attacked square, and removed defender.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Radoslaw Wojtaszek vs Alexei Fedorov 2012 (E62) [bookwalk]"
+      ],
+      "themes": [
+        "visualization",
+        "calculation"
+      ],
+      "source_books": [
+        "Everyones First Chess Workbook Fundamental Tactics and Checkmates for Improvers - 738 Practical Exercises",
+        "How to Reassess Your Chess",
+        "Pump Up Your Rating",
+        "Small Steps to Giant Improvement: Master Pawn Play in Chess",
+        "Think Like a Super-GM"
+      ],
+      "specificity": 1,
+      "features": [],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "methodology.visualization#1",
+      "key_id": "methodology.visualization",
+      "key_type": "methodology",
+      "label": "Visualization",
+      "principle": "Strengthen coordinate and piece memory",
+      "phase": "any",
+      "summary": "Train board vision by naming square colors and coordinates, then reconstructing piece placement from memory. Accurate calculation depends on preserving the board after each imagined move.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Radoslaw Wojtaszek vs Alexei Fedorov 2012 (E62) [bookwalk]"
+      ],
+      "themes": [
+        "visualization",
+        "working memory"
+      ],
+      "source_books": [
+        "Everyones First Chess Workbook Fundamental Tactics and Checkmates for Improvers - 738 Practical Exercises",
+        "How to Reassess Your Chess",
+        "Pump Up Your Rating",
+        "Small Steps to Giant Improvement: Master Pawn Play in Chess",
+        "Think Like a Super-GM"
+      ],
+      "specificity": 3,
+      "features": [
+        "square colors",
+        "piece placement"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "methodology.visualization#2",
+      "key_id": "methodology.visualization",
+      "key_type": "methodology",
+      "label": "Visualization",
+      "principle": "Visualize structural transformations",
+      "phase": "middlegame",
+      "summary": "In a closed center, visualize candidate pawn breaks through the resulting files and diagonals. Confirm where each minor piece will operate after exchanges before deciding whether a space-gaining break helps.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "King's Indian Defense"
+      ],
+      "games": [
+        "Radoslaw Wojtaszek vs Alexei Fedorov 2012",
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]"
+      ],
+      "themes": [
+        "visualization",
+        "pawn structure",
+        "minor piece battles"
+      ],
+      "source_books": [
+        "Everyones First Chess Workbook Fundamental Tactics and Checkmates for Improvers - 738 Practical Exercises",
+        "How to Reassess Your Chess",
+        "Pump Up Your Rating",
+        "Small Steps to Giant Improvement: Master Pawn Play in Chess",
+        "Think Like a Super-GM"
+      ],
+      "specificity": 5,
+      "features": [
+        "closed center",
+        "pawn breaks",
+        "files",
+        "diagonals"
+      ],
+      "slots": {},
+      "conditions": []
+    }
+  ]
+}

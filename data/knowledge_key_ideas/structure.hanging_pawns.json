@@ -1,0 +1,117 @@
+{
+  "key_id": "structure.hanging_pawns",
+  "key_type": "structure",
+  "label": "Hanging Pawns",
+  "idea_count": 3,
+  "ideas": [
+    {
+      "idea_id": "structure.hanging_pawns#0",
+      "key_id": "structure.hanging_pawns",
+      "key_type": "structure",
+      "label": "Hanging Pawns",
+      "principle": "Use activity before hanging pawns become weak",
+      "phase": "middlegame",
+      "summary": "Hanging pawns offer space and dynamic breaks but can become fixed targets. Their value depends on whether they can advance while pieces remain coordinated.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "E60",
+        "E90",
+        "D26",
+        "D42"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Sandro Mareco vs Jorge Cori 2009 (E37) [bookwalk]",
+        "Sakline Mostafa, Sajid vs Barua, Oitijjo 2026 (E60)"
+      ],
+      "themes": [
+        "hanging pawns",
+        "pawn structures"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide"
+      ],
+      "specificity": 1,
+      "features": [
+        "space",
+        "dynamic breaks"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "structure.hanging_pawns#1",
+      "key_id": "structure.hanging_pawns",
+      "key_type": "structure",
+      "label": "Hanging Pawns",
+      "principle": "Advance or restrain the hanging pair",
+      "phase": "middlegame",
+      "summary": "The side with hanging pawns should prepare a central advance or kingside activity. The defender should restrain both pawns, provoke one forward, and attack the remaining weakness.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Queen's Gambit"
+      ],
+      "games": [
+        "Sandro Mareco vs Jorge Cori 2009",
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]"
+      ],
+      "themes": [
+        "hanging pawns",
+        "restriction",
+        "pawn break"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide"
+      ],
+      "specificity": 3,
+      "features": [
+        "central advance",
+        "fixed target"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "structure.hanging_pawns#2",
+      "key_id": "structure.hanging_pawns",
+      "key_type": "structure",
+      "label": "Hanging Pawns",
+      "principle": "Transform hanging pawns before simplification",
+      "phase": "middlegame",
+      "summary": "Before simplifying a hanging-pawn position, check whether exchanges remove the pieces that support the central break. With fewer minor pieces, the defender can often blockade the pawns; the owner may need to create a passed d-pawn before that blockade is secure.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Queen's Gambit"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927",
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]"
+      ],
+      "themes": [
+        "hanging pawns",
+        "simplification",
+        "passed pawn"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide"
+      ],
+      "specificity": 5,
+      "features": [
+        "minor-piece exchanges",
+        "blockade",
+        "passed d-pawn"
+      ],
+      "slots": {},
+      "conditions": []
+    }
+  ]
+}

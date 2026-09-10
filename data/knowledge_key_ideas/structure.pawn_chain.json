@@ -1,0 +1,122 @@
+{
+  "key_id": "structure.pawn_chain",
+  "key_type": "structure",
+  "label": "Pawn Chain / Locked Centre",
+  "idea_count": 3,
+  "ideas": [
+    {
+      "idea_id": "structure.pawn_chain#0",
+      "key_id": "structure.pawn_chain",
+      "key_type": "structure",
+      "label": "Pawn Chain / Locked Centre",
+      "principle": "Attack the pawn chain at its support",
+      "phase": "middlegame",
+      "summary": "In a locked center, pawn chains determine space, breaks, and piece routes. Attack the base or undermine the head rather than pushing without a target.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "French Defense",
+        "Caro-Kann Defense",
+        "C00",
+        "C11"
+      ],
+      "games": [
+        "Naidon, Pietro Weber vs Born, Ary 2026 (C00)",
+        "Eslava Cordoba, Salome vs Rodriguez Patino, Santiago 2026 (C00)",
+        "Surkeev, Shumkar vs Fakhriddinxujaev, Umarxon 2026 (C11)",
+        "Rozman, Levy vs Song, Julien 2026 (C11)"
+      ],
+      "themes": [
+        "pawn chain",
+        "locked center"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide"
+      ],
+      "specificity": 1,
+      "features": [
+        "chain base",
+        "chain head"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "structure.pawn_chain#1",
+      "key_id": "structure.pawn_chain",
+      "key_type": "structure",
+      "label": "Pawn Chain / Locked Centre",
+      "principle": "Coordinate the wing attack with the chain",
+      "phase": "middlegame",
+      "summary": "A closed center gives time to reroute pieces toward the wing where the chain points. Prepare the pawn lever that opens lines for those pieces while slowing the opponent's lever.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "French Defense",
+        "C00",
+        "C11"
+      ],
+      "games": [
+        "Surkeev, Shumkar vs Fakhriddinxujaev, Umarxon 2026",
+        "Naidon, Pietro Weber vs Born, Ary 2026 (C00)",
+        "Eslava Cordoba, Salome vs Rodriguez Patino, Santiago 2026 (C00)"
+      ],
+      "themes": [
+        "pawn chain",
+        "piece rerouting",
+        "pawn break"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide"
+      ],
+      "specificity": 3,
+      "features": [
+        "closed center",
+        "wing play"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "structure.pawn_chain#2",
+      "key_id": "structure.pawn_chain",
+      "key_type": "structure",
+      "label": "Pawn Chain / Locked Centre",
+      "principle": "Choose the lever by resulting lines",
+      "phase": "middlegame",
+      "summary": "When one lever attacks the front pawn and another attacks the base, compare which exchange opens the useful diagonal or file. A flank pawn push can be correct if it fixes the defender or removes support from the entire chain.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "French Defense",
+        "C00",
+        "C11"
+      ],
+      "games": [
+        "Naidon, Pietro Weber vs Born, Ary 2026",
+        "Naidon, Pietro Weber vs Born, Ary 2026 (C00)",
+        "Eslava Cordoba, Salome vs Rodriguez Patino, Santiago 2026 (C00)"
+      ],
+      "themes": [
+        "pawn chain",
+        "pawn break",
+        "color complexes"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide"
+      ],
+      "specificity": 5,
+      "features": [
+        "front pawn",
+        "base pawn",
+        "open diagonal",
+        "open file"
+      ],
+      "slots": {},
+      "conditions": []
+    }
+  ]
+}

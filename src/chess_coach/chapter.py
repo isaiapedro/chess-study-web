@@ -332,12 +332,60 @@ def _find_family_sections(text: str, *, min_body_chars: int) -> list[Section]:
     return sections
 
 
+def _find_sections_by_titles(
+    text: str, titles: list[str], *, min_body_chars: int = 800
+) -> list[Section]:
+    """
+    Locate sections by an explicit ordered list of bare chapter titles.
+
+    Some books (e.g. Shereshevsky's Endgame Strategy) only print "Chapter N"
+    in the table of contents — the actual in-body headings are bare titles
+    with no attached number, so the generic "chapter N" regex scheme can't
+    find them at all. Here the number comes from list order, not the text:
+    walk titles in order, and for each one find its first line-start match
+    strictly after the previous title's real heading position. That skips
+    the TOC block (all titles packed together near the start, before any
+    real heading is found) and any running-header repeats of earlier titles.
+    """
+    cursor = 0
+    starts: list[tuple[int, int, str]] = []  # (start, title_end, title)
+    for i, title in enumerate(titles):
+        pattern = re.compile(
+            rf"(?im)^\s*{re.escape(title.strip())}\s*$"
+        )
+        matches = list(pattern.finditer(text, cursor))
+        if not matches:
+            continue
+        match = matches[1] if i == 0 and len(matches) > 1 else matches[0]
+        starts.append((match.start(), match.end(), title))
+        cursor = match.end()
+
+    sections: list[Section] = []
+    for idx, (start, title_end, title) in enumerate(starts):
+        end = starts[idx + 1][0] if idx + 1 < len(starts) else len(text)
+        body = text[title_end:end].strip()
+        if len(body) < min_body_chars:
+            continue
+        sections.append(
+            Section(
+                scheme="titles",
+                number=idx + 1,
+                title=title,
+                body=body,
+                start=start,
+                end=end,
+            )
+        )
+    return sections
+
+
 def find_sections(
     text: str,
     *,
     scheme: str | None = None,
     custom_pattern: str | None = None,
     min_body_chars: int = 800,
+    explicit_titles: list[str] | None = None,
 ) -> list[Section]:
     """
     Split book text into sections.
@@ -345,6 +393,8 @@ def find_sections(
     Prefer headings whose following body is long enough — skips TOC stubs.
     Family scheme stitches chapter spans (Chess Structures: Family One = ch 1–7).
     """
+    if explicit_titles:
+        return _find_sections_by_titles(text, explicit_titles, min_body_chars=min_body_chars)
     if scheme == "family" or scheme is None:
         family_sections = _find_family_sections(text, min_body_chars=min_body_chars)
         if scheme == "family":
@@ -389,12 +439,14 @@ def select_chapter(
     scheme: str | None = None,
     custom_pattern: str | None = None,
     min_body_chars: int = 800,
+    explicit_titles: list[str] | None = None,
 ) -> tuple[str, str]:
     sections = find_sections(
         text,
         scheme=scheme,
         custom_pattern=custom_pattern,
         min_body_chars=min_body_chars,
+        explicit_titles=explicit_titles,
     )
     if not sections:
         if chapter is None or chapter in {"", "all", "body"}:
@@ -961,6 +1013,8 @@ def extract_citations(chapter_text: str, *, book: str = "", chapter: str = "") -
     citations.extend(_citations_from_game_headers(chapter_text, book=book, chapter=chapter))
     # Quality Chess style: Name - Name \n Event YEAR
     citations.extend(_citations_from_dash_headers(chapter_text, book=book, chapter=chapter))
+    # New In Chess style: Game N \n Name \n rating \n Name \n rating \n Event Year
+    citations.extend(_citations_from_game_number_headers(chapter_text, book=book, chapter=chapter))
     citations = order_citations_book(_dedupe_citations(citations))
     log("Citations parsed: %d (book order)", len(citations))
     return citations
@@ -1100,6 +1154,91 @@ def _citations_from_game_headers(
     return out
 
 
+GAME_NUMBER_HEADER_RE = re.compile(r"(?m)^Game\s+(?P<num>[I0-9]+)\s*$")
+_MOVE_SIDE_RE = re.compile(r"(?i)^(white|black)\s+to\s+move\s*$")
+
+
+def _citations_from_game_number_headers(
+    text: str,
+    *,
+    book: str,
+    chapter: str,
+) -> list[GameCitation]:
+    """
+    Parse 'Game N' blocks (New In Chess style):
+        Game 1
+        Sergey Karjakin
+         2732
+        Wang Yue
+         2689
+        Baku 2008 (5)
+        White to move
+    Names and ratings each sit on their own line, sometimes interleaved with
+    stray page-number lines from the PDF layout — so scan lines after the
+    header, keep name-shaped ones (letters, no digits) as white/black in
+    order, and stop at the first Event+Year line or the "X to move" marker.
+    """
+    out: list[GameCitation] = []
+    for match in GAME_NUMBER_HEADER_RE.finditer(text):
+        window_end = min(len(text), match.end() + 300)
+        block = text[match.end() : window_end]
+        lines = [ln.strip() for ln in block.splitlines()]
+        names: list[str] = []
+        event_line: str | None = None
+        consumed_end = match.end()
+        pos = match.end()
+        for raw_line in block.splitlines():
+            line = raw_line.strip()
+            pos += len(raw_line) + 1
+            if not line:
+                continue
+            if _MOVE_SIDE_RE.match(line):
+                consumed_end = pos
+                break
+            year_match = YEAR_IN_TEXT_RE.search(line)
+            if year_match and not re.fullmatch(r"\d+", line):
+                event_line = line
+                consumed_end = pos
+                break
+            if re.fullmatch(r"\d{1,4}", line):
+                continue  # rating or stray page number
+            if len(names) < 2 and re.fullmatch(r"[A-Za-z][A-Za-z.'\- ]{1,45}", line):
+                names.append(line)
+        if len(names) < 2 or event_line is None:
+            continue
+        white = _clean_player_name(names[0])
+        black = _clean_player_name(names[1])
+        year_match = YEAR_IN_TEXT_RE.search(event_line)
+        year = _parse_year(year_match.group("year")) if year_match else None
+        if not white or not black or year is None:
+            continue
+        event = re.sub(rf"{re.escape(year_match.group('year'))}.*$", "", event_line).strip(" ,-")
+        window_start = _overview_window_start(text, match.start())
+        context = _citation_context(
+            text,
+            window_start,
+            header_end=consumed_end,
+            default_span=5000,
+            max_span=16000,
+        )
+        preamble, notes = extract_move_notes(context)
+        out.append(
+            GameCitation(
+                white=white,
+                black=black,
+                year=year,
+                event=event,
+                context=context,
+                notes=notes,
+                preamble=preamble,
+                source_book=book,
+                chapter=chapter,
+                offset=match.start(),
+            )
+        )
+    return out
+
+
 def _dedupe_citations(citations: list[GameCitation]) -> list[GameCitation]:
     # earliest offset wins; merge notes from duplicates
     ordered = sorted(citations, key=lambda c: c.offset)
@@ -1141,9 +1280,11 @@ def load_chapter(
     cfg = _load_book_section_config(book_path)
     scheme = scheme or cfg.get("section_scheme") or cfg.get("sections", {}).get("scheme")
     custom = None
+    titles = None
     sections_cfg = cfg.get("sections") if isinstance(cfg.get("sections"), dict) else {}
     if isinstance(sections_cfg, dict):
         custom = sections_cfg.get("pattern")
+        titles = sections_cfg.get("titles")
         min_body_chars = int(sections_cfg.get("min_body_chars", min_body_chars))
         scheme = scheme or sections_cfg.get("scheme")
     custom = custom or cfg.get("section_pattern")
@@ -1154,6 +1295,7 @@ def load_chapter(
         scheme=scheme,
         custom_pattern=custom,
         min_body_chars=min_body_chars,
+        explicit_titles=titles,
     )
     book_name = cfg.get("book") or book_path.stem.split("(")[0].strip()
     log("Section ready: %s (%d chars)", title, len(body))
@@ -1173,8 +1315,10 @@ def list_book_sections(
     scheme = scheme or cfg.get("section_scheme")
     sections_cfg = cfg.get("sections") if isinstance(cfg.get("sections"), dict) else {}
     custom = None
+    titles = None
     if isinstance(sections_cfg, dict):
         custom = sections_cfg.get("pattern")
+        titles = sections_cfg.get("titles")
         min_body_chars = int(sections_cfg.get("min_body_chars", min_body_chars))
         scheme = scheme or sections_cfg.get("scheme")
     log("Detecting sections (scheme=%s)...", scheme or "auto")
@@ -1183,6 +1327,7 @@ def list_book_sections(
         scheme=scheme,
         custom_pattern=custom or cfg.get("section_pattern"),
         min_body_chars=min_body_chars,
+        explicit_titles=titles,
     )
     log("Sections found: %d", len(sections))
     return sections

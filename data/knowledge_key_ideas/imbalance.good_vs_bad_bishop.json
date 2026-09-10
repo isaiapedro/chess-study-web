@@ -1,0 +1,125 @@
+{
+  "key_id": "imbalance.good_vs_bad_bishop",
+  "key_type": "imbalance",
+  "label": "Good vs Bad Bishop",
+  "idea_count": 3,
+  "ideas": [
+    {
+      "idea_id": "imbalance.good_vs_bad_bishop#0",
+      "key_id": "imbalance.good_vs_bad_bishop",
+      "key_type": "imbalance",
+      "label": "Good vs Bad Bishop",
+      "principle": "Judge a bishop by the structure and its available duties.",
+      "phase": "middlegame",
+      "summary": "A bishop is bad when its own fixed pawns block its diagonals or create targets on its color. Improve it by changing the pawn structure, moving it outside the chain, or exchanging it for an active enemy piece.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "C00",
+        "C11",
+        "B12",
+        "B18"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Sandro Mareco vs Jorge Cori 2009 (E37) [bookwalk]",
+        "Naidon, Pietro Weber vs Born, Ary 2026 (C00)",
+        "Eslava Cordoba, Salome vs Rodriguez Patino, Santiago 2026 (C00)"
+      ],
+      "themes": [
+        "good bishop",
+        "bad bishop",
+        "pawn structure"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide"
+      ],
+      "specificity": 1,
+      "features": [
+        "fixed pawn chain",
+        "restricted bishop",
+        "color-complex weaknesses"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "imbalance.good_vs_bad_bishop#1",
+      "key_id": "imbalance.good_vs_bad_bishop",
+      "key_type": "imbalance",
+      "label": "Good vs Bad Bishop",
+      "principle": "Fix targets on the bad bishop's color and simplify around them.",
+      "phase": "endgame",
+      "summary": "Against a bad bishop, fix enemy pawns on that bishop's color and occupy the opposite color with your king or knight. Trade active enemy pieces so the bishop's structural burden becomes decisive.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "C00",
+        "C11",
+        "B12",
+        "B18"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Sandro Mareco vs Jorge Cori 2009 (E37) [bookwalk]",
+        "Naidon, Pietro Weber vs Born, Ary 2026 (C00)",
+        "Eslava Cordoba, Salome vs Rodriguez Patino, Santiago 2026 (C00)"
+      ],
+      "themes": [
+        "good vs bad bishop",
+        "restriction",
+        "simplification"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide"
+      ],
+      "specificity": 3,
+      "features": [
+        "pawns fixed on bishop color",
+        "strong knight",
+        "minor-piece exchange"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "imbalance.good_vs_bad_bishop#2",
+      "key_id": "imbalance.good_vs_bad_bishop",
+      "key_type": "imbalance",
+      "label": "Good vs Bad Bishop",
+      "principle": "Break the pawn chain before the bad bishop becomes the only minor piece.",
+      "phase": "middlegame",
+      "summary": "In a French-style locked center, a bishop trapped behind the pawn chain can remain strategically inferior to a knight on d4 or e5. The restricted side should challenge the chain with ...f6 or free the bishop before exchanging other active pieces.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "French Defense"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Sandro Mareco vs Jorge Cori 2009 (E37) [bookwalk]",
+        "Naidon, Pietro Weber vs Born, Ary 2026 (C00)",
+        "Eslava Cordoba, Salome vs Rodriguez Patino, Santiago 2026 (C00)"
+      ],
+      "themes": [
+        "bad bishop",
+        "French structure",
+        "pawn break"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide"
+      ],
+      "specificity": 4,
+      "features": [
+        "locked center",
+        "bishop behind pawn chain",
+        "knight outpost"
+      ],
+      "slots": {},
+      "conditions": []
+    }
+  ]
+}

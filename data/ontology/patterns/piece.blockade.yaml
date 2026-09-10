@@ -1,0 +1,17 @@
+id: piece.blockade
+label: Blockade
+phase: middlegame
+family: piece
+aliases:
+- blockade
+- blockading
+keywords:
+- blockade
+- blockading knight
+- immobilize
+rules_of_thumb:
+- Use knights/pieces to immobilize enemy passed pawns or center advances.
+plans:
+- Use knights/pieces to immobilize enemy passed pawns or center advances.
+related:
+- piece.coordination

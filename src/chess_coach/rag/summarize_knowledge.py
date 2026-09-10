@@ -262,6 +262,119 @@ def _bookwalk_game_labels(config: dict[str, Any], themes: list[str]) -> list[str
     return labels
 
 
+def evenly_spaced_indices(n: int, k: int) -> list[int]:
+    """Pick k distinct indices covering [0, n) as evenly as possible."""
+    if n <= 0 or k <= 0:
+        return []
+    if k >= n:
+        return list(range(n))
+    if k == 1:
+        return [n // 2]
+    out: list[int] = []
+    seen: set[int] = set()
+    for i in range(k):
+        idx = round(i * (n - 1) / (k - 1))
+        idx = max(0, min(n - 1, idx))
+        if idx in seen:
+            for delta in range(1, n):
+                for cand in (idx + delta, idx - delta):
+                    if 0 <= cand < n and cand not in seen:
+                        idx = cand
+                        break
+                else:
+                    continue
+                break
+        seen.add(idx)
+        out.append(idx)
+    return sorted(out)
+
+
+def select_summary_source_chunks(
+    chunks: list[Any],
+    max_chunks: int | None,
+) -> list[Any]:
+    """
+    Choose teachable chunks across the *whole* book.
+
+    Prefer chapter-balanced sampling when headings exist; otherwise even
+    stride through the full teachable list (not front-of-PDF only).
+    """
+    teachable = [c for c in chunks if chunk_is_teachable(getattr(c, "text", "") or "")]
+    if not teachable:
+        return []
+    if max_chunks is None or max_chunks <= 0 or len(teachable) <= max_chunks:
+        return teachable
+
+    by_chapter: dict[str, list[Any]] = {}
+    order: list[str] = []
+    for chunk in teachable:
+        key = str(getattr(chunk, "chapter", "") or "body").strip() or "body"
+        if key not in by_chapter:
+            order.append(key)
+            by_chapter[key] = []
+        by_chapter[key].append(chunk)
+
+    if len(order) <= 1:
+        idxs = evenly_spaced_indices(len(teachable), max_chunks)
+        return [teachable[i] for i in idxs]
+
+    # At least one per chapter when budget allows, then fill by chapter size.
+    selected: list[Any] = []
+    used: set[int] = set()
+
+    def add_chunk(chunk: Any) -> bool:
+        cid = id(chunk)
+        if cid in used:
+            return False
+        used.add(cid)
+        selected.append(chunk)
+        return True
+
+    if max_chunks >= len(order):
+        for key in order:
+            add_chunk(by_chapter[key][len(by_chapter[key]) // 2])
+    else:
+        chapter_idxs = evenly_spaced_indices(len(order), max_chunks)
+        for ci in chapter_idxs:
+            group = by_chapter[order[ci]]
+            add_chunk(group[len(group) // 2])
+        return selected[:max_chunks]
+
+    remaining = max_chunks - len(selected)
+    if remaining <= 0:
+        return selected[:max_chunks]
+
+    weights = [len(by_chapter[k]) for k in order]
+    total_w = sum(weights) or 1
+    quotas = [max(0, round(remaining * w / total_w)) for w in weights]
+    # Fix rounding so quotas sum to remaining
+    while sum(quotas) > remaining:
+        for i in range(len(quotas)):
+            if quotas[i] > 0 and sum(quotas) > remaining:
+                quotas[i] -= 1
+    while sum(quotas) < remaining:
+        richest = max(range(len(order)), key=lambda i: weights[i] - quotas[i])
+        quotas[richest] += 1
+
+    for key, quota in zip(order, quotas):
+        group = by_chapter[key]
+        unused = [c for c in group if id(c) not in used]
+        if not unused or quota <= 0:
+            continue
+        idxs = evenly_spaced_indices(len(unused), min(quota, len(unused)))
+        for i in idxs:
+            add_chunk(unused[i])
+            if len(selected) >= max_chunks:
+                return selected[:max_chunks]
+
+    if len(selected) < max_chunks:
+        for chunk in teachable:
+            add_chunk(chunk)
+            if len(selected) >= max_chunks:
+                break
+    return selected[:max_chunks]
+
+
 def summarize_book_chunks(
     path: Path,
     config: dict[str, Any],
@@ -276,15 +389,9 @@ def summarize_book_chunks(
         max_chars=int(chunk_cfg.get("max_chars", 700)),
         overlap_chars=int(chunk_cfg.get("overlap_chars", 80)),
     )
-    # Scan deeper than max_chunks so TOC pages can be skipped.
-    scan_limit = None
-    if max_chunks is not None:
-        scan_limit = max(max_chunks * 8, max_chunks)
-        chunks = chunks[:scan_limit]
+    selected = select_summary_source_chunks(chunks, max_chunks)
     out: list[KnowledgeSummary] = []
-    for chunk in chunks:
-        if not chunk_is_teachable(chunk.text):
-            continue
+    for chunk in selected:
         themes = detect_themes(chunk.text, chunk.themes)
         patterns = tag_text_patterns(
             chunk.text, ontology_dir=ont_dir, book_patterns=getattr(chunk, "book_patterns", None) or []
@@ -323,8 +430,6 @@ def summarize_book_chunks(
                 source_chunk_id=chunk.chunk_id,
             )
         )
-        if max_chunks is not None and len(out) >= max_chunks:
-            break
     return out
 
 
@@ -359,6 +464,41 @@ def write_summaries_jsonl(summaries: list[KnowledgeSummary], out_path: Path) -> 
             )
 
 
+def load_summaries_jsonl(path: Path) -> list[KnowledgeSummary]:
+    if not path.is_file():
+        return []
+    out: list[KnowledgeSummary] = []
+    with path.open("r", encoding="utf-8") as handle:
+        for line in handle:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                row = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            out.append(
+                KnowledgeSummary(
+                    summary_id=str(row.get("id") or ""),
+                    text=str(row.get("text") or ""),
+                    book=str(row.get("book") or ""),
+                    chapter=str(row.get("chapter") or ""),
+                    themes=list(row.get("themes") or []),
+                    patterns=list(row.get("patterns") or []),
+                    eco_hints=list(row.get("eco_hints") or []),
+                    similar_games=list(row.get("similar_games") or []),
+                    source_path=str(row.get("source_path") or ""),
+                    source_chunk_id=str(row.get("source_chunk_id") or ""),
+                )
+            )
+    return [s for s in out if s.summary_id and s.text]
+
+
+def _book_jsonl_path(out_dir: Path, file_path: Path) -> Path:
+    slug = re.sub(r"[^a-z0-9]+", "_", file_path.stem.lower()).strip("_")[:60]
+    return out_dir / f"{slug}.jsonl"
+
+
 def embed_summaries(
     summaries: list[KnowledgeSummary],
     config: dict[str, Any],
@@ -376,6 +516,10 @@ def embed_summaries(
             client.delete_collection(name)
         except Exception:
             pass
+    if not summaries:
+        if reset:
+            get_summaries_collection(config)
+        return 0
     collection = get_summaries_collection(config)
     embedder = get_embedder(
         config["ollama_host"],
@@ -433,6 +577,7 @@ def summarize_knowledge_path(
     reset: bool = False,
     allow_hash_fallback: bool = False,
     jsonl_dir: Path | None = None,
+    force: bool = False,
 ) -> int:
     root = Path(__file__).resolve().parents[3]
     out_dir = jsonl_dir or Path(config.get("rag", {}).get("summaries_dir", "data/knowledge_summaries"))
@@ -447,30 +592,63 @@ def summarize_knowledge_path(
     else:
         files = [path]
 
-    all_summaries: list[KnowledgeSummary] = []
+    per_book_cap = None if max_chunks_per_book == 0 else max_chunks_per_book
+    total_embedded = 0
+    skipped_existing = 0
+
+    if reset:
+        print("Resetting summaries Chroma collection…", flush=True)
+        embed_summaries([], config, reset=True, allow_hash_fallback=allow_hash_fallback)
+
     for idx, file_path in enumerate(files, start=1):
         print(f"[{idx}/{len(files)}] summarizing {file_path.name}", flush=True)
+        jsonl_path = _book_jsonl_path(out_dir, file_path)
+        existing = load_summaries_jsonl(jsonl_path)
+        enough = (
+            per_book_cap is not None
+            and bool(existing)
+            and len(existing) >= per_book_cap
+        )
+        if not force and not reset and enough:
+            print(
+                f"  SKIP already summarized ({len(existing)} in {jsonl_path.name}) — embedding batch",
+                flush=True,
+            )
+            total_embedded += embed_summaries(
+                existing,
+                config,
+                reset=False,
+                allow_hash_fallback=allow_hash_fallback,
+            )
+            skipped_existing += 1
+            continue
+
         try:
             summaries = summarize_book_chunks(
                 file_path,
                 config,
                 use_llm=use_llm,
-                max_chunks=max_chunks_per_book,
+                max_chunks=per_book_cap,
             )
         except Exception as exc:
             print(f"  SKIP {exc}", flush=True)
             continue
         print(f"  {len(summaries)} summaries", flush=True)
-        slug = re.sub(r"[^a-z0-9]+", "_", file_path.stem.lower()).strip("_")[:60]
-        write_summaries_jsonl(summaries, out_dir / f"{slug}.jsonl")
-        all_summaries.extend(summaries)
+        write_summaries_jsonl(summaries, jsonl_path)
+        total_embedded += embed_summaries(
+            summaries,
+            config,
+            reset=False,
+            allow_hash_fallback=allow_hash_fallback,
+        )
 
-    return embed_summaries(
-        all_summaries,
-        config,
-        reset=reset,
-        allow_hash_fallback=allow_hash_fallback,
-    )
+    if skipped_existing:
+        print(
+            f"Skipped LLM for {skipped_existing} books with existing jsonl "
+            f"(use --force / --reset-summaries to redo)",
+            flush=True,
+        )
+    return total_embedded
 
 
 def run_knowledge_pipeline(
@@ -479,27 +657,34 @@ def run_knowledge_pipeline(
     *,
     skip_ingest: bool = False,
     skip_summarize: bool = False,
+    skip_key_buckets: bool = False,
     skip_annotated: bool = False,
     use_llm: bool = True,
     max_chunks_per_book: int | None = 24,
     allow_hash_fallback: bool = False,
     reset_summaries: bool = False,
+    force_ingest: bool = False,
+    force_summarize: bool = False,
+    force_key_buckets: bool = False,
 ) -> dict[str, int]:
     """
-    PDF ingest → knowledge summaries (+ PGN links) → embed RAG
+    PDF ingest → per-chunk summaries → soft-key buckets + key summaries
     → optional annotated bookwalk synthesize.
     """
-    stats = {"ingested": 0, "summaries": 0, "annotated": 0}
+    from chess_coach.rag.key_bucket_summarize import summarize_by_key_path
+
+    stats = {"ingested": 0, "summaries": 0, "key_summaries": 0, "annotated": 0}
     if not skip_ingest:
-        print("=== 1/3 ingest PDFs ===", flush=True)
+        print("=== 1/4 ingest PDFs ===", flush=True)
         stats["ingested"] = ingest_path(
             books_path,
             config,
             reset=False,
             allow_hash_fallback=allow_hash_fallback,
+            force=force_ingest,
         )
     if not skip_summarize:
-        print("=== 2/3 summarize + link PGN + embed ===", flush=True)
+        print("=== 2/4 summarize + link PGN + embed ===", flush=True)
         stats["summaries"] = summarize_knowledge_path(
             books_path,
             config,
@@ -507,9 +692,22 @@ def run_knowledge_pipeline(
             max_chunks_per_book=max_chunks_per_book,
             reset=reset_summaries,
             allow_hash_fallback=allow_hash_fallback,
+            force=force_summarize or reset_summaries,
         )
+    if not skip_key_buckets:
+        print("=== 3/4 soft-key buckets + LLM key summaries ===", flush=True)
+        key_stats = summarize_by_key_path(
+            books_path,
+            config,
+            use_llm=use_llm,
+            max_chunks_per_book=max_chunks_per_book if max_chunks_per_book else 48,
+            force=force_key_buckets or reset_summaries,
+            reset=reset_summaries,
+            allow_hash_fallback=allow_hash_fallback,
+        )
+        stats["key_summaries"] = int(key_stats.get("embedded") or 0)
     if not skip_annotated:
-        print("=== 3/3 synthesize annotated bookwalk positions ===", flush=True)
+        print("=== 4/4 synthesize annotated bookwalk positions ===", flush=True)
         try:
             stats["annotated"] = synthesize_annotated(
                 config, allow_hash_fallback=allow_hash_fallback

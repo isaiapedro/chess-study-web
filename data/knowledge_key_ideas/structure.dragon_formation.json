@@ -1,0 +1,124 @@
+{
+  "key_id": "structure.dragon_formation",
+  "key_type": "structure",
+  "label": "Dragon Formation",
+  "idea_count": 3,
+  "ideas": [
+    {
+      "idea_id": "structure.dragon_formation#0",
+      "key_id": "structure.dragon_formation",
+      "key_type": "structure",
+      "label": "Dragon Formation",
+      "principle": "Activate the fianchetto against the center",
+      "phase": "middlegame",
+      "summary": "The Dragon formation features a kingside fianchetto aimed at a center that may open. Its strength comes from the long diagonal and coordinated counterplay.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Sicilian Dragon",
+        "B90",
+        "B70"
+      ],
+      "games": [
+        "Wandor, Adam vs Iwan, Patryk 2026 (B90)",
+        "Sadhwani, Raunak vs Lu, Shanglei 2026 (B90)",
+        "Folin, Giorgio vs Picone Chiodo, Luigi 2026 (B70)",
+        "Nail, Christopher vs Voronkov, Andrii 2026 (B70)"
+      ],
+      "themes": [
+        "Dragon formation",
+        "pawn structures"
+      ],
+      "source_books": [
+        "Chess Structures: A Grandmaster Guide",
+        "FCO: Fundamental Chess Openings",
+        "Pawn structure chess"
+      ],
+      "specificity": 1,
+      "features": [
+        "kingside fianchetto",
+        "long diagonal"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "structure.dragon_formation#1",
+      "key_id": "structure.dragon_formation",
+      "key_type": "structure",
+      "label": "Dragon Formation",
+      "principle": "Recognize the structure beyond the opening",
+      "phase": "middlegame",
+      "summary": "Dragon positions should be recognized by structure even with colors reversed. Compare central pawn tension, access to the long diagonal, and which side can open lines first.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Sicilian Dragon",
+        "English Opening",
+        "B90",
+        "B70"
+      ],
+      "games": [
+        "Folin, Giorgio vs Picone Chiodo, Luigi 2026",
+        "Wandor, Adam vs Iwan, Patryk 2026 (B90)",
+        "Sadhwani, Raunak vs Lu, Shanglei 2026 (B90)"
+      ],
+      "themes": [
+        "Dragon formation",
+        "piece coordination"
+      ],
+      "source_books": [
+        "Chess Structures: A Grandmaster Guide",
+        "FCO: Fundamental Chess Openings",
+        "Pawn structure chess"
+      ],
+      "specificity": 3,
+      "features": [
+        "reversed colors",
+        "central tension",
+        "long diagonal"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "structure.dragon_formation#2",
+      "key_id": "structure.dragon_formation",
+      "key_type": "structure",
+      "label": "Dragon Formation",
+      "principle": "Prepare the Dragon's freeing break",
+      "phase": "middlegame",
+      "summary": "Against a Maróczy-style bind, the Dragon bishop needs a pawn break to become active. Coordinate the queen, rook, and knight behind the freeing break; an unsupported push only creates targets while the opponent controls the central light squares.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Accelerated Dragon",
+        "B90",
+        "B70"
+      ],
+      "games": [
+        "Wandor, Adam vs Iwan, Patryk 2026",
+        "Wandor, Adam vs Iwan, Patryk 2026 (B90)",
+        "Sadhwani, Raunak vs Lu, Shanglei 2026 (B90)"
+      ],
+      "themes": [
+        "Dragon formation",
+        "Maróczy Bind",
+        "pawn break"
+      ],
+      "source_books": [
+        "Chess Structures: A Grandmaster Guide",
+        "FCO: Fundamental Chess Openings",
+        "Pawn structure chess"
+      ],
+      "specificity": 5,
+      "features": [
+        "fianchetto bishop",
+        "central light squares",
+        "freeing break"
+      ],
+      "slots": {},
+      "conditions": []
+    }
+  ]
+}

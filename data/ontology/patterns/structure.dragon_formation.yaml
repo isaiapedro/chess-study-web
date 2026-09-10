@@ -1,0 +1,21 @@
+id: structure.dragon_formation
+label: Dragon Formation
+phase: middlegame
+family: chess_structures
+aliases:
+- dragon structure
+- dragon formation
+- fianchetto dragon
+keywords:
+- dragon
+- fianchetto
+- g6 bishop
+- open c-file
+rules_of_thumb:
+- Fianchetto structure with open c-file pressure.
+plans:
+- 'Black: ...c-file and long diagonal.'
+- 'White: Yugoslav-style kingside attack or clamp.'
+related:
+- opening.sicilian
+- attack.opposite_side_castling

@@ -1,0 +1,24 @@
+id: opening.london_system
+label: London System
+phase: opening
+family: opening
+aliases:
+- london system
+- london
+keywords:
+- London System
+- London
+eco_prefixes:
+- D00
+- D01
+- D02
+- D03
+opening_tokens:
+- london
+detect: eco_or_opening
+rules_of_thumb:
+- Solid Bf4 systems with flexible plans.
+plans:
+- e3/c3 setup; minority or kingside expansion.
+related:
+- opening.queens_gambit

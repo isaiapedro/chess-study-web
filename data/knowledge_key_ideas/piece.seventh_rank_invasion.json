@@ -1,0 +1,105 @@
+{
+  "key_id": "piece.seventh_rank_invasion",
+  "key_type": "piece",
+  "label": "Seventh-Rank Invasion",
+  "idea_count": 3,
+  "ideas": [
+    {
+      "idea_id": "piece.seventh_rank_invasion#0",
+      "key_id": "piece.seventh_rank_invasion",
+      "key_type": "piece",
+      "label": "Seventh-Rank Invasion",
+      "principle": "Invade where pawns and king are vulnerable",
+      "phase": "middlegame",
+      "summary": "A rook on the seventh rank attacks pawns from the side, restricts the king, and often creates mating or promotion threats.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Sakline Mostafa, Sajid vs Barua, Oitijjo 2026 (E60)",
+        "Ushenina, Anna vs Fressinet, Laurent 2026 (E60)"
+      ],
+      "themes": [
+        "seventh rank",
+        "rook activity"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings"
+      ],
+      "specificity": 1,
+      "features": [
+        "weak pawns",
+        "restricted king"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "piece.seventh_rank_invasion#1",
+      "key_id": "piece.seventh_rank_invasion",
+      "key_type": "piece",
+      "label": "Seventh-Rank Invasion",
+      "principle": "Coordinate the seventh-rank entry",
+      "phase": "endgame",
+      "summary": "An invasion is strongest when another piece controls the escape squares or a passed pawn distracts the defender. Prepare entry by taking an open file and denying exchanges.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [],
+      "games": [
+        "Baryshpolets vs Turov 2012",
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]"
+      ],
+      "themes": [
+        "seventh rank",
+        "passed pawn",
+        "piece coordination"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings"
+      ],
+      "specificity": 3,
+      "features": [
+        "open file",
+        "escape squares"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "piece.seventh_rank_invasion#2",
+      "key_id": "piece.seventh_rank_invasion",
+      "key_type": "piece",
+      "label": "Seventh-Rank Invasion",
+      "principle": "Use king entry and deflection to invade",
+      "phase": "endgame",
+      "summary": "In a rook ending, combine a seventh-rank rook with an advancing king that attacks the defender's pawns. If entry is blocked, a pawn sacrifice can open the file or deflect the guarding rook.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927",
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]"
+      ],
+      "themes": [
+        "seventh rank",
+        "rook ending",
+        "simplification"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings"
+      ],
+      "specificity": 5,
+      "features": [
+        "active king",
+        "deflection",
+        "pawn sacrifice"
+      ],
+      "slots": {},
+      "conditions": []
+    }
+  ]
+}

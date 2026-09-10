@@ -1,0 +1,113 @@
+{
+  "key_id": "endgame.strategic.pawn_break",
+  "key_type": "endgame",
+  "label": "Endgame Pawn Break",
+  "idea_count": 3,
+  "ideas": [
+    {
+      "idea_id": "endgame.strategic.pawn_break#0",
+      "key_id": "endgame.strategic.pawn_break",
+      "key_type": "endgame",
+      "label": "Endgame Pawn Break",
+      "principle": "Judge a pawn break by the position it creates, not by the pawn it trades.",
+      "phase": "endgame",
+      "summary": "Do not treat every endgame pawn move as a race toward promotion. A pawn break is strongest when it opens an entry file, creates a passed pawn, or forces a lasting weakness.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Delmouly, Manon vs Bellahcene, Jenna 2026 (D30)",
+        "Iturrizaga Bonelli, Eduardo vs Sivanandan, Bodhana 2026 (D30)"
+      ],
+      "themes": [
+        "pawn break",
+        "passed pawn",
+        "endgame strategy"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Dvoretsky's Endgame Manual"
+      ],
+      "specificity": 1,
+      "features": [
+        "pawn lever",
+        "entry file",
+        "structural weakness"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "endgame.strategic.pawn_break#1",
+      "key_id": "endgame.strategic.pawn_break",
+      "key_type": "endgame",
+      "label": "Endgame Pawn Break",
+      "principle": "Attack a pawn hook to transform a fixed structure.",
+      "phase": "endgame",
+      "summary": "Look for an advanced enemy pawn that acts as a hook. Challenging it can force an unfavorable capture, open a file for the rook, or leave a neighboring pawn isolated.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Delmouly, Manon vs Bellahcene, Jenna 2026 (D30)",
+        "Iturrizaga Bonelli, Eduardo vs Sivanandan, Bodhana 2026 (D30)"
+      ],
+      "themes": [
+        "pawn break",
+        "pawn hook",
+        "rook activity"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Dvoretsky's Endgame Manual"
+      ],
+      "specificity": 3,
+      "features": [
+        "advanced enemy pawn",
+        "forced recapture",
+        "open file"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "endgame.strategic.pawn_break#2",
+      "key_id": "endgame.strategic.pawn_break",
+      "key_type": "endgame",
+      "label": "Endgame Pawn Break",
+      "principle": "Use the break to overload the defending rook.",
+      "phase": "endgame",
+      "summary": "Before playing a break such as f5-f4 in a rook ending, check whether it drives the defending rook away from a pawn or rank. The break is valuable when the rook cannot maintain both active play and protection.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Delmouly, Manon vs Bellahcene, Jenna 2026 (D30)",
+        "Iturrizaga Bonelli, Eduardo vs Sivanandan, Bodhana 2026 (D30)"
+      ],
+      "themes": [
+        "rook ending",
+        "pawn break",
+        "overloading"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Dvoretsky's Endgame Manual"
+      ],
+      "specificity": 4,
+      "features": [
+        "f-pawn break",
+        "rook displacement",
+        "loose pawn"
+      ],
+      "slots": {},
+      "conditions": []
+    }
+  ]
+}

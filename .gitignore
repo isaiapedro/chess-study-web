@@ -19,3 +19,7 @@ data/pgn_archive/
 *.wasm
 *.sqlite
 data/derived/
+data/knowledge_summaries/
+data/knowledge_key_buckets/
+data/knowledge_key_summaries/
+data/booklog.md

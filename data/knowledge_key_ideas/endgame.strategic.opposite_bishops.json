@@ -1,0 +1,101 @@
+{
+  "key_id": "endgame.strategic.opposite_bishops",
+  "key_type": "endgame",
+  "label": "Opposite Bishops (Ending)",
+  "idea_count": 3,
+  "ideas": [
+    {
+      "idea_id": "endgame.strategic.opposite_bishops#0",
+      "key_id": "endgame.strategic.opposite_bishops",
+      "key_type": "endgame",
+      "label": "Opposite Bishops (Ending)",
+      "principle": "Attacking opposite bishops",
+      "phase": "endgame",
+      "summary": "With opposite-colored bishops, the side with the initiative should attack on the color complex the opponent cannot defend. Extra pawns or a safer king often matter more than exact material equality.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]"
+      ],
+      "themes": [
+        "opposite-bishops",
+        "color-complex",
+        "initiative"
+      ],
+      "source_books": [
+        "Small Steps to Giant Improvement: Master Pawn Play in Chess"
+      ],
+      "specificity": 2,
+      "features": [
+        "opposite-bishops",
+        "color-complex"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "endgame.strategic.opposite_bishops#1",
+      "key_id": "endgame.strategic.opposite_bishops",
+      "key_type": "endgame",
+      "label": "Opposite Bishops (Ending)",
+      "principle": "Drawing fortress ideas",
+      "phase": "endgame",
+      "summary": "The defender should place pawns on the color of their bishop, blockade passed pawns on the enemy bishop's color, and trade into a pure opposite-bishop ending when the attacker cannot create a second front.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]"
+      ],
+      "themes": [
+        "fortress",
+        "blockade",
+        "draw-technique"
+      ],
+      "source_books": [
+        "Small Steps to Giant Improvement: Master Pawn Play in Chess"
+      ],
+      "specificity": 3,
+      "features": [
+        "opposite-bishops",
+        "fortress"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "endgame.strategic.opposite_bishops#2",
+      "key_id": "endgame.strategic.opposite_bishops",
+      "key_type": "endgame",
+      "label": "Opposite Bishops (Ending)",
+      "principle": "Create two fronts",
+      "phase": "middlegame",
+      "summary": "To win opposite-bishop middlegames, combine kingside pressure with a queenside passer or a second weakness. One fixed target is often enough for a draw; two distant problems overwhelm the defending bishop.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]"
+      ],
+      "themes": [
+        "two-weaknesses",
+        "passed-pawn",
+        "attack"
+      ],
+      "source_books": [
+        "Small Steps to Giant Improvement: Master Pawn Play in Chess"
+      ],
+      "specificity": 4,
+      "features": [
+        "opposite-bishops",
+        "two-weaknesses"
+      ],
+      "slots": {},
+      "conditions": []
+    }
+  ]
+}

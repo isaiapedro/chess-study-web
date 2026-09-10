@@ -1,0 +1,122 @@
+{
+  "key_id": "endgame.theoretical.philidor",
+  "key_type": "endgame",
+  "label": "Philidor Defence (Rook Ending)",
+  "idea_count": 3,
+  "ideas": [
+    {
+      "idea_id": "endgame.theoretical.philidor#0",
+      "key_id": "endgame.theoretical.philidor",
+      "key_type": "endgame",
+      "label": "Philidor Defence (Rook Ending)",
+      "principle": "Restrict the king before beginning rear checks.",
+      "phase": "endgame",
+      "summary": "The defender in a rook ending should keep the attacking king away from the promotion zone and preserve checking distance. Passive defense becomes dangerous once the stronger king gains shelter.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "C41"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Ticha, Barbora vs Vancakova, Veronika 2026 (C41)",
+        "Prudnikov, Andrey vs Einarsson, Halldor Gretar 2026 (C41)"
+      ],
+      "themes": [
+        "rook ending",
+        "defensive technique",
+        "checking distance"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Dvoretsky's Endgame Manual",
+        "FCO: Fundamental Chess Openings"
+      ],
+      "specificity": 2,
+      "features": [
+        "rook versus rook and pawn",
+        "king restriction",
+        "rear checks"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "endgame.theoretical.philidor#1",
+      "key_id": "endgame.theoretical.philidor",
+      "key_type": "endgame",
+      "label": "Philidor Defence (Rook Ending)",
+      "principle": "Use third-rank restriction, then switch to rear checks.",
+      "phase": "endgame",
+      "summary": "The Philidor defense holds when the pawn has not passed the fifth rank: keep the rook on the third rank to bar the enemy king. When the pawn advances, retreat the rook and check from behind.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "C41"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Ticha, Barbora vs Vancakova, Veronika 2026 (C41)",
+        "Prudnikov, Andrey vs Einarsson, Halldor Gretar 2026 (C41)"
+      ],
+      "themes": [
+        "Philidor",
+        "rook ending",
+        "third-rank defense"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Dvoretsky's Endgame Manual",
+        "FCO: Fundamental Chess Openings"
+      ],
+      "specificity": 4,
+      "features": [
+        "pawn on fifth rank or lower",
+        "rook on third rank",
+        "rear checks"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "endgame.theoretical.philidor#2",
+      "key_id": "endgame.theoretical.philidor",
+      "key_type": "endgame",
+      "label": "Philidor Defence (Rook Ending)",
+      "principle": "Time the rook's retreat only after the pawn blocks its own king.",
+      "phase": "endgame",
+      "summary": "In the central-pawn Philidor setup, do not abandon the third rank while the attacking king is still blocked. After the pawn advances to the sixth rank, move the rook far enough away to deliver repeated checks from the rear.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "C41"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Ticha, Barbora vs Vancakova, Veronika 2026 (C41)",
+        "Prudnikov, Andrey vs Einarsson, Halldor Gretar 2026 (C41)"
+      ],
+      "themes": [
+        "Philidor",
+        "theoretical rook ending",
+        "rear checks"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Dvoretsky's Endgame Manual",
+        "FCO: Fundamental Chess Openings"
+      ],
+      "specificity": 5,
+      "features": [
+        "central pawn on sixth rank",
+        "blocked attacking king",
+        "long checking distance"
+      ],
+      "slots": {},
+      "conditions": []
+    }
+  ]
+}

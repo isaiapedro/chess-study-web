@@ -25,6 +25,49 @@ def get_collection(config: dict[str, Any]) -> Collection:
     )
 
 
+def _existing_source_counts(collection: Collection) -> dict[str, int]:
+    """Map source_path -> chunk count already in the collection."""
+    counts: dict[str, int] = {}
+    total = collection.count()
+    if total <= 0:
+        return counts
+    offset = 0
+    page = 256
+    while offset < total:
+        raw = collection.get(include=["metadatas"], limit=page, offset=offset)
+        ids = raw.get("ids") or []
+        metas = raw.get("metadatas") or []
+        if not ids:
+            break
+        for meta in metas:
+            if not meta:
+                continue
+            src = str(meta.get("source_path") or "").strip()
+            if not src:
+                continue
+            counts[src] = counts.get(src, 0) + 1
+        offset += len(ids)
+    return counts
+
+
+def _source_keys(path: Path) -> list[str]:
+    keys = [str(path)]
+    try:
+        resolved = str(path.resolve())
+        if resolved not in keys:
+            keys.append(resolved)
+    except OSError:
+        pass
+    return keys
+
+
+def _lookup_existing(counts: dict[str, int], path: Path) -> int:
+    best = 0
+    for key in _source_keys(path):
+        best = max(best, counts.get(key, 0))
+    return best
+
+
 def _chunk_metadata(chunk: Any, ontology_dir: str | None) -> dict[str, Any]:
     patterns = tag_text_patterns(
         chunk.text,
@@ -46,6 +89,7 @@ def ingest_path(
     *,
     reset: bool = False,
     allow_hash_fallback: bool = False,
+    force: bool = False,
 ) -> int:
     rag = config["rag"]
     chunk_cfg = config.get("chunk", {})
@@ -74,8 +118,19 @@ def ingest_path(
     else:
         files = [path]
 
+    existing_counts: dict[str, int] = {}
+    if not force and not reset:
+        print("Scanning collection for already-ingested books…", flush=True)
+        existing_counts = _existing_source_counts(collection)
+        print(
+            f"  {sum(existing_counts.values())} chunks across {len(existing_counts)} sources",
+            flush=True,
+        )
+
     total = 0
     tagged = 0
+    skipped = 0
+    skipped_existing = 0
     batch_ids: list[str] = []
     batch_docs: list[str] = []
     batch_meta: list[dict[str, Any]] = []
@@ -100,7 +155,6 @@ def ingest_path(
         print(f"  upserted batch ({len(batch_ids)} chunks, total={total})", flush=True)
         batch_ids, batch_docs, batch_meta = [], [], []
 
-    skipped = 0
     for idx, file_path in enumerate(files, start=1):
         print(f"[{idx}/{len(files)}] extracting {file_path.name}", flush=True)
         try:
@@ -118,6 +172,21 @@ def ingest_path(
             print(f"  SKIP empty/scanned extract ({total_chars} chars, {len(chunks)} chunks)", flush=True)
             skipped += 1
             continue
+
+        have = _lookup_existing(existing_counts, file_path)
+        if not force and have >= len(chunks):
+            print(
+                f"  SKIP already ingested ({have} chunks ≥ {len(chunks)} extracted)",
+                flush=True,
+            )
+            skipped_existing += 1
+            continue
+        if have and have < len(chunks):
+            print(
+                f"  RESUME partial book ({have}/{len(chunks)} chunks in DB) — re-upserting",
+                flush=True,
+            )
+
         print(f"  {len(chunks)} chunks ({total_chars} chars)", flush=True)
         for chunk in chunks:
             meta = _chunk_metadata(chunk, ont_dir)
@@ -131,6 +200,8 @@ def ingest_path(
     flush()
     if skipped:
         print(f"Skipped {skipped} files (empty OCR or extract errors)")
+    if skipped_existing:
+        print(f"Skipped {skipped_existing} files already fully ingested (use --force to re-embed)")
     print(f"Pattern-tagged chunks: {tagged}/{total}", flush=True)
     return total
 

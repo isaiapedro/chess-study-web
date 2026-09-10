@@ -142,7 +142,7 @@ def _worker_url_for(out_html: Path, assets_dir: Path | None = None) -> str:
     return f"stockfish/{STOCKFISH_JS}"
 
 
-def _extract_vars_blocks(comment: str) -> tuple[str, list[str]]:
+def _extract_vars_blocks(comment: str, *, collapse_ws: bool = True) -> tuple[str, list[str]]:
     """Pull [Vars:…] blocks with nested brackets; return (comment_without_vars, vars)."""
     variations: list[str] = []
     if not comment:
@@ -176,7 +176,13 @@ def _extract_vars_blocks(comment: str) -> tuple[str, list[str]]:
                     clean_book_note(v) for v in inner.split(";") if clean_book_note(v)
                 )
         i = j
-    cleaned = re.sub(r"\s+", " ", "".join(built)).strip()
+    cleaned = "".join(built)
+    if collapse_ws:
+        cleaned = re.sub(r"\s+", " ", cleaned).strip()
+    else:
+        cleaned = re.sub(r"[^\S\n]+", " ", cleaned)
+        cleaned = re.sub(r" *\n *", "\n", cleaned)
+        cleaned = re.sub(r"\n{3,}", "\n\n", cleaned).strip()
     return cleaned, variations
 
 
@@ -184,11 +190,16 @@ def _split_layers(comment: str) -> tuple[str, str, list[str], str]:
     """Return book text, engine text, variations, book_kind (curated|draft|legacy|none)."""
     from chess_coach.book_notes_sidecar import BOOK_TAG_RE, parse_book_kind
 
-    comment, variations = _extract_vars_blocks(comment)
+    kind_hint, _ = parse_book_kind(comment or "")
+    comment, variations = _extract_vars_blocks(
+        comment, collapse_ws=(kind_hint != "curated")
+    )
     book = engine = ""
     if " | " in comment and ("[Book" in comment or "[Engine" in comment):
         parts = comment.split(" | ")
-        book = " ".join(p for p in parts if p.startswith("[Book"))
+        book = "\n\n".join(p for p in parts if p.startswith("[Book")) if kind_hint == "curated" else " ".join(
+            p for p in parts if p.startswith("[Book")
+        )
         engine = " ".join(p for p in parts if p.startswith("[Engine"))
     elif comment.startswith("[Book"):
         book = comment
@@ -198,8 +209,10 @@ def _split_layers(comment: str) -> tuple[str, str, list[str], str]:
     if book:
         book = BOOK_TAG_RE.sub("", book).strip()
         book = re.sub(r"^\[Book:[^\]]*\]\s*", "", book).strip()
-    book = clean_book_note(book)
-    engine = clean_book_note(engine)
+    if kind != "curated":
+        book = clean_book_note(book)
+    # Engine/RAG notes are machine-written — OCR clean mangles evals (+0.58 → +0. 58).
+    engine = (engine or "").strip()
     if not book:
         kind = "none"
     elif kind == "none":
@@ -396,7 +409,7 @@ def render_html(
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" />
   <style>
-    /* Chess Wrapped tokens — design/identity/chess-wrapped/README.md */
+    /* Chess Wrapped tokens — design/personal/chess-wrapped/shared/identity/README.md */
     :root {{
       --bg: #000000;
       --panel: #121212;

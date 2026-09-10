@@ -1,0 +1,110 @@
+{
+  "key_id": "endgame.theoretical.triangulation",
+  "key_type": "endgame",
+  "label": "Triangulation",
+  "idea_count": 3,
+  "ideas": [
+    {
+      "idea_id": "endgame.theoretical.triangulation#0",
+      "key_id": "endgame.theoretical.triangulation",
+      "key_type": "endgame",
+      "label": "Triangulation",
+      "principle": "Lose a tempo without changing the essential position.",
+      "phase": "endgame",
+      "summary": "Triangulation is a controlled loss of tempo: the king uses three moves to return to the same square while forcing the opponent to move. Use it only after identifying the desired zugzwang.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Mitrabha, Guha vs Preobrazhensky, Andrey 2026 (A20)",
+        "Sobol, Mariia vs Booysen, Dylan 2026 (A20)"
+      ],
+      "themes": [
+        "triangulation",
+        "zugzwang",
+        "king maneuver"
+      ],
+      "source_books": [
+        "Dvoretsky's Endgame Manual"
+      ],
+      "specificity": 2,
+      "features": [
+        "three-square king route",
+        "move-order battle",
+        "fixed pawns"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "endgame.theoretical.triangulation#1",
+      "key_id": "endgame.theoretical.triangulation",
+      "key_type": "endgame",
+      "label": "Triangulation",
+      "principle": "Treat spare pawn moves as tempi, not automatic improvements.",
+      "phase": "endgame",
+      "summary": "Count reserve pawn tempi before triangulating. A harmless pawn move may decide who must yield the opposition, but pushing too soon can remove a square your own king needs.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Mitrabha, Guha vs Preobrazhensky, Andrey 2026 (A20)",
+        "Sobol, Mariia vs Booysen, Dylan 2026 (A20)"
+      ],
+      "themes": [
+        "triangulation",
+        "reserve tempi",
+        "opposition"
+      ],
+      "source_books": [
+        "Dvoretsky's Endgame Manual"
+      ],
+      "specificity": 3,
+      "features": [
+        "unmoved pawn",
+        "opposition",
+        "king entry square"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "endgame.theoretical.triangulation#2",
+      "key_id": "endgame.theoretical.triangulation",
+      "key_type": "endgame",
+      "label": "Triangulation",
+      "principle": "Preserve the king's triangulation squares when fixing the pawn structure.",
+      "phase": "endgame",
+      "summary": "In king-and-pawn endings, triangulate only when the returning king move hands the opponent the same position with the move. Confirm that the pawn has enough reserve tempi and does not occupy a key square such as e4 that the king needs for the maneuver.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Mitrabha, Guha vs Preobrazhensky, Andrey 2026 (A20)",
+        "Sobol, Mariia vs Booysen, Dylan 2026 (A20)"
+      ],
+      "themes": [
+        "triangulation",
+        "key squares",
+        "pawn ending"
+      ],
+      "source_books": [
+        "Dvoretsky's Endgame Manual"
+      ],
+      "specificity": 5,
+      "features": [
+        "king and pawn ending",
+        "e4 key square",
+        "exact tempo count"
+      ],
+      "slots": {},
+      "conditions": []
+    }
+  ]
+}

@@ -1,0 +1,120 @@
+{
+  "key_id": "structure.maroczy_bind",
+  "key_type": "structure",
+  "label": "Maróczy Bind",
+  "idea_count": 3,
+  "ideas": [
+    {
+      "idea_id": "structure.maroczy_bind#0",
+      "key_id": "structure.maroczy_bind",
+      "key_type": "structure",
+      "label": "Maróczy Bind",
+      "principle": "Convert space by maintaining the bind",
+      "phase": "middlegame",
+      "summary": "The Maróczy Bind uses central pawns to restrict freeing breaks and limit opposing pieces. Its owner should improve patiently without loosening the bind.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Accelerated Dragon"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Wandor, Adam vs Iwan, Patryk 2026 (B90)",
+        "Sadhwani, Raunak vs Lu, Shanglei 2026 (B90)",
+        "Folin, Giorgio vs Picone Chiodo, Luigi 2026 (B70)"
+      ],
+      "themes": [
+        "Maróczy Bind",
+        "restriction"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide",
+        "Dvoretsky's Endgame Manual",
+        "Grandmaster Repertoire 5: The English Opening - Volume Three"
+      ],
+      "specificity": 1,
+      "features": [
+        "central space",
+        "restricted breaks"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "structure.maroczy_bind#1",
+      "key_id": "structure.maroczy_bind",
+      "key_type": "structure",
+      "label": "Maróczy Bind",
+      "principle": "Control the breaks that challenge the bind",
+      "phase": "middlegame",
+      "summary": "The cramped side seeks timely pawn breaks and piece exchanges; the side with the Maróczy Bind controls those breaks and targets backward pawns created by the compact setup.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Accelerated Dragon"
+      ],
+      "games": [
+        "Folin, Giorgio vs Picone Chiodo, Luigi 2026",
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Wandor, Adam vs Iwan, Patryk 2026 (B90)"
+      ],
+      "themes": [
+        "Maróczy Bind",
+        "pawn break",
+        "restriction"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide",
+        "Dvoretsky's Endgame Manual",
+        "Grandmaster Repertoire 5: The English Opening - Volume Three"
+      ],
+      "specificity": 3,
+      "features": [
+        "backward pawn",
+        "space advantage"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "structure.maroczy_bind#2",
+      "key_id": "structure.maroczy_bind",
+      "key_type": "structure",
+      "label": "Maróczy Bind",
+      "principle": "Coordinate the bind against the freeing break",
+      "phase": "middlegame",
+      "summary": "A knight reroute toward a stable queenside or central square can reinforce the Maróczy Bind while freeing heavier pieces. Before allowing the opponent's f-pawn break, calculate whether the opened diagonal activates the Dragon bishop or merely leaves lasting weaknesses.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Accelerated Dragon"
+      ],
+      "games": [
+        "Wandor, Adam vs Iwan, Patryk 2026",
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Wandor, Adam vs Iwan, Patryk 2026 (B90)"
+      ],
+      "themes": [
+        "Maróczy Bind",
+        "piece rerouting",
+        "Dragon formation"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings",
+        "Chess Structures: A Grandmaster Guide",
+        "Dvoretsky's Endgame Manual",
+        "Grandmaster Repertoire 5: The English Opening - Volume Three"
+      ],
+      "specificity": 5,
+      "features": [
+        "knight outpost",
+        "f-pawn break",
+        "fianchetto bishop"
+      ],
+      "slots": {},
+      "conditions": []
+    }
+  ]
+}

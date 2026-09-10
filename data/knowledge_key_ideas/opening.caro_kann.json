@@ -1,0 +1,153 @@
+{
+  "key_id": "opening.caro_kann",
+  "key_type": "opening",
+  "label": "Caro-Kann Defence",
+  "idea_count": 4,
+  "ideas": [
+    {
+      "idea_id": "opening.caro_kann#0",
+      "key_id": "opening.caro_kann",
+      "key_type": "opening",
+      "label": "Caro-Kann Defence",
+      "principle": "Build a sound center, complete development, and time the freeing break.",
+      "phase": "opening",
+      "summary": "The Caro-Kann Defence gives Black a sound pawn structure and usually a safe king. Black accepts slightly restrained development in return for a durable position, then challenges White's center with ...c5 or ...e5 and welcomes endgames in which few weaknesses remain.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Caro-Kann Defence",
+        "B12-B19"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Naidon, Pietro Weber vs Born, Ary 2026 (C00)",
+        "Eslava Cordoba, Salome vs Rodriguez Patino, Santiago 2026 (C00)"
+      ],
+      "themes": [
+        "sound development",
+        "central break",
+        "endgame"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings"
+      ],
+      "specificity": 1,
+      "features": [
+        "caro-kann structure",
+        "d5-e6 pawn chain"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "opening.caro_kann#1",
+      "key_id": "opening.caro_kann",
+      "key_type": "opening",
+      "label": "Caro-Kann Defence",
+      "principle": "Develop the potentially bad bishop outside the pawn chain.",
+      "phase": "opening",
+      "summary": "In the Caro-Kann, Black should solve the light-squared bishop before locking the center with ...e6 whenever possible. After that bishop reaches f5 or g4, the remaining pieces often develop compactly with ...Nd7, ...Ngf6, and ...Be7.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Caro-Kann Defence",
+        "B12-B19"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Naidon, Pietro Weber vs Born, Ary 2026 (C00)",
+        "Eslava Cordoba, Salome vs Rodriguez Patino, Santiago 2026 (C00)"
+      ],
+      "themes": [
+        "piece placement",
+        "development",
+        "bishop activity"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings"
+      ],
+      "specificity": 2,
+      "features": [
+        "light-squared bishop outside chain",
+        "solid center"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "opening.caro_kann#2",
+      "key_id": "opening.caro_kann",
+      "key_type": "opening",
+      "label": "Caro-Kann Defence",
+      "principle": "Attack a pawn chain at its base and challenge its head.",
+      "phase": "middlegame",
+      "summary": "Against the Caro-Kann Advance structure, Black attacks the base and head of White's e5-d4 chain with ...c5 and ...f6. White generally uses the space advantage for kingside play, while Black must avoid passive piece placement and strike before White consolidates.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Caro-Kann Defence",
+        "Advance Variation",
+        "B12"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]",
+        "Naidon, Pietro Weber vs Born, Ary 2026 (C00)",
+        "Eslava Cordoba, Salome vs Rodriguez Patino, Santiago 2026 (C00)"
+      ],
+      "themes": [
+        "pawn chain",
+        "counterplay",
+        "central tension"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings"
+      ],
+      "specificity": 4,
+      "features": [
+        "white e5-d4 chain",
+        "c5 break",
+        "f6 break"
+      ],
+      "slots": {},
+      "conditions": []
+    },
+    {
+      "idea_id": "opening.caro_kann#3",
+      "key_id": "opening.caro_kann",
+      "key_type": "opening",
+      "label": "Caro-Kann Defence",
+      "principle": "Convert structural soundness into active endgame play.",
+      "phase": "middlegame",
+      "summary": "In Caro-Kann endgames, Black's structural health matters only if the pieces become active. Centralize the king, put rooks behind passed pawns, and do not trade automatically when the resulting minor-piece ending leaves a bishop tied to weaknesses.",
+      "san_lines": [],
+      "fens": [],
+      "openings": [
+        "Caro-Kann Defence",
+        "B12-B19"
+      ],
+      "games": [
+        "Alexander Alekhine vs Jose Raul Capablanca 1927",
+        "Alexander Alekhine vs Jose Raul Capablanca 1927 (E16) [bookwalk]",
+        "Baryshpolets vs Turov 2012 () [bookwalk]"
+      ],
+      "themes": [
+        "simplification",
+        "king activity",
+        "passed pawn"
+      ],
+      "source_books": [
+        "Capablanca's Best Chess Endings"
+      ],
+      "specificity": 5,
+      "features": [
+        "sound pawn structure",
+        "minor-piece ending"
+      ],
+      "slots": {},
+      "conditions": []
+    }
+  ]
+}

@@ -6,20 +6,14 @@ aliases:
 - hanging pawns
 keywords:
 - hanging pawns
-- hanging pawn duo
-- c4 and d4
-- c5 and d5
+- hanging duo
+- c and d pawns
 rules_of_thumb:
-- Hanging pawns control space and open lines but can become fixed targets.
-- Owner wants dynamic breaks (c5/d5 or c4/d4) and piece activity.
-- Opponent restraints the duo, induces advance, then attacks the resulting weaknesses.
+- Dynamic center advances d4-d5 / c4-c5 vs targeted file pressure.
 plans:
-- 'Owner: prepare the break, keep pieces behind the pawns, avoid premature push.'
-- 'Opponent: blockade, pressure with major pieces on half-open files.'
+- Advance to create passed pawn or open lines.
+- Opponent fix and pressure the hanging duo.
 related:
 - structure.iqp
-- structure.minority_attack
-detect: board_hanging_pawns
-exemplars:
-- Kasparov vs Karpov, Moscow 1985
-- Mareco vs Cori, 2009 (chapter)
+- structure.symmetrical_center
+detect: board_hanging

@@ -1,0 +1,16 @@
+id: endgame.theoretical.fortress
+label: Fortress
+phase: endgame
+family: endgame_theoretical
+aliases:
+- fortress
+keywords:
+- fortress
+- drawing setup
+- material deficit draw
+rules_of_thumb:
+- Drawing setups despite material deficits.
+plans:
+- Drawing setups despite material deficits.
+related:
+- endgame.strategic.active_king
