@@ -140,6 +140,8 @@ chess-coach analyze path/to/game.pgn --out report.md
 
 Flags: `--no-rag`, `--no-llm`, `--depth`, `--threshold`, `--json`
 
+For reproducible analysis reports, record the PGN source, command flags, and engine version alongside the generated output.
+
 ## Config
 
 [`configs/default.yaml`](configs/default.yaml) — engine path, depth, models, RAG thresholds.
